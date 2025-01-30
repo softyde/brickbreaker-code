@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2020-2023 The Pybricks Authors
+// Copyright (c) 2020-2025 The Pybricks Authors
 
 import './editor.scss';
 import {
@@ -25,6 +25,7 @@ import {
     Redo,
     Undo,
 } from '@blueprintjs/icons';
+import * as Blockly from 'blockly/core';
 import classNames from 'classnames';
 import * as monaco from 'monaco-editor';
 import tomorrowNightEightiesTheme from 'monaco-themes/themes/Tomorrow-Night-Eighties.json';
@@ -471,11 +472,17 @@ const Editor: React.FunctionComponent = () => {
     );
 
     const editorRef = useRef<HTMLDivElement>(null);
+    const blocklyEditorRef = useRef<HTMLDivElement>(null);
 
     useEffectOnce(() => {
         // istanbul ignore if: should never happen
         if (!editorRef.current) {
             console.error('no editorRef!');
+            return;
+        }
+
+        if (!blocklyEditorRef.current) {
+            console.error('no blocklyEditorRef!');
             return;
         }
 
@@ -492,6 +499,60 @@ const Editor: React.FunctionComponent = () => {
 
         monacoEditor.focus();
         setEditor(monacoEditor);
+
+        Blockly.defineBlocksWithJsonArray([
+            {
+                type: 'string_length',
+                message0: 'Sensorwert von %1',
+                args0: [
+                    {
+                        type: 'input_value',
+                        name: 'VALUE',
+                        check: 'String',
+                    },
+                ],
+                output: 'Number',
+                colour: 160,
+                tooltip: 'Returns number of letters in the provided text.',
+                helpUrl: 'http://www.w3schools.com/jsref/jsref_length_string.asp',
+            },
+            {
+                type: 'xxx',
+                message0: 'Setze %1 auf %2',
+                args0: [
+                    {
+                        type: 'field_variable',
+                        name: 'VAR',
+                        variable: 'Geschwindigkeit',
+                        variableTypes: [''],
+                    },
+                    {
+                        type: 'input_value',
+                        name: 'VALUE',
+                    },
+                ],
+            },
+        ]);
+
+        const toolbox = {
+            // There are two kinds of toolboxes. The simpler one is a flyout toolbox.
+            kind: 'flyoutToolbox',
+            // The contents is the blocks and other items that exist in your toolbox.
+            contents: [
+                {
+                    kind: 'block',
+                    type: 'string_length',
+                },
+                {
+                    kind: 'block',
+                    type: 'xxx',
+                },
+
+                // You can add more blocks to this array.
+            ],
+        };
+
+        Blockly.inject(blocklyEditorRef.current, { toolbox: toolbox });
 
         return () => {
             setEditor(undefined);
@@ -518,6 +579,7 @@ const Editor: React.FunctionComponent = () => {
                     popoverProps={popoverProps}
                 >
                     <Welcome isVisible={isEmpty} />
+                    <div className="pb-editor-blockly" ref={blocklyEditorRef} />
                     <div className="pb-editor-monaco" ref={editorRef} />
                 </ContextMenu>
             </ResizeSensor>

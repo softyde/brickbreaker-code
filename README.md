@@ -1,11 +1,9 @@
-[![CI test status](https://github.com/pybricks/pybricks-code/workflows/CI%20Tests/badge.svg)](https://github.com/pybricks/pybricks-code/actions/workflows/test-pull-request.yml) [![codecov](https://codecov.io/gh/pybricks/pybricks-code/branch/master/graph/badge.svg?token=EJEBMN635G)](https://codecov.io/gh/pybricks/pybricks-code)
+brickbreaker-code
+=================
 
-pybricks-code
-=============
+A web app for programming LEGO® Powered Up Smart Hubs with Pybricks MicroPython for use in a German elementary school and support of Blocky elements.
 
-A Web App for programming LEGO® Powered Up smart hubs using Pybricks MicroPython.
-
-**Try it at <https://code.pybricks.com> or the latest updates <https://beta.pybricks.com>.**
+**Try it at <https://code.softyroyal.de> or the latest updates <https://beta.softyroyal.de>.**
 
 ![screenshot](.README/screenshot.png)
 
