@@ -1,13 +1,18 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2022 The Pybricks Authors
+// Copyright (c) 2022-2025 The Pybricks Authors
 
 import { createAction } from '../../actions';
 import { Hub } from '../../components/hubPicker';
 
-import { pythonFileExtension } from '../../pybricksMicropython/lib';
+import {
+    blockyFileExtension,
+    pythonFileExtension,
+} from '../../pybricksMicropython/lib';
 
 /** Supported file extensions. */
-type SupportedFileExtension = typeof pythonFileExtension;
+export type SupportedFileExtension =
+    | typeof pythonFileExtension
+    | typeof blockyFileExtension;
 
 /**
  * Requests to show the new file wizard dialog.
