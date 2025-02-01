@@ -186,35 +186,118 @@ const Editor: React.FunctionComponent = () => {
             return;
         }
 
+        const theme = Blockly.Theme.defineTheme('themeName', {
+            name: 'themeName',
+            base: Blockly.Themes.Classic,
+            blockStyles: {
+                logic_blocks: {
+                    colourPrimary: '#4a148c',
+                },
+                hub_blocks: {
+                    colourPrimary: '#0c74f2',
+                    //colourSecondary: '#0c74f2',
+                    //colourTertiary: '#0c74f2',
+                },
+                event_blocks: {
+                    colourPrimary: '#f2bd0c',
+                    //colourSecondary: '#f2d985',
+                    //colourTertiary: '#735906',
+                    hat: 'cap',
+                },
+                movement_blocks: {
+                    colourPrimary: '#bc0cf2',
+                },
+            },
+            categoryStyles: {
+                event_category: {
+                    colour: '#f2bd0c',
+                },
+                hub_category: {
+                    colour: '#0c74f2',
+                },
+                movement_category: {
+                    colour: '#bc0cf2',
+                },
+            },
+            componentStyles: {
+                toolboxBackgroundColour: '#c0c0c0',
+                toolboxForegroundColour: '#000',
+
+                /*workspaceBackgroundColour: '#1e1e1e',
+                toolboxBackgroundColour: 'blackBackground',
+                toolboxForegroundColour: '#fff',
+                flyoutBackgroundColour: '#252526',
+                flyoutForegroundColour: '#ccc',
+                flyoutOpacity: 1,
+                scrollbarColour: '#797979',
+                insertionMarkerColour: '#fff',
+                insertionMarkerOpacity: 0.3,
+                scrollbarOpacity: 0.4,
+                cursorColour: '#d0d0d0',*/
+                //blackBackground: '#333',
+            },
+            //fontStyle: {},
+            //startHats: true,
+        });
+
         Blockly.defineBlocksWithJsonArray([
             {
-                type: 'string_length',
-                message0: 'Sensorwert von %1',
-                args0: [
-                    {
-                        type: 'input_value',
-                        name: 'VALUE',
-                        check: 'String',
-                    },
-                ],
-                output: 'Number',
-                colour: 160,
-                tooltip: 'Returns number of letters in the provided text.',
-                helpUrl: 'http://www.w3schools.com/jsref/jsref_length_string.asp',
+                type: 'start_program',
+                message0: 'Wenn Programm startet',
+                tooltip: 'Wenn das Programm startet',
+                nextStatement: null,
+                style: 'event_blocks',
             },
             {
-                type: 'xxx',
-                message0: 'Setze %1 auf %2',
+                type: 'setup_program',
+                message0: 'Initialisierung',
+                tooltip: 'tbd',
+                nextStatement: null,
+                style: 'event_blocks',
+            },
+            {
+                type: 'move_straight_block',
+                message0: 'Fahre %1 %2cm',
+                style: 'movement_blocks',
                 args0: [
                     {
                         type: 'field_variable',
-                        name: 'VAR',
-                        variable: 'Geschwindigkeit',
+                        name: 'VAR1',
+                        variable: 'Vorwärts',
+                    },
+                    {
+                        type: 'field_input',
+                        name: 'VAR2',
+                        text: '10',
+                        check: 'Number',
+                    },
+                ],
+                nextStatement: null,
+                previousStatement: null,
+            },
+            {
+                type: 'hub_block',
+                message0: '%1 mit Oberseite %2 und Vorderseite %3',
+                nextStatement: null,
+                previousStatement: null,
+                style: 'hub_blocks',
+                args0: [
+                    {
+                        type: 'field_input',
+                        name: 'VAR1',
+                        text: 'Spike Prime',
+                    },
+                    {
+                        type: 'field_variable',
+                        name: 'VAR2',
+                        variable: 'z-Achse',
                         variableTypes: [''],
                     },
                     {
-                        type: 'input_value',
-                        name: 'VALUE',
+                        type: 'field_variable',
+                        name: 'VAR3',
+                        variable: 'x-Achse',
+                        variableTypes: [''],
                     },
                 ],
             },
@@ -241,24 +324,38 @@ const Editor: React.FunctionComponent = () => {
             contents: [
                 {
                     kind: 'category',
-                    name: 'Bla',
-                    categorystyle: 'logic_category',
-                    colour: '160',
+                    name: 'Ereignisse',
+                    categorystyle: 'event_category',
                     contents: [
                         {
                             kind: 'block',
-                            type: 'string_length',
+                            type: 'setup_program',
+                        },
+                        {
+                            kind: 'block',
+                            type: 'start_program',
                         },
                     ],
                 },
                 {
                     kind: 'category',
-                    name: 'Fasel',
-                    colour: '210',
+                    name: 'Hub',
+                    categorystyle: 'hub_category',
                     contents: [
                         {
                             kind: 'block',
-                            type: 'xxx',
+                            type: 'hub_block',
+                        },
+                    ],
+                },
+                {
+                    kind: 'category',
+                    name: 'Bewegung',
+                    categorystyle: 'movement_category',
+                    contents: [
+                        {
+                            kind: 'block',
+                            type: 'move_straight_block',
                         },
                     ],
                 },
@@ -269,6 +366,7 @@ const Editor: React.FunctionComponent = () => {
             toolbox: toolbox,
             sounds: true,
             media: './blockly/',
+            theme: theme,
             grid: {
                 spacing: 20,
                 length: 3,
