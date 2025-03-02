@@ -60,6 +60,7 @@
 
     &-tabpanel {
         min-height: 0;
+        height: 100%;
         flex: 1 1 auto;
     }
 
@@ -121,5 +122,17 @@
     // allow overflow to overlay content outside of editor
     & .overflowingContentWidget {
         z-index: bp.$pt-z-index-overlay - 1;
+    }
+}
+
+.splitter-layout {
+    position: initial;
+
+    div.pb-hide-blockly > :not(:last-child) {
+        display: none;
+    }
+
+    div.pb-hide-blockly > :last-child {
+        width: 100% !important;
     }
 }

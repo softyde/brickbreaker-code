@@ -10,6 +10,7 @@ import {
     MenuItem,
     OverlayLifecycleProps,
     ResizeSensor,
+    //ResizeSensor,
 } from '@blueprintjs/core';
 import { Blank, Clipboard, Duplicate, Redo, Undo } from '@blueprintjs/icons';
 import classNames from 'classnames';
@@ -334,9 +335,17 @@ const EditorText: React.FunctionComponent = () => {
     const isEmpty = useSelector((s) => s.editor.openFileUuids.length === 0);
     const { activeFileUuid } = useSelector((s) => s.editor);
     const fileName = useFileStoragePath(activeFileUuid ?? ('' as UUID));
-
+    /*
+<ResizeSensor onResize={() => editor?.layout()}>
+</ResizeSensor>
+// */
     return (
-        <ResizeSensor onResize={() => editor?.layout()}>
+        <ResizeSensor
+            onResize={() => {
+                editor?.layout();
+                console.log('resize');
+            }}
+        >
             <ContextMenu
                 className={classNames('pb-editor-tabpanel', isEmpty && 'pb-empty')}
                 role="tabpanel"

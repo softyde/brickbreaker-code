@@ -6,6 +6,7 @@ const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMi
 const ignoredFiles = require('react-dev-utils/ignoredFiles');
 const paths = require('./paths');
 const getHttpsConfig = require('./getHttpsConfig');
+const { runtime } = require('webpack');
 
 const host = process.env.HOST || '0.0.0.0';
 const sockHost = process.env.WDS_SOCKET_HOST;
@@ -83,6 +84,14 @@ module.exports = function (proxy, allowedHost) {
       overlay: {
         errors: true,
         warnings: false,
+        runtimeErrors: (error) => {
+          if (error.message === 'ResizeObserver loop completed with undelivered notifications.') {
+            return false;
+          }
+
+          console.log(error.message);
+          return true;
+        },        
       },
     },
     devMiddleware: {
