@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2025 The Pybricks Authors
+// Copyright (c) 2025 The Pybricks Authors, Philipp Anné
 
 import './editor.scss';
 import {
@@ -343,7 +343,6 @@ const EditorText: React.FunctionComponent = () => {
         <ResizeSensor
             onResize={() => {
                 editor?.layout();
-                console.log('resize');
             }}
         >
             <ContextMenu

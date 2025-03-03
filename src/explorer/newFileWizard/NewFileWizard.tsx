@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2022-2025 The Pybricks Authors
+// Copyright (c) 2022-2025 The Pybricks Authors, Philipp Anné
 
 import {
     Button,
