@@ -632,7 +632,7 @@ function* handleStoreTextFileValue(
 
                 await db.metadata.update(metadata.uuid, { sha256 });
 
-                await db._contents.put({ path: metadata.path, contents: action.value });
+                await db._contents.update(metadata.path, { contents: action.value });
             }),
         );
 

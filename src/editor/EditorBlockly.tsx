@@ -13,6 +13,35 @@ import { categoryIcons, isCategoryStyle } from './icons/categoryIcons';
 //import { blockyFileExtension } from '../pybricksMicropython/lib';
 //import { useSelector } from '../reducers';
 
+type BlocklyWorkspaceListener = (workspace: Blockly.Workspace) => void;
+
+const listeners: BlocklyWorkspaceListener[] = [];
+
+export interface IDisposable {
+    dispose(): void;
+}
+
+export function onDidCreateBlocklyEditor(
+    listener: (workspace: Blockly.Workspace) => void,
+): IDisposable {
+    listeners.push(listener);
+
+    return {
+        dispose: () => {
+            const index = listeners.indexOf(listener);
+            if (index !== -1) {
+                listeners.splice(index, 1);
+            } else {
+                throw new Error('disposable not found');
+            }
+        },
+    };
+}
+
+function notifyDidCreateBlocklyEditor(workspace: Blockly.Workspace) {
+    listeners.forEach((listener) => listener(workspace));
+}
+
 class SeperatorField extends Blockly.Field {
     lineElement_: SVGElement | null;
 
@@ -619,6 +648,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
 
         // Führe initiales Resize durch
         resizeBlockly();
+
+        notifyDidCreateBlocklyEditor(workspaceRef.current);
 
         return () => {
             //setEditor(undefined);

@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2022-2023 The Pybricks Authors
 
+import * as Blockly from 'blockly/core';
 import type { DatabaseChangeType, IDatabaseChange } from 'dexie-observable/api';
 import * as monaco from 'monaco-editor';
+
 import { EventChannel, Task, buffers, eventChannel } from 'redux-saga';
 import {
     call,
@@ -46,6 +48,7 @@ import {
 import { RootState } from '../reducers';
 import { acquireLock, defined, ensureError } from '../utils';
 import { createCountFunc } from '../utils/iter';
+import { onDidCreateBlocklyEditor } from './EditorBlockly';
 import {
     editorActivateFile,
     editorCloseFile,
@@ -458,6 +461,92 @@ function* monitorEditors(): Generator {
     }
 }
 
+function* handleBlocklyWorkspaceDidChange(
+    ms: number,
+    chan: EventChannel<Blockly.Events.Abstract>,
+    workspace: Blockly.Workspace,
+) {
+    for (;;) {
+        yield* take(chan);
+
+        const state = Blockly.serialization.workspaces.save(workspace);
+
+        console.log('something happened', state);
+
+        // throttle the writes so we don't do it too often while user is typing quickly
+        yield* delay(ms);
+    }
+}
+
+function* handleBlocklyOpenFile(
+    workspace: Blockly.Workspace,
+    _openFiles: OpenFileManager,
+    action: ReturnType<typeof editorOpenFile>,
+): Generator {
+    try {
+        const defer: Array<() => void | Promise<void>> = [];
+
+        try {
+            const didWorkspaceChangeChan = eventChannel<Blockly.Events.Abstract>(
+                (emit) => {
+                    workspace.addChangeListener(emit);
+                    return () => workspace.removeChangeListener(emit);
+                },
+                buffers.sliding(1),
+            );
+
+            defer.push(() => didWorkspaceChangeChan.close());
+
+            // ... and then fork to function that looks like
+            // https://github.com/redux-saga/redux-saga/issues/620#issuecomment-259161095
+            yield* fork(
+                handleBlocklyWorkspaceDidChange,
+                1000,
+                didWorkspaceChangeChan,
+                workspace,
+            );
+
+            yield* take(editorCloseFile.when((a) => a.uuid === action.uuid));
+        } finally {
+            for (const callback of defer.reverse()) {
+                callback();
+            }
+        }
+    } catch (err) {
+        // FIXME das ist der falsche Typ!!!
+        yield* put(editorDidFailToOpenFile(action.uuid, ensureError(err)));
+    }
+}
+
+function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
+    const isFileStorageInitialized = yield* select(
+        (s: RootState) => s.fileStorage.isInitialized,
+    );
+
+    if (!isFileStorageInitialized) {
+        yield* take(fileStorageDidInitialize);
+    }
+
+    const openFiles = new OpenFileManager();
+
+    yield* takeEvery(editorOpenFile, handleBlocklyOpenFile, workspace, openFiles);
+}
+
+function* monitorBlockly(): Generator {
+    const ch = eventChannel<Blockly.Workspace>((emit) => {
+        const subscription = onDidCreateBlocklyEditor(emit);
+        return () => subscription.dispose();
+    });
+
+    try {
+        yield* takeEvery(ch, handleDidCreateBlockly);
+
+        yield* take('__never__');
+    } finally {
+        ch.close();
+    }
+}
+
 // HACK: dexie-observable exports const enum, so we have to redefine values
 const DatabaseChangeTypeCreate: DatabaseChangeType.Create = 1;
 const DatabaseChangeTypeUpdate: DatabaseChangeType.Update = 2;
@@ -840,5 +929,6 @@ function* runJedi(): Generator {
 
 export default function* (): Generator {
     yield* fork(monitorEditors);
+    yield* fork(monitorBlockly);
     yield* fork(runJedi);
 }
