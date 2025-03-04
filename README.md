@@ -1,7 +1,7 @@
 brickbreaker-code
 =================
 
-A web app for programming LEGO® Powered Up Smart Hubs with Pybricks MicroPython for use in a German elementary school and support of Blocky elements.
+A web app for programming LEGO® Powered Up Smart Hubs with Pybricks MicroPython for use in a German elementary school and support of Blockly elements.
 
 ## Next steps
 
