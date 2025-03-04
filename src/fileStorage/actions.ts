@@ -3,6 +3,7 @@
 
 import type * as monaco from 'monaco-editor';
 import { createAction } from '../actions';
+import { SupportedFileExtension } from '../explorer/newFileWizard/actions';
 import { FileMetadata, UUID } from '.';
 
 /** File open modes. */
@@ -462,5 +463,18 @@ export const fileStorageDidFailToStoreTextFileViewState = createAction(
         type: 'fileStorage.action.didFailToStoreTextFileViewState',
         uuid,
         error,
+    }),
+);
+
+export const fileStorageGetFileType = createAction((uuid: UUID) => ({
+    type: 'fileStorage.action.getFileType',
+    uuid,
+}));
+
+export const fileStorageDidGetFileType = createAction(
+    (uuid: UUID, fileType: SupportedFileExtension) => ({
+        type: 'fileStorage.action.didGetFileType',
+        uuid,
+        fileType,
     }),
 );

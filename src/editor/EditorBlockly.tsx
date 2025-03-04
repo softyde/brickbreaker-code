@@ -519,6 +519,38 @@ const BlocklyEditor: React.FunctionComponent = () => {
                     },
                 ],
             },
+            {
+                type: 'drive_init',
+                message0:
+                    '%3 Fahrwerk initialisieren mit %1 als Rad rechts und %2 als Rad links',
+                nextStatement: null,
+                previousStatement: null,
+                style: 'movement_category',
+                extensions: ['add_my_custom_icon'],
+
+                args0: [
+                    {
+                        type: 'field_dropdown',
+                        name: 'MOTOR_1',
+                        options: [
+                            ['Port A', 'PORTA'],
+                            ['Port B', 'PORTB'],
+                        ],
+                    },
+                    {
+                        type: 'field_dropdown',
+                        name: 'MOTOR_2',
+                        options: [
+                            ['Port A', 'PORTA'],
+                            ['Port B', 'PORTB'],
+                        ],
+                    },
+                    {
+                        type: 'field_vertical_separator',
+                        name: 'VAR4',
+                    },
+                ],
+            },
         ]);
         /*
         const theme = Blockly.Theme.defineTheme('themeName', {
@@ -577,6 +609,10 @@ const BlocklyEditor: React.FunctionComponent = () => {
                     name: 'Bewegung',
                     categorystyle: 'movement_category',
                     contents: [
+                        {
+                            kind: 'block',
+                            type: 'drive_init',
+                        },
                         {
                             kind: 'block',
                             type: 'move_straight_block',

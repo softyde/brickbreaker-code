@@ -22,13 +22,16 @@ import { FileStorageDb, UUID } from '../fileStorage';
 import {
     fileStorageDidFailToLoadTextFile,
     fileStorageDidFailToStoreTextFileViewState,
+    fileStorageDidGetFileType,
     fileStorageDidInitialize,
     fileStorageDidLoadTextFile,
     fileStorageDidStoreTextFileViewState,
+    fileStorageGetFileType,
     fileStorageLoadTextFile,
     fileStorageStoreTextFileValue,
     fileStorageStoreTextFileViewState,
 } from '../fileStorage/actions';
+import { blocklyFileExtension } from '../pybricksMicropython/lib';
 import {
     pythonMessageComplete,
     pythonMessageDeleteUserFile,
@@ -193,7 +196,13 @@ function* handleEditorOpenFile(
             );
             defer.push(() => replaceFileTask.cancel());
 
-            openFiles.add(action.uuid, model, didLoad.viewState);
+            yield* put(fileStorageGetFileType(action.uuid));
+
+            const fileInfo = yield* take(
+                fileStorageDidGetFileType.when((a) => a.uuid === action.uuid),
+            );
+
+            openFiles.add(action.uuid, model, didLoad.viewState, fileInfo.fileType);
             defer.push(() => openFiles.remove(action.uuid));
 
             yield* put(editorDidOpenFile(action.uuid));
@@ -271,6 +280,8 @@ function* handleEditorActivateFile(
         editor.restoreViewState(file.viewState);
         editor.pushUndoStop();
         activeFileHistory.push(action.uuid);
+
+        editor.updateOptions({ readOnly: file.fileType === blocklyFileExtension });
 
         editor.focus();
 

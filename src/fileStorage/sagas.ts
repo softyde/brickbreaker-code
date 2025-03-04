@@ -11,7 +11,7 @@ import {
     take,
     takeEvery,
 } from 'typed-redux-saga/macro';
-import { blocklyFileExtension } from '../pybricksMicropython/lib';
+import { blocklyFileExtension, pythonFileExtension } from '../pybricksMicropython/lib';
 import { acquireLock, defined, ensureError } from '../utils';
 import { sha256Digest } from '../utils/crypto';
 import { createCountFunc } from '../utils/iter';
@@ -40,6 +40,7 @@ import {
     fileStorageDidFailToStoreTextFileViewState,
     fileStorageDidFailToWrite,
     fileStorageDidFailToWriteFile,
+    fileStorageDidGetFileType,
     fileStorageDidInitialize,
     fileStorageDidLoadBlockly,
     fileStorageDidLoadTextFile,
@@ -53,6 +54,7 @@ import {
     fileStorageDidWrite,
     fileStorageDidWriteFile,
     fileStorageDumpAllFiles,
+    fileStorageGetFileType,
     fileStorageLoadBlockly,
     fileStorageLoadTextFile,
     fileStorageOpen,
@@ -744,6 +746,29 @@ function* handleStoreTextFileViewState(
     }
 }
 
+function* handleStoreGetFileType(
+    db: FileStorageDb,
+    action: ReturnType<typeof fileStorageGetFileType>,
+): Generator {
+    const { path } = yield* call(() =>
+        db.transaction('r', db.metadata, db._contents, async () => {
+            const metadata = await db.metadata.get(action.uuid);
+
+            if (!metadata) {
+                throw new Error(`file with uuid '${action.uuid}' not found`);
+            }
+
+            return { path: metadata.path };
+        }),
+    );
+
+    const fileType = path.toLowerCase().endsWith(blocklyFileExtension)
+        ? blocklyFileExtension
+        : pythonFileExtension;
+
+    yield* put(fileStorageDidGetFileType(action.uuid, fileType));
+}
+
 /**
  * Initializes the storage backend.
  */
@@ -805,6 +830,7 @@ function* initialize(): Generator {
         yield* takeEvery(fileStorageLoadBlockly, handleLoadBlockly, db);
         yield* takeEvery(fileStorageStoreTextFileValue, handleStoreTextFileValue, db);
         yield* takeEvery(fileStorageStoreBlocklyValue, handleStoreBlocklyValue, db);
+        yield* takeEvery(fileStorageGetFileType, handleStoreGetFileType, db);
         yield* takeEvery(
             fileStorageStoreTextFileViewState,
             handleStoreTextFileViewState,

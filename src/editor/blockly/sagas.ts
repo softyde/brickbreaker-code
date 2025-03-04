@@ -2,7 +2,9 @@
 // Copyright (c) 2025 Philipp Anné
 
 import * as Blockly from 'blockly/core';
+import { pythonGenerator } from 'blockly/python';
 import { EventChannel, buffers, eventChannel } from 'redux-saga';
+
 import { cancel } from 'redux-saga/effects';
 import {
     delay,
@@ -16,17 +18,63 @@ import {
 import { UUID } from '../../fileStorage';
 import {
     fileStorageDidFailToLoadBlockly,
+    fileStorageDidFailToStoreTextFileValue,
     fileStorageDidInitialize,
     fileStorageDidLoadBlockly,
+    fileStorageDidStoreTextFileValue,
     fileStorageLoadBlockly,
     fileStorageStoreBlocklyValue,
+    fileStorageStoreTextFileValue,
 } from '../../fileStorage/actions';
 import { RootState } from '../../reducers';
 import { defined, ensureError } from '../../utils';
-import { editorActivateFile, editorDidFailToOpenFile } from '../actions';
+import {
+    editorActivateFile,
+    editorDidFailToOpenFile,
+    editorReplaceFile,
+} from '../actions';
 import { OpenFileManager } from '../lib';
-import { blocklyDidChangeModel, blocklyDidDispose } from './actions';
+import {
+    blocklyDidChangeModel,
+    blocklyDidDispose,
+    blocklyGenerateSource,
+} from './actions';
 import * as notify from './lib';
+
+pythonGenerator.forBlock['start_program'] = (_block, _generator) => {
+    //    const nextCode = generator.blockToCode(block.getNextBlock());
+
+    return '';
+};
+
+pythonGenerator.forBlock['hub_block'] = (_block, _generator) => {
+    //const nextCode = generator.blockToCode(block.getNextBlock());
+
+    return `
+hub = PrimeHub(top_side=Axis.Z, front_side=Axis.X)
+`;
+};
+
+pythonGenerator.forBlock['drive_init'] = (_block, _generator) => {
+    return `
+left_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)
+right_motor = Motor(Port.B)
+
+drive_base = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=112)
+drive_base.use_gyro(True)
+`;
+};
+
+pythonGenerator.forBlock['move_curve_block'] = (_block, _generator) => {
+    // Collect argument strings.
+    // const fieldValue = block.getFieldValue('MY_FIELD');
+    // const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+
+    // Return code.
+    return `
+drive_base.turn(90)
+`;
+};
 
 function* handleBlocklyWorkspaceDidChange(
     ms: number,
@@ -58,9 +106,64 @@ function* handleBlocklyDidChangeModel(
 ): Generator {
     console.log('saving data for ', uuid, action.value);
     const data = action.value;
+
     // when the model changes, save it to storage.
     yield* put(fileStorageStoreBlocklyValue(uuid, data));
+    yield* put(blocklyGenerateSource(uuid));
+
     // failures are ignored
+}
+
+function* handleBlocklyGenerateSource(
+    workspace: Blockly.Workspace,
+    action: ReturnType<typeof blocklyGenerateSource>,
+): Generator {
+    console.debug('=== generate source');
+
+    try {
+        const blocks = workspace.getBlocksByType('start_program');
+
+        pythonGenerator.init(workspace);
+        let source = '';
+        blocks.forEach((block) => {
+            source += pythonGenerator.blockToCode(block);
+        });
+
+        if (source.length > 0) {
+            source = `from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+${source}`;
+        }
+
+        yield* put(fileStorageStoreTextFileValue(action.uuid, source));
+
+        const { didLoad, didFailToLoad } = yield* race({
+            didLoad: take(
+                fileStorageDidStoreTextFileValue.when((a) => a.uuid === action.uuid),
+            ),
+            didFailToLoad: take(
+                fileStorageDidFailToStoreTextFileValue.when(
+                    (a) => a.uuid === action.uuid,
+                ),
+            ),
+        });
+
+        if (didFailToLoad) {
+            throw didFailToLoad.error;
+        }
+
+        defined(didLoad);
+
+        yield* put(editorReplaceFile(action.uuid, source));
+
+        console.debug(source);
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 function* handleEditorActivateFile(
@@ -140,6 +243,12 @@ function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
         console.log('blockly created');
 
         try {
+            yield* takeEvery(
+                blocklyGenerateSource,
+                handleBlocklyGenerateSource,
+                workspace,
+            );
+
             const didWorkspaceChangeChan = eventChannel<Blockly.Events.Abstract>(
                 (emit) => {
                     workspace.addChangeListener(emit);
@@ -189,7 +298,6 @@ function* monitorBlockly(): Generator {
         const subscription = notify.onDidCreateBlocklyEditor(emit);
         return () => subscription.dispose();
     });
-
     try {
         yield* takeEvery(ch, handleDidCreateBlockly);
 
