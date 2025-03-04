@@ -13,15 +13,20 @@ Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 
 ## Next steps / wip
 
+**This is still a prototype and a long way from being put to good use.**
+
 - [x] save/load blockly data  
 - [x] handle multiple editors
-- [ ] generate py code from blockly
+- [x] generate py code from blockly
 - [ ] develop some useful blocks
+- [ ] run it on a real spike prime device
 - [ ] cleanup code
 - [ ] fix broken tests
 - [ ] peace & love  
 
-![screenshot](.README/screenshot.png)
+
+https://github.com/user-attachments/assets/3902bbb7-fdc5-4a02-a4bc-eb94b919a1d5
+
 
 ## Coming soon
 
@@ -38,3 +43,7 @@ For more details, see the file [CONTRIBUTING.md](./CONTRIBUTING.md).
 <small>
 LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.
 </small>
+
+### Screenshot (more or less up to date)
+
+![screenshot](.README/screenshot.png)
