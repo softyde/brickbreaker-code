@@ -11,6 +11,7 @@ import {
     take,
     takeEvery,
 } from 'typed-redux-saga/macro';
+import { blocklyFileExtension } from '../pybricksMicropython/lib';
 import { acquireLock, defined, ensureError } from '../utils';
 import { sha256Digest } from '../utils/crypto';
 import { createCountFunc } from '../utils/iter';
@@ -28,31 +29,37 @@ import {
     fileStorageDidFailToDeleteFile,
     fileStorageDidFailToDumpAllFiles,
     fileStorageDidFailToInitialize,
+    fileStorageDidFailToLoadBlockly,
     fileStorageDidFailToLoadTextFile,
     fileStorageDidFailToOpen,
     fileStorageDidFailToRead,
     fileStorageDidFailToReadFile,
     fileStorageDidFailToRenameFile,
+    fileStorageDidFailToStorBlocklyValue,
     fileStorageDidFailToStoreTextFileValue,
     fileStorageDidFailToStoreTextFileViewState,
     fileStorageDidFailToWrite,
     fileStorageDidFailToWriteFile,
     fileStorageDidInitialize,
+    fileStorageDidLoadBlockly,
     fileStorageDidLoadTextFile,
     fileStorageDidOpen,
     fileStorageDidRead,
     fileStorageDidReadFile,
     fileStorageDidRenameFile,
+    fileStorageDidStoreBlocklyValue,
     fileStorageDidStoreTextFileValue,
     fileStorageDidStoreTextFileViewState,
     fileStorageDidWrite,
     fileStorageDidWriteFile,
     fileStorageDumpAllFiles,
+    fileStorageLoadBlockly,
     fileStorageLoadTextFile,
     fileStorageOpen,
     fileStorageRead,
     fileStorageReadFile,
     fileStorageRenameFile,
+    fileStorageStoreBlocklyValue,
     fileStorageStoreTextFileValue,
     fileStorageStoreTextFileViewState,
     fileStorageWrite,
@@ -103,6 +110,9 @@ function* handleOpen(
             // to do this before even if it is not used
             const contents = '';
             const sha256 = yield* call(() => sha256Digest(contents));
+            const blocklyData = action.path.toLowerCase().endsWith(blocklyFileExtension)
+                ? '{}'
+                : null;
 
             const uuid = yield* call(() =>
                 db.transaction('rw', db.metadata, db._contents, async () => {
@@ -128,7 +138,11 @@ function* handleOpen(
                         viewState: null,
                     }) as FileMetadata);
 
-                    await db._contents.put({ path: action.path, contents });
+                    await db._contents.put({
+                        path: action.path,
+                        contents,
+                        blocklyData,
+                    });
 
                     return key;
                 }),
@@ -262,6 +276,7 @@ function* handleWrite(
                 await db._contents.put({
                     path: metadata.path,
                     contents: action.contents,
+                    blocklyData: action.blocklyData,
                 });
             }),
         );
@@ -347,7 +362,9 @@ function* handleWriteFile(action: ReturnType<typeof fileStorageWriteFile>): Gene
         defined(didOpen);
 
         try {
-            yield* put(fileStorageWrite(didOpen.fd, action.contents));
+            yield* put(
+                fileStorageWrite(didOpen.fd, action.contents, action.blocklyContents),
+            );
 
             const { didFailToWrite } = yield* race({
                 didWrite: take(fileStorageDidWrite.when((a) => a.fd === didOpen.fd)),
@@ -615,6 +632,35 @@ function* handleLoadTextFile(
     }
 }
 
+function* handleLoadBlockly(
+    db: FileStorageDb,
+    action: ReturnType<typeof fileStorageLoadBlockly>,
+): Generator {
+    try {
+        const { data } = yield* call(() =>
+            db.transaction('r', db.metadata, db._contents, async () => {
+                const metadata = await db.metadata.get(action.uuid);
+
+                if (!metadata) {
+                    throw new Error(`file with uuid '${action.uuid}' not found`);
+                }
+
+                const content = await db._contents.get(metadata.path);
+
+                if (!content) {
+                    throw new Error(`content for file '${metadata.path}' not found`);
+                }
+
+                return { data: content.blocklyData };
+            }),
+        );
+
+        yield* put(fileStorageDidLoadBlockly(action.uuid, data));
+    } catch (err) {
+        yield* put(fileStorageDidFailToLoadBlockly(action.uuid, ensureError(err)));
+    }
+}
+
 function* handleStoreTextFileValue(
     db: FileStorageDb,
     action: ReturnType<typeof fileStorageStoreTextFileValue>,
@@ -641,6 +687,33 @@ function* handleStoreTextFileValue(
         yield* put(
             fileStorageDidFailToStoreTextFileValue(action.uuid, ensureError(err)),
         );
+    }
+}
+
+function* handleStoreBlocklyValue(
+    db: FileStorageDb,
+    action: ReturnType<typeof fileStorageStoreBlocklyValue>,
+): Generator {
+    try {
+        yield* call(() =>
+            db.transaction('rw', db.metadata, db._contents, async () => {
+                const metadata = await db.metadata.get(action.uuid);
+
+                if (!metadata) {
+                    throw new Error(`file with uuid '${action.uuid}' not found`);
+                }
+
+                const sha256 = await Dexie.waitFor(sha256Digest(action.data));
+
+                await db.metadata.update(metadata.uuid, { sha256 });
+
+                await db._contents.update(metadata.path, { blocklyData: action.data });
+            }),
+        );
+
+        yield* put(fileStorageDidStoreBlocklyValue(action.uuid));
+    } catch (err) {
+        yield* put(fileStorageDidFailToStorBlocklyValue(action.uuid, ensureError(err)));
     }
 }
 
@@ -682,6 +755,7 @@ function* initialize(): Generator {
 
         // migrate from old storage
 
+        // FIXME can be removed
         const oldProgram = localStorage.getItem('program');
 
         if (oldProgram !== null) {
@@ -698,7 +772,11 @@ function* initialize(): Generator {
                         viewState: null,
                     }) as FileMetadata);
 
-                    await db._contents.add({ path: 'main.py', contents: oldProgram });
+                    await db._contents.add({
+                        path: 'main.py',
+                        contents: oldProgram,
+                        blocklyData: null,
+                    });
                 });
 
                 localStorage.removeItem('program');
@@ -724,7 +802,9 @@ function* initialize(): Generator {
         yield* takeEvery(fileStorageRenameFile, handleRenameFile, db);
         yield* takeEvery(fileStorageDumpAllFiles, handleDumpAllFiles, db);
         yield* takeEvery(fileStorageLoadTextFile, handleLoadTextFile, db);
+        yield* takeEvery(fileStorageLoadBlockly, handleLoadBlockly, db);
         yield* takeEvery(fileStorageStoreTextFileValue, handleStoreTextFileValue, db);
+        yield* takeEvery(fileStorageStoreBlocklyValue, handleStoreBlocklyValue, db);
         yield* takeEvery(
             fileStorageStoreTextFileViewState,
             handleStoreTextFileViewState,

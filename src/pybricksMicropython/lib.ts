@@ -7,7 +7,7 @@ import type { FileContents, FileStorageDb } from '../fileStorage';
 /** The Python file extension ('.py') */
 export const pythonFileExtension = '.py';
 /** The Blocky file extension ('.blocky') */
-export const blockyFileExtension = '.blocky';
+export const blocklyFileExtension = '.blockpy';
 
 /** A regular expression that matches the Python file extension. */
 export const pythonFileExtensionRegex = /\.[Pp][Yy]$/;

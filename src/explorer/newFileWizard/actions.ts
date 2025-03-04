@@ -5,14 +5,14 @@ import { createAction } from '../../actions';
 import { Hub } from '../../components/hubPicker';
 
 import {
-    blockyFileExtension,
+    blocklyFileExtension,
     pythonFileExtension,
 } from '../../pybricksMicropython/lib';
 
 /** Supported file extensions. */
 export type SupportedFileExtension =
     | typeof pythonFileExtension
-    | typeof blockyFileExtension;
+    | typeof blocklyFileExtension;
 
 /**
  * Requests to show the new file wizard dialog.

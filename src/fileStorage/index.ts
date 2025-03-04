@@ -34,8 +34,8 @@ export type FileContents = {
     path: string;
     /** The contents of the file. */
     contents: string;
-    /** The contents of the file. */
-    //blocklyData: string;
+    /** The blockly contents of the file. */
+    blocklyData: string | null;
 };
 
 export class FileStorageDb extends Dexie {

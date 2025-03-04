@@ -131,7 +131,14 @@ function* handleCompileMulti6(): Generator {
     const mainPy = yield* editorGetValue();
 
     const pyFiles = new Map<string, FileContents>([
-        ['__main__', { path: metadata.path ?? '__main__.py', contents: mainPy }],
+        [
+            '__main__',
+            {
+                path: metadata.path ?? '__main__.py',
+                contents: mainPy,
+                blocklyData: null,
+            },
+        ],
     ]);
 
     const checkedModules = new Set<string>(['__main__']);

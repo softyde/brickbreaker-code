@@ -3,7 +3,6 @@
 
 import { ButtonGroup } from '@blueprintjs/core';
 import React from 'react';
-import { useId } from 'react-aria';
 import { Toolbar as UtilsToolbar } from '../components/toolbar/Toolbar';
 import BluetoothButton from './buttons/bluetooth/BluetoothButton';
 import ReplButton from './buttons/repl/ReplButton';
@@ -21,8 +20,8 @@ const sponsorButtonId = 'pb-toolbar-sponsor-button';
 
 const Toolbar: React.FunctionComponent = () => {
     const i18n = useI18n();
-    const stopButtonId = useId();
-    const replButtonId = useId();
+    const stopButtonId = 'pb-toolbar-stop-button';
+    const replButtonId = 'pb-toolbar-repl-button';
 
     return (
         <UtilsToolbar

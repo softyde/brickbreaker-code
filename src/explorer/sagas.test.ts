@@ -236,7 +236,7 @@ describe('handleExplorerImportFiles', () => {
         saga.put(explorerImportFiles());
 
         await expect(saga.take()).resolves.toEqual(
-            fileStorageWriteFile(testFileName, testFileContents),
+            fileStorageWriteFile(testFileName, testFileContents, null),
         );
 
         saga.put(fileStorageDidWriteFile(testFileName, uuid(0)));
@@ -286,7 +286,7 @@ describe('handleExplorerImportFiles', () => {
         saga.put(renameImportDialogDidAccept(testFileName, renamedFileName));
 
         await expect(saga.take()).resolves.toEqual(
-            fileStorageWriteFile(renamedFileName, testFileContents),
+            fileStorageWriteFile(renamedFileName, testFileContents, null),
         );
 
         saga.put(fileStorageDidWriteFile(renamedFileName, uuid(0)));
@@ -344,7 +344,7 @@ describe('handleExplorerImportFiles', () => {
                 );
 
                 await expect(saga.take()).resolves.toEqual(
-                    fileStorageWriteFile(testFileName1, testFileContents1),
+                    fileStorageWriteFile(testFileName1, testFileContents1, null),
                 );
 
                 saga.put(fileStorageDidWriteFile(testFileName1, testFileUuid1));
@@ -363,7 +363,7 @@ describe('handleExplorerImportFiles', () => {
                 }
 
                 await expect(saga.take()).resolves.toEqual(
-                    fileStorageWriteFile(testFileName2, testFileContents2),
+                    fileStorageWriteFile(testFileName2, testFileContents2, null),
                 );
 
                 saga.put(fileStorageDidWriteFile(testFileName2, testFileUuid2));
@@ -430,7 +430,7 @@ describe('handleExplorerImportFiles', () => {
                 saga.put(renameImportDialogDidAccept(testFileName1, renamedFileName1));
 
                 await expect(saga.take()).resolves.toEqual(
-                    fileStorageWriteFile(renamedFileName1, testFileContents1),
+                    fileStorageWriteFile(renamedFileName1, testFileContents1, null),
                 );
 
                 saga.put(fileStorageDidWriteFile(renamedFileName1, renamedFileUuid1));
@@ -458,7 +458,7 @@ describe('handleExplorerImportFiles', () => {
                 saga.put(renameImportDialogDidAccept(testFileName2, renamedFileName2));
 
                 await expect(saga.take()).resolves.toEqual(
-                    fileStorageWriteFile(renamedFileName2, testFileContents2),
+                    fileStorageWriteFile(renamedFileName2, testFileContents2, null),
                 );
 
                 saga.put(fileStorageDidWriteFile(renamedFileName2, renamedFileUuid2));
@@ -555,7 +555,7 @@ describe('handleExplorerImportFiles', () => {
         saga.put(explorerImportFiles());
 
         await expect(saga.take()).resolves.toEqual(
-            fileStorageWriteFile(testFileName, testFileContents),
+            fileStorageWriteFile(testFileName, testFileContents, null),
         );
 
         saga.put(fileStorageDidWriteFile(testFileName, uuid(0)));

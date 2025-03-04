@@ -20,7 +20,7 @@ import { useHubPickerSelectedHub } from '../../components/hubPicker/hooks';
 import { useFileStorageMetadata } from '../../fileStorage/hooks';
 import {
     FileNameValidationResult,
-    blockyFileExtension,
+    blocklyFileExtension,
     pythonFileExtension,
     validateFileName,
 } from '../../pybricksMicropython/lib';
@@ -95,7 +95,7 @@ const NewFileWizard: React.FunctionComponent = () => {
                         onChange={(e) =>
                             setFileExtension(
                                 (e.target as HTMLInputElement).checked
-                                    ? blockyFileExtension
+                                    ? blocklyFileExtension
                                     : pythonFileExtension,
                             )
                         }

@@ -21,13 +21,19 @@ import { useAppLastDocsPageSetting } from './hooks';
 import { useI18n } from './i18n';
 
 const Editor = React.lazy(async () => {
-    const [sagaModule, componentModule] = await Promise.all([
+    const [sagaModule, blocklySagaModule, componentModule] = await Promise.all([
         import('../editor/sagas'),
+        import('../editor/blockly/sagas'),
         import('../editor/Editor'),
     ]);
 
     window.dispatchEvent(
         new CustomEvent('pb-lazy-saga', { detail: { saga: sagaModule.default } }),
+    );
+    window.dispatchEvent(
+        new CustomEvent('pb-lazy-saga', {
+            detail: { saga: blocklySagaModule.default },
+        }),
     );
 
     return componentModule;

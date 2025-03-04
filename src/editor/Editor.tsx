@@ -11,7 +11,7 @@ import SplitterLayout from 'react-splitter-layout';
 import { useLocalStorage } from 'usehooks-ts';
 import { UUID } from '../fileStorage';
 import { useFileStoragePath } from '../fileStorage/hooks';
-import { blockyFileExtension } from '../pybricksMicropython/lib';
+import { blocklyFileExtension } from '../pybricksMicropython/lib';
 import { useSelector } from '../reducers';
 import { useSettingIsShowDocsEnabled } from '../settings/hooks';
 import BlocklyEditor from './EditorBlockly';
@@ -177,10 +177,10 @@ const Editor: React.FunctionComponent = () => {
         useSettingIsShowDocsEnabled();
 
     const i18n = useI18n();
-    //const isEmpty = useSelector((s) => s.editor.openFileUuids.length === 0);
+    const isEmpty = useSelector((s) => s.editor.openFileUuids.length === 0);
     const { activeFileUuid } = useSelector((s) => s.editor);
     const fileName = useFileStoragePath(activeFileUuid ?? ('' as UUID));
-    const isBlockly = fileName?.endsWith(blockyFileExtension);
+    const isBlockly = fileName?.endsWith(blocklyFileExtension);
 
     const [editorSplit, setEditorSplit] = useLocalStorage('app-editor-split', 30);
 
@@ -189,7 +189,9 @@ const Editor: React.FunctionComponent = () => {
             <EditorTabs /* onChange={() => editor?.focus()} */ />
 
             <SplitterLayout
-                customClassName={isBlockly ? 'pb-show-blockly' : 'pb-hide-blockly'}
+                customClassName={
+                    isBlockly && !isEmpty ? 'pb-show-blockly' : 'pb-hide-blockly'
+                }
                 vertical={false}
                 percentage={true}
                 secondaryInitialSize={editorSplit}

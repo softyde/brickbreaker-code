@@ -3,9 +3,18 @@ brickbreaker-code
 
 A web app for programming LEGO® Powered Up Smart Hubs with Pybricks MicroPython for use in a German elementary school and support of Blocky elements.
 
-**Try it at <https://code.softyroyal.de> or the latest updates <https://beta.softyroyal.de>.**
+## Next steps
+
+[ ] save/load blockly data  
+[ ] generate py code from blockly   
+[ ] develop some usefull blocks
+[ ] peace & love  
 
 ![screenshot](.README/screenshot.png)
+
+## Coming soon
+
+**Try it at <https://code.softyroyal.de> or the latest updates <https://beta.softyroyal.de>.**
 
 # Contributing
 

@@ -20,6 +20,14 @@
         }
     }
 
+    .#{bp.$ns}-button {
+        border-radius: 5px;
+
+        &:not(:last-child) {
+            margin-right: 1px !important;
+        }
+    }
+
     // override blueprint.js style
     & * {
         box-shadow: unset !important;
@@ -38,5 +46,32 @@
     &-action-button:focus-visible:not(.pb-focus-managed) {
         // to get contrast since button background and focus ring are both blue
         outline-offset: 4px;
+    }
+
+    button {
+        &#pb-toolbar-bluetooth-button {
+            background-color: rgba(95, 181, 195, 1);
+            &.#{bp.$ns}-disabled {
+                background-color: rgba(95, 181, 195, 0.5);
+            }
+        }
+        &#pb-toolbar-run-button {
+            background-color: rgba(89, 176, 123, 1);
+            &.#{bp.$ns}-disabled {
+                background-color: rgba(89, 176, 123, 0.5);
+            }
+        }
+        &#pb-toolbar-stop-button {
+            background-color: rgba(235, 103, 83, 1);
+            &.#{bp.$ns}-disabled {
+                background-color: rgba(235, 103, 83, 0.5);
+            }
+        }
+        &#pb-toolbar-repl-button {
+            background-color: rgba(231, 175, 56, 1);
+            &.#{bp.$ns}-disabled {
+                background-color: rgba(231, 175, 56, 0.5);
+            }
+        }
     }
 }

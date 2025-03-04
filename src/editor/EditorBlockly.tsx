@@ -4,43 +4,21 @@
 import './editorBlockly.scss';
 
 import * as Blockly from 'blockly/core';
+
+import * as De from 'blockly/msg/de';
+
+//import { Scope, ScopeType } from 'blockly/core/contextmenu_registry';
 import React, { useRef } from 'react';
 
 import { useEffectOnce } from 'usehooks-ts';
+import * as notify from './blockly/lib';
 import { categoryIcons, isCategoryStyle } from './icons/categoryIcons';
 //import { UUID } from '../fileStorage';
 //import { useFileStoragePath } from '../fileStorage/hooks';
 //import { blockyFileExtension } from '../pybricksMicropython/lib';
 //import { useSelector } from '../reducers';
 
-type BlocklyWorkspaceListener = (workspace: Blockly.Workspace) => void;
-
-const listeners: BlocklyWorkspaceListener[] = [];
-
-export interface IDisposable {
-    dispose(): void;
-}
-
-export function onDidCreateBlocklyEditor(
-    listener: (workspace: Blockly.Workspace) => void,
-): IDisposable {
-    listeners.push(listener);
-
-    return {
-        dispose: () => {
-            const index = listeners.indexOf(listener);
-            if (index !== -1) {
-                listeners.splice(index, 1);
-            } else {
-                throw new Error('disposable not found');
-            }
-        },
-    };
-}
-
-function notifyDidCreateBlocklyEditor(workspace: Blockly.Workspace) {
-    listeners.forEach((listener) => listener(workspace));
-}
+Blockly.setLocale(De as unknown as { [key: string]: string });
 
 class SeperatorField extends Blockly.Field {
     lineElement_: SVGElement | null;
@@ -312,6 +290,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
             (this as Blockly.Block).addIcon(icon);
         });
 
+        // registerFirstContextMenuOptions();
+
         Blockly.registry.register(
             Blockly.registry.Type.TOOLBOX_ITEM,
             Blockly.ToolboxCategory.registrationName,
@@ -459,6 +439,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 type: 'move_follow_line',
                 message0: '%2 Folge der Linie für höchstens %1cm',
                 style: 'movement_category',
+                tooltip: 'Na was wohl: der Linie hinterherfahren.',
                 extensions: ['add_my_custom_icon'],
 
                 args0: [
@@ -517,16 +498,20 @@ const BlocklyEditor: React.FunctionComponent = () => {
 
                 args0: [
                     {
-                        type: 'field_variable',
-                        name: 'VAR1',
-                        variable: 'Port C',
-                        variableTypes: [''],
+                        type: 'field_dropdown',
+                        name: 'PORT_1',
+                        options: [
+                            ['Port A', 'PORTA'],
+                            ['Port B', 'PORTB'],
+                        ],
                     },
                     {
-                        type: 'field_variable',
-                        name: 'VAR2',
-                        variable: 'Port D',
-                        variableTypes: [''],
+                        type: 'field_dropdown',
+                        name: 'PORT_2',
+                        options: [
+                            ['Port A', 'PORTA'],
+                            ['Port B', 'PORTB'],
+                        ],
                     },
                     {
                         type: 'field_vertical_separator',
@@ -549,6 +534,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
             fontStyle: {},
             startHats: true,
         });*/
+
+        Blockly.ContextMenuItems.registerCommentOptions();
 
         const toolbox = {
             // There are two kinds of toolboxes. The simpler one is a flyout toolbox.
@@ -606,11 +593,13 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 },
             ],
         };
-
         workspaceRef.current = Blockly.inject(blocklyEditorRef.current, {
             toolbox: toolbox,
             renderer: 'zelos',
             sounds: true,
+            collapse: false,
+            disable: false,
+            comments: true,
             media: './blockly/',
             theme: theme,
             grid: {
@@ -630,7 +619,6 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 pinch: true,
             },
         });
-
         // Erstelle einen ResizeObserver, um auf Größenänderungen zu reagieren
         resizeObserverRef.current = new ResizeObserver(() => {
             // Debounce die Resize-Funktion
@@ -649,7 +637,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
         // Führe initiales Resize durch
         resizeBlockly();
 
-        notifyDidCreateBlocklyEditor(workspaceRef.current);
+        notify.didCreateBlocklyEditor(workspaceRef.current);
 
         return () => {
             //setEditor(undefined);
