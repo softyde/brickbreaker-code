@@ -18,3 +18,12 @@ export const blocklyGenerateSource = createAction((uuid: UUID) => ({
     type: 'blockly.action.generateSource',
     uuid,
 }));
+
+export const blocklyHighlightBlock = createAction((id: string) => ({
+    type: 'blockly.action.highlightBlock',
+    id,
+}));
+
+export const blocklyRemoveHighlightFromBlock = createAction(() => ({
+    type: 'blockly.action.removeHighlightFromBlock',
+}));

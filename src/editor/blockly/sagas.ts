@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Philipp Anné
 
 import * as Blockly from 'blockly/core';
-import { pythonGenerator } from 'blockly/python';
+import { PythonGenerator } from 'blockly/python';
 import { EventChannel, buffers, eventChannel } from 'redux-saga';
 
 import { cancel } from 'redux-saga/effects';
@@ -32,14 +32,82 @@ import {
     editorActivateFile,
     editorDidFailToOpenFile,
     editorReplaceFile,
+    editorReplaceSourceMap,
 } from '../actions';
-import { OpenFileManager } from '../lib';
+import { OpenFileManager, SourceMapType } from '../lib';
 import {
     blocklyDidChangeModel,
     blocklyDidDispose,
     blocklyGenerateSource,
+    blocklyHighlightBlock,
+    blocklyRemoveHighlightFromBlock,
 } from './actions';
 import * as notify from './lib';
+
+class MyPythonGenerator extends PythonGenerator {
+    prefixWithBlock(v: string, b: Blockly.Block): string {
+        if (v === null || v.trim().length === 0) {
+            return v;
+        }
+
+        let line = v
+            .split('\n')
+            .map((l) => (l.trim().length > 0 ? `<<${b.id}>>${l}` : l))
+            .join('\n');
+
+        if (!line.endsWith('\n')) {
+            line = `${line}\n`;
+        }
+        line = `${line}\n`;
+
+        return line;
+    }
+
+    /**
+     * Common tasks for generating Python from blocks.
+     * Handles comments for the specified block and any connected value blocks.
+     * Calls any statements following this block.
+     *
+     * @param block The current block.
+     * @param code The Python code created for this block.
+     * @param thisOnly True to generate code for only this statement.
+     * @returns Python code with comments and subsequent blocks added.
+     */
+    scrub_(block: Blockly.Block, code: string, thisOnly = false): string {
+        let commentCode = '';
+        // Only collect comments for blocks that aren't inline.
+        if (!block.outputConnection || !block.outputConnection.targetConnection) {
+            // Collect comment for this block.
+            let comment = block.getCommentText();
+            if (comment) {
+                comment = Blockly.utils.string.wrap(comment, this.COMMENT_WRAP - 3);
+                commentCode += this.prefixLines(comment + '\n', '# ');
+            }
+            // Collect comments for all value arguments.
+            // Don't collect comments for nested statements.
+            for (let i = 0; i < block.inputList.length; i++) {
+                if (block.inputList[i].type === Blockly.inputs.inputTypes.VALUE) {
+                    const childBlock = block.inputList[i].connection!.targetBlock();
+                    if (childBlock) {
+                        comment = this.allNestedComments(childBlock);
+                        if (comment) {
+                            commentCode += this.prefixLines(comment, '# ');
+                        }
+                    }
+                }
+            }
+        }
+        const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
+        const nextCode = thisOnly ? '' : this.blockToCode(nextBlock);
+        return (
+            this.prefixWithBlock(commentCode, block) +
+            this.prefixWithBlock(code, block) +
+            nextCode
+        );
+    }
+}
+
+const pythonGenerator = new MyPythonGenerator('python');
 
 pythonGenerator.forBlock['start_program'] = (_block, _generator) => {
     //    const nextCode = generator.blockToCode(block.getNextBlock());
@@ -50,19 +118,15 @@ pythonGenerator.forBlock['start_program'] = (_block, _generator) => {
 pythonGenerator.forBlock['hub_block'] = (_block, _generator) => {
     //const nextCode = generator.blockToCode(block.getNextBlock());
 
-    return `
-hub = PrimeHub(top_side=Axis.Z, front_side=Axis.X)
-`;
+    return `hub = PrimeHub(top_side=Axis.Z, front_side=Axis.X)`;
 };
 
 pythonGenerator.forBlock['drive_init'] = (_block, _generator) => {
-    return `
-left_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)
+    return `left_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)
 right_motor = Motor(Port.B)
 
 drive_base = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=112)
-drive_base.use_gyro(True)
-`;
+drive_base.use_gyro(True)`;
 };
 
 pythonGenerator.forBlock['move_curve_block'] = (_block, _generator) => {
@@ -70,10 +134,7 @@ pythonGenerator.forBlock['move_curve_block'] = (_block, _generator) => {
     // const fieldValue = block.getFieldValue('MY_FIELD');
     // const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
 
-    // Return code.
-    return `
-drive_base.turn(90)
-`;
+    return `drive_base.turn(90)`;
 };
 
 function* handleBlocklyWorkspaceDidChange(
@@ -158,6 +219,29 @@ ${source}`;
 
         defined(didLoad);
 
+        const sourceMap: SourceMapType = [];
+        const a = source.split('\n');
+        for (let lineNumber = 0; lineNumber < a.length; lineNumber++) {
+            const line = a[lineNumber];
+
+            const startIndex = line.indexOf('<<');
+
+            if (startIndex >= 0) {
+                const endIndex = line.indexOf('>>', startIndex);
+
+                const id = line.substring(startIndex + 2, endIndex);
+
+                console.debug(`line ${lineNumber}: ${id}`);
+
+                sourceMap.push({ line: lineNumber, id });
+
+                a[lineNumber] = line.substring(endIndex + 2);
+            }
+        }
+
+        source = a.join('\n');
+
+        yield* put(editorReplaceSourceMap(action.uuid, sourceMap));
         yield* put(editorReplaceFile(action.uuid, source));
 
         console.debug(source);
@@ -227,6 +311,29 @@ function* handleEditorActivateFile(
     }
 }
 
+function handleBlocklyHighlightBlock(
+    workspace: Blockly.Workspace,
+    action: ReturnType<typeof blocklyHighlightBlock>,
+) {
+    const block = workspace.getBlockById(action.id);
+
+    if (block) {
+        const svgWorkspace = workspace as Blockly.WorkspaceSvg;
+        svgWorkspace.highlightBlock(block.id);
+    }
+}
+
+function handleBlocklyRemoveHighlightFromBlock(workspace: Blockly.Workspace) {
+    const block = workspace.getAllBlocks();
+
+    if (block.length > 0) {
+        const svgWorkspace = workspace as Blockly.WorkspaceSvg;
+
+        svgWorkspace.highlightBlock(block[0].id);
+        svgWorkspace.highlightBlock(block[0].id, false);
+    }
+}
+
 function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
     const isFileStorageInitialized = yield* select(
         (s: RootState) => s.fileStorage.isInitialized,
@@ -275,6 +382,18 @@ function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
                 handleEditorActivateFile,
                 workspace,
                 openFiles,
+            );
+
+            yield* takeEvery(
+                blocklyRemoveHighlightFromBlock,
+                handleBlocklyRemoveHighlightFromBlock,
+                workspace,
+            );
+
+            yield* takeEvery(
+                blocklyHighlightBlock,
+                handleBlocklyHighlightBlock,
+                workspace,
             );
 
             console.log('waiting for dispose');

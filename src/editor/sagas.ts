@@ -57,6 +57,7 @@ import {
     editorCompletionDidInit,
     editorCompletionInit,
     editorDidActivateFile,
+    editorDidChangeLine,
     editorDidCloseFile,
     editorDidCreate,
     editorDidFailToActivateFile,
@@ -67,7 +68,12 @@ import {
     editorGoto,
     editorOpenFile,
     editorReplaceFile,
+    editorReplaceSourceMap,
 } from './actions';
+import {
+    blocklyHighlightBlock,
+    blocklyRemoveHighlightFromBlock,
+} from './blockly/actions';
 import { EditorError } from './error';
 import { ActiveFileHistoryManager, OpenFileManager } from './lib';
 import { pybricksMicroPythonId } from './pybricksMicroPython';
@@ -357,6 +363,40 @@ function* handleEditorDidCloseFile(
     }
 }
 
+function* handleEditorDidChangeLine(
+    editor: monaco.editor.ICodeEditor,
+    openFiles: OpenFileManager,
+    action: ReturnType<typeof editorDidChangeLine>,
+): Generator {
+    // Looks like a dirty hack (see monitorViewState)
+    // We could also abuse activeFileHistory.peek for it
+    const model = editor.getModel();
+
+    if (model === null) {
+        return;
+    }
+
+    const uuid = model.uri.path as UUID;
+
+    const fileInfo = openFiles.get(uuid);
+    if (!fileInfo) {
+        return;
+    }
+
+    const sourceMap = fileInfo.sourceMap;
+
+    if (!sourceMap) {
+        return;
+    }
+
+    const entry = sourceMap.find((a) => a.line === action.lineNumber);
+    if (entry) {
+        yield* put(blocklyHighlightBlock(entry.id));
+    } else {
+        yield* put(blocklyRemoveHighlightFromBlock());
+    }
+}
+
 /**
  * Monitors the editor for any possible view state change and stores the state
  * with the associated file when the state changes.
@@ -408,6 +448,16 @@ function* monitorViewState(editor: monaco.editor.ICodeEditor): Generator {
     }
 }
 
+/**
+ * Updates the source map for a blockly generated python file.
+ */
+function handleEditorReplaceSourceMap(
+    openFile: OpenFileManager,
+    action: ReturnType<typeof editorReplaceSourceMap>,
+) {
+    openFile.updateSourceMap(action.uuid, action.sourceMap);
+}
+
 function* handleDidCreateEditor(editor: monaco.editor.ICodeEditor): Generator {
     // first, we need to be sure that file storage is ready
 
@@ -422,6 +472,7 @@ function* handleDidCreateEditor(editor: monaco.editor.ICodeEditor): Generator {
     const openFiles = new OpenFileManager();
     const activeFileHistory = new ActiveFileHistoryManager(editor.getId());
 
+    yield* takeEvery(editorReplaceSourceMap, handleEditorReplaceSourceMap, openFiles);
     yield* takeEvery(editorGetValueRequest, handleEditorGetValueRequest, editor);
     yield* takeEvery(editorOpenFile, handleEditorOpenFile, editor, openFiles);
     yield* takeEvery(
@@ -433,6 +484,7 @@ function* handleDidCreateEditor(editor: monaco.editor.ICodeEditor): Generator {
     );
     yield* takeEvery(editorGoto, handleEditorGoto, editor);
     yield* takeEvery(editorDidCloseFile, handleEditorDidCloseFile, activeFileHistory);
+    yield* takeEvery(editorDidChangeLine, handleEditorDidChangeLine, editor, openFiles);
     yield* fork(monitorViewState, editor);
 
     yield* put(editorDidCreate());

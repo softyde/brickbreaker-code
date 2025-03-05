@@ -111,6 +111,7 @@ describe('OpenFileManager', () => {
             model,
             viewState: null,
             fileType: pythonFileExtension,
+            sourceMap: null,
         });
 
         manager.remove(testFileUuid);

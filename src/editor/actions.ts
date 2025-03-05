@@ -3,6 +3,7 @@
 
 import { createAction } from '../actions';
 import { UUID } from '../fileStorage';
+import { SourceMapType } from './lib';
 export {
     didFailToInit as editorCompletionDidFailToInit,
     didInit as editorCompletionDidInit,
@@ -131,4 +132,27 @@ export const editorReplaceFile = createAction((uuid: UUID, value: string) => ({
     type: 'editor.action.replaceFile',
     uuid,
     value,
+}));
+
+/**
+ * Requests to replace the source map for a file in the editor.
+ * @param uuid The file UUID.
+ * @param sourceMap The new source mpa for the file.
+ */
+export const editorReplaceSourceMap = createAction(
+    (uuid: UUID, sourceMap: SourceMapType | null) => ({
+        type: 'editor.action.replaceSourceMap',
+        uuid,
+        sourceMap,
+    }),
+);
+
+/**
+ * Requests to replace the source map for a file in the editor.
+ * @param uuid The file UUID.
+ * @param sourceMap The new source mpa for the file.
+ */
+export const editorDidChangeLine = createAction((lineNumber: number) => ({
+    type: 'editor.action.didChangeLine',
+    lineNumber,
 }));

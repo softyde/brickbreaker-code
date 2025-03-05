@@ -27,6 +27,8 @@ import { compile } from '../mpy/actions';
 import { useSelector } from '../reducers';
 import { isMacOS } from '../utils/os';
 import Welcome from './Welcome';
+import { editorDidChangeLine } from './actions';
+import { blocklyRemoveHighlightFromBlock } from './blockly/actions';
 import { useI18n } from './i18n';
 import * as pybricksMicroPython from './pybricksMicroPython';
 import { pybricksMicroPythonId } from './pybricksMicroPython';
@@ -321,6 +323,16 @@ const EditorText: React.FunctionComponent = () => {
             lineNumbersMinChars: 4,
             wordBasedSuggestions: 'off',
             selectionClipboard: false, // don't copy selection on Linux
+        });
+
+        monacoEditor.onDidChangeCursorPosition((e) => {
+            if (e.reason === monaco.editor.CursorChangeReason.Explicit) {
+                dispatch(editorDidChangeLine(e.position.lineNumber - 1));
+            }
+        });
+
+        monacoEditor.onDidBlurEditorText(() => {
+            dispatch(blocklyRemoveHighlightFromBlock());
         });
 
         monacoEditor.focus();
