@@ -20,8 +20,9 @@ Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 - [x] generate py code from blockly
 - [x] create source map for generated py code (dev progress: https://youtu.be/bWZQiGOCs4I)
 - [x] source map works both ways: block <> code
-- [ ] develop some useful blocks
-- [ ] run it on a real spike prime device
+- [x] develop some useful blocks
+- [x] run it on a real spike prime device (dev progress https://youtu.be/rxz_a8NYH68)
+- [ ] develop some even more useful blocks (vars, parameters, etc.)
 - [ ] cleanup code
 - [ ] fix broken tests
 - [ ] peace & love  
