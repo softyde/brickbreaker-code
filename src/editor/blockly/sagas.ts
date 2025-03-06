@@ -144,6 +144,22 @@ pythonGenerator.forBlock['move_curve_block'] = (_block, _generator) => {
     return `drive_base.turn(90)`;
 };
 
+pythonGenerator.forBlock['line_follow_block'] = (_block, _generator) => {
+    return `# Jaja, das wird irgendwann`;
+};
+
+pythonGenerator.forBlock['move_follow_line'] = (_block, _generator) => {
+    return `# Hey, das ist eine Alpha!`;
+};
+
+pythonGenerator.forBlock['move_straight_block'] = (_block, _generator) => {
+    return `# brumm brumm brumm`;
+};
+
+pythonGenerator.forBlock['setup_program'] = (_block, _generator) => {
+    return `# Nicht implementiert: nimm "Programm starten"`;
+};
+
 function* handleBlocklyWorkspaceDidChange(
     ms: number,
     chan: EventChannel<Blockly.Events.Abstract>,
@@ -204,7 +220,10 @@ function* handleBlocklyGenerateSource(
     console.debug('=== generate source');
 
     try {
-        const blocks = workspace.getBlocksByType('start_program');
+        const setupBlocks = workspace.getBlocksByType('setup_program');
+        const startBlocks = workspace.getBlocksByType('start_program');
+
+        const blocks = [...setupBlocks, ...startBlocks];
 
         pythonGenerator.init(workspace);
         let source = '';

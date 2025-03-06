@@ -11,6 +11,15 @@ Die Blöcke sollen dabei (nach heutiger Idee) nicht (nur) 1:1 die pybricks Pytho
 
 Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 
+---
+
+**Try it at <https://alpha.brickbreaker.de>.**
+
+**This is an alpha. And nothing will work.  
+If it does: don't use it for anything serious.**
+
+---
+
 ## Next steps / wip
 
 **This is still a prototype and a long way from being put to good use.**
@@ -30,10 +39,6 @@ Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 
 https://github.com/user-attachments/assets/3902bbb7-fdc5-4a02-a4bc-eb94b919a1d5
 
-
-## Coming soon
-
-**Try it at <https://code.softyroyal.de> or the latest updates <https://beta.softyroyal.de>.**
 
 # Contributing
 
