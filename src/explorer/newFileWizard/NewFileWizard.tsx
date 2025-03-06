@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2022-2023 The Pybricks Authors
+// Copyright (c) 2022-2025 The Pybricks Authors, Philipp Anné
 
 import {
     Button,
@@ -20,12 +20,17 @@ import { useHubPickerSelectedHub } from '../../components/hubPicker/hooks';
 import { useFileStorageMetadata } from '../../fileStorage/hooks';
 import {
     FileNameValidationResult,
+    blocklyFileExtension,
     pythonFileExtension,
     validateFileName,
 } from '../../pybricksMicropython/lib';
 import { useSelector } from '../../reducers';
 import FileNameFormGroup from '../fileNameFormGroup/FileNameFormGroup';
-import { newFileWizardDidAccept, newFileWizardDidCancel } from './actions';
+import {
+    SupportedFileExtension,
+    newFileWizardDidAccept,
+    newFileWizardDidCancel,
+} from './actions';
 import { useI18n } from './i18n';
 
 const NewFileWizard: React.FunctionComponent = () => {
@@ -38,10 +43,13 @@ const NewFileWizard: React.FunctionComponent = () => {
     );
     const isOpen = useSelector((s) => s.explorer.newFileWizard.isOpen);
     const [fileName, setFileName] = useState('');
+    const [fileExtension, setFileExtension] =
+        useState<SupportedFileExtension>(pythonFileExtension);
+
     const files = useFileStorageMetadata() ?? [];
     const fileNameValidation = validateFileName(
         fileName,
-        pythonFileExtension,
+        fileExtension,
         files.map((f) => f.path),
     );
 
@@ -54,12 +62,12 @@ const NewFileWizard: React.FunctionComponent = () => {
             dispatch(
                 newFileWizardDidAccept(
                     fileName,
-                    pythonFileExtension,
+                    fileExtension,
                     useTemplate ? hubType : undefined,
                 ),
             );
         },
-        [dispatch, fileName, hubType, useTemplate],
+        [dispatch, fileName, fileExtension, hubType, useTemplate],
     );
 
     const handleClose = useCallback(() => {
@@ -73,15 +81,31 @@ const NewFileWizard: React.FunctionComponent = () => {
             icon={<Plus />}
             title={i18n.translate('title')}
             isOpen={isOpen}
-            onOpening={() => setFileName('')}
+            onOpening={() => {
+                setFileName('');
+                setFileExtension(pythonFileExtension);
+            }}
             onOpened={() => fileNameInputRef.current?.focus()}
             onClose={handleClose}
         >
             <form onSubmit={handleSubmit}>
                 <div className={Classes.DIALOG_BODY}>
+                    <Switch
+                        //checked={???}
+                        onChange={(e) =>
+                            setFileExtension(
+                                (e.target as HTMLInputElement).checked
+                                    ? blocklyFileExtension
+                                    : pythonFileExtension,
+                            )
+                        }
+                    >
+                        {i18n.translate('type.label')}
+                    </Switch>
+
                     <FileNameFormGroup
                         fileName={fileName}
-                        fileExtension={pythonFileExtension}
+                        fileExtension={fileExtension}
                         validationResult={fileNameValidation}
                         inputRef={fileNameInputRef}
                         onChange={setFileName}

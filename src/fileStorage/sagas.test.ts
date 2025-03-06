@@ -90,7 +90,7 @@ async function setUpTestFile(saga: AsyncSaga): Promise<[FileMetadata, string]> {
         fail(didOpen);
     }
 
-    saga.put(fileStorageWrite(didOpen.fd, testFileContents));
+    saga.put(fileStorageWrite(didOpen.fd, testFileContents, null));
 
     await expect(saga.take()).resolves.toEqual(fileStorageDidWrite(didOpen.fd));
 
@@ -344,7 +344,7 @@ describe('write', () => {
             fileStorageDidOpen('test.file', uuid(0), 1 as FD),
         );
 
-        saga.put(fileStorageWrite(1 as FD, 'new contents'));
+        saga.put(fileStorageWrite(1 as FD, 'new contents', null));
 
         await expect(saga.take()).resolves.toEqual(fileStorageDidWrite(1 as FD));
     });
@@ -358,7 +358,7 @@ describe('write', () => {
             fileStorageDidOpen('test.file', uuid(0), 1 as FD),
         );
 
-        saga.put(fileStorageWrite(1 as FD, 'new contents'));
+        saga.put(fileStorageWrite(1 as FD, 'new contents', null));
 
         await expect(saga.take()).resolves.toEqual(
             fileStorageDidFailToWrite(
@@ -382,7 +382,7 @@ describe('write', () => {
 
             await expect(saga.take()).resolves.toEqual(fileStorageDidClose(1 as FD));
 
-            saga.put(fileStorageWrite(1 as FD, 'new contents'));
+            saga.put(fileStorageWrite(1 as FD, 'new contents', null));
 
             await expect(saga.take()).resolves.toEqual(
                 fileStorageDidFailToWrite(
@@ -472,7 +472,7 @@ describe('writeFile', () => {
         saga = new AsyncSaga(fileStorage, { fileStorage: new FileStorageDb('test') });
         await expect(saga.take()).resolves.toEqual(fileStorageDidInitialize([]));
 
-        saga.put(fileStorageWriteFile('test.file', contents));
+        saga.put(fileStorageWriteFile('test.file', contents, null));
 
         await expect(saga.take()).resolves.toEqual(
             fileStorageOpen('test.file', 'w', true),
@@ -493,7 +493,7 @@ describe('writeFile', () => {
             saga.put(fileStorageDidOpen('test.file', uuid(0), 0 as FD));
 
             await expect(saga.take()).resolves.toEqual(
-                fileStorageWrite(0 as FD, contents),
+                fileStorageWrite(0 as FD, contents, null),
             );
         });
 

@@ -1,13 +1,38 @@
-[![CI test status](https://github.com/pybricks/pybricks-code/workflows/CI%20Tests/badge.svg)](https://github.com/pybricks/pybricks-code/actions/workflows/test-pull-request.yml) [![codecov](https://codecov.io/gh/pybricks/pybricks-code/branch/master/graph/badge.svg?token=EJEBMN635G)](https://codecov.io/gh/pybricks/pybricks-code)
+brickbreaker-code
+=================
 
-pybricks-code
-=============
+A web app for programming LEGO® Powered Up Smart Hubs with Pybricks MicroPython for use in a German elementary school and support of Blockly elements.
 
-A Web App for programming LEGO® Powered Up smart hubs using Pybricks MicroPython.
+### Primary goal
 
-**Try it at <https://code.pybricks.com> or the latest updates <https://beta.pybricks.com>.**
+Das Ziel ist, das Tool inkl. Unterstützung für Blockly-Entwicklung und vollständig auf Deutsch zur Verfügung zu stellen. 
 
-![screenshot](.README/screenshot.png)
+Die Blöcke sollen dabei (nach heutiger Idee) nicht (nur) 1:1 die pybricks Python-Bibliothek abbilden, sondern für Grundschülerinnen und -schüler vereinfachte Programmiermöglichkeiten bieten.
+
+Zielsystem ist primär LEGO® Education SPIKE™ Prime.
+
+## Next steps / wip
+
+**This is still a prototype and a long way from being put to good use.**
+
+- [x] save/load blockly data  
+- [x] handle multiple editors
+- [x] generate py code from blockly
+- [x] create source map for generated py code (dev progress: https://youtu.be/bWZQiGOCs4I)
+- [x] source map works both ways: block <> code
+- [ ] develop some useful blocks
+- [ ] run it on a real spike prime device
+- [ ] cleanup code
+- [ ] fix broken tests
+- [ ] peace & love  
+
+
+https://github.com/user-attachments/assets/3902bbb7-fdc5-4a02-a4bc-eb94b919a1d5
+
+
+## Coming soon
+
+**Try it at <https://code.softyroyal.de> or the latest updates <https://beta.softyroyal.de>.**
 
 # Contributing
 
@@ -20,3 +45,7 @@ For more details, see the file [CONTRIBUTING.md](./CONTRIBUTING.md).
 <small>
 LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.
 </small>
+
+### Screenshot (more or less up to date)
+
+![screenshot](.README/screenshot.png)

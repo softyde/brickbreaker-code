@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2020-2023 The Pybricks Authors
+// Copyright (c) 2020-2025 The Pybricks Authors
 
 // Custom styling for the Editor control.
 
@@ -60,6 +60,7 @@
 
     &-tabpanel {
         min-height: 0;
+        height: 100%;
         flex: 1 1 auto;
     }
 
@@ -73,13 +74,17 @@
         }
     }
 
-    &-monaco {
+    &-monaco,
+    &-blockly {
         width: 100%;
         height: 100%;
 
         .pb-editor-tabpanel.pb-empty > & {
             display: none;
         }
+    }
+    &-hidden {
+        visibility: hidden;
     }
 
     &-placeholder {
@@ -117,5 +122,33 @@
     // allow overflow to overlay content outside of editor
     & .overflowingContentWidget {
         z-index: bp.$pt-z-index-overlay - 1;
+    }
+}
+
+.splitter-layout {
+    position: initial;
+
+    div.pb-hide-blockly > :not(:last-child) {
+        display: none;
+    }
+
+    div.pb-hide-blockly > :last-child {
+        width: 100% !important;
+    }
+}
+
+.editor-highlight-sourcemap {
+    background-color: rgba(0, 0, 0, 0.5);
+
+    &.style-hub_category {
+        background-color: lighten(#0c74f2, 30%);
+    }
+
+    &.style-event_category {
+        background-color: lighten(#f2bd0c, 30%);
+    }
+
+    &.style-movement_category {
+        background-color: lighten(#bc0cf2, 30%);
     }
 }

@@ -3,6 +3,7 @@
 
 import type * as monaco from 'monaco-editor';
 import { createAction } from '../actions';
+import { SupportedFileExtension } from '../explorer/newFileWizard/actions';
 import { FileMetadata, UUID } from '.';
 
 /** File open modes. */
@@ -127,11 +128,14 @@ export const fileStorageDidFailToRead = createAction((fd: FD, error: Error) => (
  * @param fd A file descriptor that is open for writing.
  * @param contents The contents of the file.
  */
-export const fileStorageWrite = createAction((fd: FD, contents: string) => ({
-    type: 'fileStorage.action.write',
-    fd,
-    contents,
-}));
+export const fileStorageWrite = createAction(
+    (fd: FD, contents: string, blocklyData: string | null) => ({
+        type: 'fileStorage.action.write',
+        fd,
+        contents,
+        blocklyData,
+    }),
+);
 
 /**
  * Indicates that {@link fileStorageWrite} succeeded.
@@ -193,11 +197,14 @@ export const fileStorageDidFailToReadFile = createAction(
  * @param path: The file path.
  * @param contents: The contents read from the file.
  */
-export const fileStorageWriteFile = createAction((path: string, contents: string) => ({
-    type: 'fileStorage.action.writeFile',
-    path,
-    contents,
-}));
+export const fileStorageWriteFile = createAction(
+    (path: string, contents: string, blocklyContents: string | null) => ({
+        type: 'fileStorage.action.writeFile',
+        path,
+        contents,
+        blocklyContents,
+    }),
+);
 
 /**
  * Indicates that {@link fileStorageWriteFile} succeeded.
@@ -375,6 +382,27 @@ export const fileStorageDidFailToLoadTextFile = createAction(
     }),
 );
 
+export const fileStorageLoadBlockly = createAction((uuid: UUID) => ({
+    type: 'fileStorage.action.loadBlockly',
+    uuid,
+}));
+
+export const fileStorageDidLoadBlockly = createAction(
+    (uuid: UUID, data: string | null) => ({
+        type: 'fileStorage.action.didLoadBlockly',
+        uuid,
+        data,
+    }),
+);
+
+export const fileStorageDidFailToLoadBlockly = createAction(
+    (uuid: UUID, error: Error) => ({
+        type: 'fileStorage.action.didFailToLoadBlockly',
+        uuid,
+        error,
+    }),
+);
+
 export const fileStorageStoreTextFileValue = createAction(
     (uuid: UUID, value: string) => ({
         type: 'fileStorage.action.storeTextFileValue',
@@ -391,6 +419,27 @@ export const fileStorageDidStoreTextFileValue = createAction((uuid: UUID) => ({
 export const fileStorageDidFailToStoreTextFileValue = createAction(
     (uuid: UUID, error: Error) => ({
         type: 'fileStorage.action.didFailToStoreTextFileValue',
+        uuid,
+        error,
+    }),
+);
+
+export const fileStorageStoreBlocklyValue = createAction(
+    (uuid: UUID, data: string) => ({
+        type: 'fileStorage.action.storeBlocklyValue',
+        uuid,
+        data,
+    }),
+);
+
+export const fileStorageDidStoreBlocklyValue = createAction((uuid: UUID) => ({
+    type: 'fileStorage.action.didStoreBlocklyValue',
+    uuid,
+}));
+
+export const fileStorageDidFailToStorBlocklyValue = createAction(
+    (uuid: UUID, error: Error) => ({
+        type: 'fileStorage.action.didFailToStoreBlocklyValue',
         uuid,
         error,
     }),
@@ -414,5 +463,18 @@ export const fileStorageDidFailToStoreTextFileViewState = createAction(
         type: 'fileStorage.action.didFailToStoreTextFileViewState',
         uuid,
         error,
+    }),
+);
+
+export const fileStorageGetFileType = createAction((uuid: UUID) => ({
+    type: 'fileStorage.action.getFileType',
+    uuid,
+}));
+
+export const fileStorageDidGetFileType = createAction(
+    (uuid: UUID, fileType: SupportedFileExtension) => ({
+        type: 'fileStorage.action.didGetFileType',
+        uuid,
+        fileType,
     }),
 );

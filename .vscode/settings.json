@@ -25,7 +25,7 @@
         "blankLinesAfter": 1,
         "spacesBetweenYears": false,
         "license": "MIT",
-        "copyrightHolder": "The Pybricks Authors",
+        "copyrightHolder": "Philipp Anné",
         "creationDateZero": "now"
     },
     "psi-header.templates": [
@@ -55,7 +55,6 @@
         "isActive": true,
         "autoHeader": "manualSave",
         "enforceHeader": true,
-        "include": ["scss", "typescript", "typescriptreact"],
-        "replace": ["Copyright"]
+        "include": ["scss", "typescript", "typescriptreact"]
     }
 }

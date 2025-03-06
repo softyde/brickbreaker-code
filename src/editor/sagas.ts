@@ -3,6 +3,7 @@
 
 import type { DatabaseChangeType, IDatabaseChange } from 'dexie-observable/api';
 import * as monaco from 'monaco-editor';
+
 import { EventChannel, Task, buffers, eventChannel } from 'redux-saga';
 import {
     call,
@@ -21,13 +22,16 @@ import { FileStorageDb, UUID } from '../fileStorage';
 import {
     fileStorageDidFailToLoadTextFile,
     fileStorageDidFailToStoreTextFileViewState,
+    fileStorageDidGetFileType,
     fileStorageDidInitialize,
     fileStorageDidLoadTextFile,
     fileStorageDidStoreTextFileViewState,
+    fileStorageGetFileType,
     fileStorageLoadTextFile,
     fileStorageStoreTextFileValue,
     fileStorageStoreTextFileViewState,
 } from '../fileStorage/actions';
+import { blocklyFileExtension } from '../pybricksMicropython/lib';
 import {
     pythonMessageComplete,
     pythonMessageDeleteUserFile,
@@ -53,6 +57,7 @@ import {
     editorCompletionDidInit,
     editorCompletionInit,
     editorDidActivateFile,
+    editorDidChangeLine,
     editorDidCloseFile,
     editorDidCreate,
     editorDidFailToActivateFile,
@@ -61,12 +66,20 @@ import {
     editorGetValueRequest,
     editorGetValueResponse,
     editorGoto,
+    editorHighlightBlockCode,
     editorOpenFile,
     editorReplaceFile,
+    editorReplaceSourceMap,
 } from './actions';
+import {
+    blocklyHighlightBlock,
+    blocklyRemoveHighlightFromBlock,
+} from './blockly/actions';
 import { EditorError } from './error';
 import { ActiveFileHistoryManager, OpenFileManager } from './lib';
 import { pybricksMicroPythonId } from './pybricksMicroPython';
+
+const EDITOR_HIGHLIGHT_CLASSNAME = 'editor-highlight-sourcemap';
 
 function* handleEditorGetValueRequest(
     editor: monaco.editor.ICodeEditor,
@@ -192,7 +205,13 @@ function* handleEditorOpenFile(
             );
             defer.push(() => replaceFileTask.cancel());
 
-            openFiles.add(action.uuid, model, didLoad.viewState);
+            yield* put(fileStorageGetFileType(action.uuid));
+
+            const fileInfo = yield* take(
+                fileStorageDidGetFileType.when((a) => a.uuid === action.uuid),
+            );
+
+            openFiles.add(action.uuid, model, didLoad.viewState, fileInfo.fileType);
             defer.push(() => openFiles.remove(action.uuid));
 
             yield* put(editorDidOpenFile(action.uuid));
@@ -271,6 +290,8 @@ function* handleEditorActivateFile(
         editor.pushUndoStop();
         activeFileHistory.push(action.uuid);
 
+        editor.updateOptions({ readOnly: file.fileType === blocklyFileExtension });
+
         editor.focus();
 
         yield* put(editorDidActivateFile(action.uuid));
@@ -345,6 +366,105 @@ function* handleEditorDidCloseFile(
     }
 }
 
+function* handleEditorDidChangeLine(
+    editor: monaco.editor.ICodeEditor,
+    openFiles: OpenFileManager,
+    action: ReturnType<typeof editorDidChangeLine>,
+): Generator {
+    // Looks like a dirty hack (see monitorViewState)
+    // We could also abuse activeFileHistory.peek for it
+    const model = editor.getModel();
+
+    if (model === null) {
+        return;
+    }
+
+    const uuid = model.uri.path as UUID;
+
+    const fileInfo = openFiles.get(uuid);
+    if (!fileInfo) {
+        return;
+    }
+
+    const sourceMap = fileInfo.sourceMap;
+
+    if (!sourceMap) {
+        return;
+    }
+
+    const entry = sourceMap.find((a) => a.line === action.lineNumber);
+    if (entry) {
+        yield* put(blocklyHighlightBlock(entry.id));
+    } else {
+        yield* put(blocklyRemoveHighlightFromBlock());
+    }
+}
+
+function handleEditorHighlightBlockCode(
+    editor: monaco.editor.ICodeEditor,
+    openFiles: OpenFileManager,
+    action: ReturnType<typeof editorHighlightBlockCode>,
+) {
+    // Looks like a dirty hack (see monitorViewState)
+    // We could also abuse activeFileHistory.peek for it
+    const model = editor.getModel();
+
+    if (model === null) {
+        return;
+    }
+
+    const uuid = model.uri.path as UUID;
+
+    const fileInfo = openFiles.get(uuid);
+    if (!fileInfo) {
+        return;
+    }
+
+    const sourceMap = fileInfo.sourceMap;
+
+    if (!sourceMap) {
+        return;
+    }
+
+    const id = action.id;
+
+    const oldDecorations = model
+        .getAllDecorations(undefined, true)
+        .map((a) => a.id)
+        .filter(
+            (d) =>
+                model
+                    .getDecorationOptions(d)
+                    ?.className?.includes(EDITOR_HIGHLIGHT_CLASSNAME),
+        );
+
+    const newDecorations: monaco.editor.IModelDeltaDecoration[] = [];
+
+    if (id) {
+        const lines = sourceMap.filter((a) => a.id === id);
+
+        lines.forEach((element) => {
+            newDecorations.push({
+                range: {
+                    startLineNumber: element.line + 1,
+                    startColumn: 1,
+                    endLineNumber: element.line + 1,
+                    endColumn: 1,
+                },
+                options: {
+                    className: `${EDITOR_HIGHLIGHT_CLASSNAME} style-${action.styleName}`,
+                    isWholeLine: true,
+                    shouldFillLineOnLineBreak: true,
+                },
+            });
+        });
+    }
+
+    console.debug('deco', oldDecorations, newDecorations);
+
+    model.deltaDecorations(oldDecorations, newDecorations);
+}
+
 /**
  * Monitors the editor for any possible view state change and stores the state
  * with the associated file when the state changes.
@@ -368,7 +488,7 @@ function* monitorViewState(editor: monaco.editor.ICodeEditor): Generator {
 
     try {
         for (;;) {
-            yield* take(ch);
+            const event = yield* take(ch);
 
             const model = editor.getModel();
 
@@ -377,6 +497,10 @@ function* monitorViewState(editor: monaco.editor.ICodeEditor): Generator {
             }
 
             const uuid = model.uri.path as UUID;
+
+            if (!('scrollTop' in event)) {
+                yield* put(editorHighlightBlockCode(undefined));
+            }
 
             yield* put(fileStorageStoreTextFileViewState(uuid, editor.saveViewState()));
 
@@ -396,6 +520,16 @@ function* monitorViewState(editor: monaco.editor.ICodeEditor): Generator {
     }
 }
 
+/**
+ * Updates the source map for a blockly generated python file.
+ */
+function handleEditorReplaceSourceMap(
+    openFile: OpenFileManager,
+    action: ReturnType<typeof editorReplaceSourceMap>,
+) {
+    openFile.updateSourceMap(action.uuid, action.sourceMap);
+}
+
 function* handleDidCreateEditor(editor: monaco.editor.ICodeEditor): Generator {
     // first, we need to be sure that file storage is ready
 
@@ -410,6 +544,7 @@ function* handleDidCreateEditor(editor: monaco.editor.ICodeEditor): Generator {
     const openFiles = new OpenFileManager();
     const activeFileHistory = new ActiveFileHistoryManager(editor.getId());
 
+    yield* takeEvery(editorReplaceSourceMap, handleEditorReplaceSourceMap, openFiles);
     yield* takeEvery(editorGetValueRequest, handleEditorGetValueRequest, editor);
     yield* takeEvery(editorOpenFile, handleEditorOpenFile, editor, openFiles);
     yield* takeEvery(
@@ -421,9 +556,26 @@ function* handleDidCreateEditor(editor: monaco.editor.ICodeEditor): Generator {
     );
     yield* takeEvery(editorGoto, handleEditorGoto, editor);
     yield* takeEvery(editorDidCloseFile, handleEditorDidCloseFile, activeFileHistory);
+    yield* takeEvery(editorDidChangeLine, handleEditorDidChangeLine, editor, openFiles);
+    yield* takeEvery(
+        editorHighlightBlockCode,
+        handleEditorHighlightBlockCode,
+        editor,
+        openFiles,
+    );
     yield* fork(monitorViewState, editor);
 
     yield* put(editorDidCreate());
+
+    // editor.createDecorationsCollection([
+    //     {
+    //         range: new monaco.Range(3, 1, 3, 1),
+    //         options: {
+    //             isWholeLine: true,
+    //             glyphMarginClassName: 'myClassName',
+    //         },
+    //     },
+    // ]);
 
     // this should restore all previously open files in the same order
     // the were last used (which may be different from the order in which

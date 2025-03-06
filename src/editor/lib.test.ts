@@ -4,6 +4,7 @@
 import { mock } from 'jest-mock-extended';
 import type * as monaco from 'monaco-editor';
 import { uuid } from '../../test';
+import { pythonFileExtension } from '../pybricksMicropython/lib';
 import { ActiveFileHistoryManager, OpenFileInfo, OpenFileManager } from './lib';
 
 const testFileUuid = uuid(0);
@@ -103,12 +104,14 @@ describe('OpenFileManager', () => {
 
         const model = mock<monaco.editor.ITextModel>();
 
-        manager.add(testFileUuid, model, null);
+        manager.add(testFileUuid, model, null, pythonFileExtension);
 
         expect(manager.has(testFileUuid)).toBeTruthy();
         expect(manager.get(testFileUuid)).toEqual(<OpenFileInfo>{
             model,
             viewState: null,
+            fileType: pythonFileExtension,
+            sourceMap: null,
         });
 
         manager.remove(testFileUuid);
@@ -125,8 +128,9 @@ describe('OpenFileManager', () => {
 
         const model = mock<monaco.editor.ITextModel>();
         const viewState = mock<monaco.editor.ICodeEditorViewState>();
+        const fileType = pythonFileExtension;
 
-        manager.add(testFileUuid, model, viewState);
+        manager.add(testFileUuid, model, viewState, fileType);
 
         expect(manager.get(testFileUuid)).toHaveProperty('viewState', viewState);
 

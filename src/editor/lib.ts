@@ -3,6 +3,7 @@
 
 import dexieObservable from 'dexie-observable';
 import type * as monaco from 'monaco-editor';
+import { SupportedFileExtension } from '../explorer/newFileWizard/actions';
 import { UUID } from '../fileStorage';
 
 // HACK: Using window.name to detect page reloads vs. tab duplication.
@@ -128,11 +129,18 @@ export class ActiveFileHistoryManager {
     }
 }
 
+export type SourceMapLine = { line: number; id: string };
+export type SourceMapType = SourceMapLine[];
+
 export type OpenFileInfo = {
     /** The model. */
     readonly model: monaco.editor.ITextModel;
     /** The view state. */
     viewState: monaco.editor.ICodeEditorViewState | null;
+    /** The file type */
+    readonly fileType: SupportedFileExtension;
+    /** The source map for blockly */
+    sourceMap: SourceMapType | null;
 };
 
 export class OpenFileManager {
@@ -148,13 +156,14 @@ export class OpenFileManager {
         uuid: UUID,
         model: monaco.editor.ITextModel,
         viewState: monaco.editor.ICodeEditorViewState | null,
+        fileType: SupportedFileExtension,
     ): void {
         // istanbul ignore if: bug if hit
         if (this.map.has(uuid)) {
             throw new Error(`bug: key '${uuid}' already exists in the map`);
         }
 
-        this.map.set(uuid, { model, viewState });
+        this.map.set(uuid, { model, viewState, fileType, sourceMap: null });
     }
 
     /**
@@ -200,5 +209,21 @@ export class OpenFileManager {
         }
 
         info.viewState = viewState;
+    }
+
+    /**
+     * Modifies the source map of {@link uuid}.
+     *
+     * @param uuid The lookup key.
+     * @param viewState The new source map.
+     */
+    public updateSourceMap(uuid: UUID, sourceMap: SourceMapType | null): void {
+        const info = this.map.get(uuid);
+
+        if (!info) {
+            return;
+        }
+
+        info.sourceMap = sourceMap;
     }
 }

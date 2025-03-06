@@ -47,6 +47,7 @@ import {
 } from '../fileStorage/actions';
 import {
     FileNameValidationResult,
+    blocklyFileExtension,
     pythonFileExtension,
     pythonFileExtensionRegex,
     pythonFileMimeType,
@@ -180,6 +181,7 @@ function* importPythonFile(
     sourceFileContents: string,
     context: ImportContext,
 ): Generator {
+    // FIXME
     const [baseName] = sourceFileName.split(pythonFileExtensionRegex);
     let fileName = `${baseName}${pythonFileExtension}`;
 
@@ -252,7 +254,7 @@ function* importPythonFile(
     if (existingFileInfo && openFileUuids.includes(existingFileInfo.uuid)) {
         yield* put(editorReplaceFile(existingFileInfo.uuid, sourceFileContents));
     } else {
-        yield* put(fileStorageWriteFile(fileName, sourceFileContents));
+        yield* put(fileStorageWriteFile(fileName, sourceFileContents, null));
 
         const { didFailToWrite } = yield* race({
             didWrite: take(fileStorageDidWriteFile.when((a) => a.path === fileName)),
@@ -356,6 +358,7 @@ function* handleExplorerCreateNewFile(): Generator {
             fileStorageWriteFile(
                 fileName,
                 getPybricksMicroPythonFileTemplate(didAccept.hubType) || '',
+                didAccept.fileExtension === blocklyFileExtension ? '{}' : null,
             ),
         );
 
