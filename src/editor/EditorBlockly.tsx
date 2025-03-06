@@ -638,6 +638,10 @@ const BlocklyEditor: React.FunctionComponent = () => {
             comments: true,
             media: './blockly/',
             theme: theme,
+            maxInstances: {
+                setup_program: 1,
+                start_program: 1,
+            },
             grid: {
                 spacing: 40,
                 length: 6,

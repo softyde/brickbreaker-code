@@ -66,6 +66,7 @@ import {
     editorGetValueRequest,
     editorGetValueResponse,
     editorGoto,
+    editorHighlightBlockCode,
     editorOpenFile,
     editorReplaceFile,
     editorReplaceSourceMap,
@@ -77,6 +78,8 @@ import {
 import { EditorError } from './error';
 import { ActiveFileHistoryManager, OpenFileManager } from './lib';
 import { pybricksMicroPythonId } from './pybricksMicroPython';
+
+const EDITOR_HIGHLIGHT_CLASSNAME = 'editor-highlight-sourcemap';
 
 function* handleEditorGetValueRequest(
     editor: monaco.editor.ICodeEditor,
@@ -397,6 +400,71 @@ function* handleEditorDidChangeLine(
     }
 }
 
+function handleEditorHighlightBlockCode(
+    editor: monaco.editor.ICodeEditor,
+    openFiles: OpenFileManager,
+    action: ReturnType<typeof editorHighlightBlockCode>,
+) {
+    // Looks like a dirty hack (see monitorViewState)
+    // We could also abuse activeFileHistory.peek for it
+    const model = editor.getModel();
+
+    if (model === null) {
+        return;
+    }
+
+    const uuid = model.uri.path as UUID;
+
+    const fileInfo = openFiles.get(uuid);
+    if (!fileInfo) {
+        return;
+    }
+
+    const sourceMap = fileInfo.sourceMap;
+
+    if (!sourceMap) {
+        return;
+    }
+
+    const id = action.id;
+
+    const oldDecorations = model
+        .getAllDecorations(undefined, true)
+        .map((a) => a.id)
+        .filter(
+            (d) =>
+                model
+                    .getDecorationOptions(d)
+                    ?.className?.includes(EDITOR_HIGHLIGHT_CLASSNAME),
+        );
+
+    const newDecorations: monaco.editor.IModelDeltaDecoration[] = [];
+
+    if (id) {
+        const lines = sourceMap.filter((a) => a.id === id);
+
+        lines.forEach((element) => {
+            newDecorations.push({
+                range: {
+                    startLineNumber: element.line + 1,
+                    startColumn: 1,
+                    endLineNumber: element.line + 1,
+                    endColumn: 1,
+                },
+                options: {
+                    className: `${EDITOR_HIGHLIGHT_CLASSNAME} style-${action.styleName}`,
+                    isWholeLine: true,
+                    shouldFillLineOnLineBreak: true,
+                },
+            });
+        });
+    }
+
+    console.debug('deco', oldDecorations, newDecorations);
+
+    model.deltaDecorations(oldDecorations, newDecorations);
+}
+
 /**
  * Monitors the editor for any possible view state change and stores the state
  * with the associated file when the state changes.
@@ -420,7 +488,7 @@ function* monitorViewState(editor: monaco.editor.ICodeEditor): Generator {
 
     try {
         for (;;) {
-            yield* take(ch);
+            const event = yield* take(ch);
 
             const model = editor.getModel();
 
@@ -429,6 +497,11 @@ function* monitorViewState(editor: monaco.editor.ICodeEditor): Generator {
             }
 
             const uuid = model.uri.path as UUID;
+
+            console.debug(event);
+            if (!('scrollTop' in event)) {
+                yield* put(editorHighlightBlockCode(undefined));
+            }
 
             yield* put(fileStorageStoreTextFileViewState(uuid, editor.saveViewState()));
 
@@ -485,9 +558,25 @@ function* handleDidCreateEditor(editor: monaco.editor.ICodeEditor): Generator {
     yield* takeEvery(editorGoto, handleEditorGoto, editor);
     yield* takeEvery(editorDidCloseFile, handleEditorDidCloseFile, activeFileHistory);
     yield* takeEvery(editorDidChangeLine, handleEditorDidChangeLine, editor, openFiles);
+    yield* takeEvery(
+        editorHighlightBlockCode,
+        handleEditorHighlightBlockCode,
+        editor,
+        openFiles,
+    );
     yield* fork(monitorViewState, editor);
 
     yield* put(editorDidCreate());
+
+    // editor.createDecorationsCollection([
+    //     {
+    //         range: new monaco.Range(3, 1, 3, 1),
+    //         options: {
+    //             isWholeLine: true,
+    //             glyphMarginClassName: 'myClassName',
+    //         },
+    //     },
+    // ]);
 
     // this should restore all previously open files in the same order
     // the were last used (which may be different from the order in which

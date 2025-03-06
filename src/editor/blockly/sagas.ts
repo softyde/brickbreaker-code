@@ -31,6 +31,7 @@ import { defined, ensureError } from '../../utils';
 import {
     editorActivateFile,
     editorDidFailToOpenFile,
+    editorHighlightBlockCode,
     editorReplaceFile,
     editorReplaceSourceMap,
 } from '../actions';
@@ -145,10 +146,26 @@ function* handleBlocklyWorkspaceDidChange(
     for (;;) {
         const event = yield* take(chan);
 
-        // ignoring ui events by now
         if (event.isUiEvent) {
+            if (event.type === Blockly.Events.SELECTED) {
+                const selected = event as Blockly.Events.Selected;
+
+                let styleName: string | undefined;
+
+                if (selected.newElementId) {
+                    const block = workspace.getBlockById(selected.newElementId);
+
+                    styleName = block?.getStyleName();
+                }
+
+                yield* put(editorHighlightBlockCode(selected.newElementId, styleName));
+            }
+
+            // ignoring other ui events by now
             continue;
         }
+
+        yield* put(editorHighlightBlockCode());
 
         const state = Blockly.serialization.workspaces.save(workspace);
 

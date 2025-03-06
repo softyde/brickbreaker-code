@@ -156,3 +156,15 @@ export const editorDidChangeLine = createAction((lineNumber: number) => ({
     type: 'editor.action.didChangeLine',
     lineNumber,
 }));
+
+/**
+ * Requests the editor to hightlight text regions generated from block.
+ * @param id the block id
+ */
+export const editorHighlightBlockCode = createAction(
+    (id?: string, styleName?: string) => ({
+        type: 'editor.action.highlightBlockCode',
+        id,
+        styleName,
+    }),
+);

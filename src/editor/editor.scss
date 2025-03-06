@@ -136,3 +136,19 @@
         width: 100% !important;
     }
 }
+
+.editor-highlight-sourcemap {
+    background-color: rgba(0, 0, 0, 0.5);
+
+    &.style-hub_category {
+        background-color: lighten(#0c74f2, 30%);
+    }
+
+    &.style-event_category {
+        background-color: lighten(#f2bd0c, 30%);
+    }
+
+    &.style-movement_category {
+        background-color: lighten(#bc0cf2, 30%);
+    }
+}
