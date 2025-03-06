@@ -3,7 +3,7 @@
 
 import * as Blockly from 'blockly/core';
 import { PythonGenerator } from 'blockly/python';
-import { EventChannel, buffers, eventChannel } from 'redux-saga';
+import { EventChannel, Task, buffers, eventChannel } from 'redux-saga';
 
 import { cancel } from 'redux-saga/effects';
 import {
@@ -119,7 +119,13 @@ pythonGenerator.forBlock['start_program'] = (_block, _generator) => {
 pythonGenerator.forBlock['hub_block'] = (_block, _generator) => {
     //const nextCode = generator.blockToCode(block.getNextBlock());
 
-    return `hub = PrimeHub(top_side=Axis.Z, front_side=Axis.X)`;
+    return `hub = PrimeHub()`;
+};
+
+pythonGenerator.forBlock['hub_beep'] = (_block, _generator) => {
+    //const nextCode = generator.blockToCode(block.getNextBlock());
+
+    return `hub.speaker.beep(440, 75)`;
 };
 
 pythonGenerator.forBlock['drive_init'] = (_block, _generator) => {
@@ -182,7 +188,6 @@ function* handleBlocklyDidChangeModel(
     uuid: UUID,
     action: ReturnType<typeof blocklyDidChangeModel>,
 ): Generator {
-    console.log('saving data for ', uuid, action.value);
     const data = action.value;
 
     // when the model changes, save it to storage.
@@ -258,8 +263,6 @@ ${source}`;
 
         yield* put(editorReplaceSourceMap(action.uuid, sourceMap));
         yield* put(editorReplaceFile(action.uuid, source));
-
-        console.debug(source);
     } catch (err) {
         console.error(err);
     }
@@ -293,26 +296,34 @@ function* handleEditorActivateFile(
 
             defined(didLoad);
 
+            let lis: Task | undefined;
+
             if (didLoad.data !== null) {
+                console.debug('data loaded', didLoad.data);
                 const data = JSON.parse(didLoad.data);
 
                 Blockly.serialization.workspaces.load(data, workspace, {
                     recordUndo: false,
                 });
-            }
 
-            const lis = yield* takeEvery(
-                blocklyDidChangeModel,
-                handleBlocklyDidChangeModel,
-                action.uuid,
-            );
+                lis = yield* takeEvery(
+                    blocklyDidChangeModel,
+                    handleBlocklyDidChangeModel,
+                    action.uuid,
+                );
+            }
 
             console.log('listening for ', action.uuid);
 
             yield* take(editorActivateFile.when((a) => a.uuid !== action.uuid));
 
             console.log('stop listening for ', action.uuid, lis);
-            yield cancel(lis);
+            if (lis) {
+                console.debug('stopping model change listener');
+                yield cancel(lis);
+            } else {
+                console.debug('no model change listener to stop');
+            }
 
             console.log('stopped');
         } finally {

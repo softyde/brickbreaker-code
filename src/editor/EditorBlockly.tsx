@@ -196,7 +196,6 @@ class CustomIcon extends Blockly.icons.Icon {
 
     initView(pointerdownListener: (e: PointerEvent) => void) {
         if (this.svgRoot) {
-            console.log('already initialized');
             return;
         } // Already initialized.
 
@@ -463,6 +462,20 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 previousStatement: null,
             },
             {
+                type: 'hub_beep',
+                message0: '%1 Einen Ton abspielen',
+                nextStatement: null,
+                previousStatement: null,
+                style: 'hub_category',
+                extensions: ['add_my_custom_icon'],
+                args0: [
+                    {
+                        type: 'field_vertical_separator',
+                        name: 'separator',
+                    },
+                ],
+            },
+            {
                 type: 'hub_block',
                 message0: '%4 %1 mit Oberseite %2 und Vorderseite %3',
                 nextStatement: null,
@@ -607,6 +620,10 @@ const BlocklyEditor: React.FunctionComponent = () => {
                         {
                             kind: 'block',
                             type: 'line_follow_block',
+                        },
+                        {
+                            kind: 'block',
+                            type: 'hub_beep',
                         },
                     ],
                 },

@@ -460,8 +460,6 @@ function handleEditorHighlightBlockCode(
         });
     }
 
-    console.debug('deco', oldDecorations, newDecorations);
-
     model.deltaDecorations(oldDecorations, newDecorations);
 }
 
