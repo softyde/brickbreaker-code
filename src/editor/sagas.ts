@@ -498,7 +498,6 @@ function* monitorViewState(editor: monaco.editor.ICodeEditor): Generator {
 
             const uuid = model.uri.path as UUID;
 
-            console.debug(event);
             if (!('scrollTop' in event)) {
                 yield* put(editorHighlightBlockCode(undefined));
             }

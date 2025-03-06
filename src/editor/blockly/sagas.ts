@@ -248,8 +248,6 @@ ${source}`;
 
                 const id = line.substring(startIndex + 2, endIndex);
 
-                console.debug(`line ${lineNumber}: ${id}`);
-
                 sourceMap.push({ line: lineNumber, id });
 
                 a[lineNumber] = line.substring(endIndex + 2);

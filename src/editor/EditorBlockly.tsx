@@ -368,15 +368,21 @@ const BlocklyEditor: React.FunctionComponent = () => {
         Blockly.defineBlocksWithJsonArray([
             {
                 type: 'start_program',
-                message0: 'Wenn Programm startet',
-                tooltip: 'Wenn das Programm startet',
+                message0: '%1 Programm starten',
+                tooltip: 'Programm starten',
                 nextStatement: null,
                 style: 'event_category',
                 extensions: ['add_my_custom_icon'],
+                args0: [
+                    {
+                        type: 'field_vertical_separator',
+                        name: 'separator',
+                    },
+                ],
             },
             {
                 type: 'setup_program',
-                message0: '%1 Initialisierung',
+                message0: '%1 Roboter initialisieren',
                 tooltip: 'tbd',
                 nextStatement: null,
                 style: 'event_category',
@@ -385,7 +391,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 args0: [
                     {
                         type: 'field_vertical_separator',
-                        name: 'VAR1',
+                        name: 'separator',
                     },
                 ],
             },
@@ -409,7 +415,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
                     },
                     {
                         type: 'field_vertical_separator',
-                        name: 'VAR3',
+                        name: 'separator',
                     },
                 ],
                 nextStatement: null,
