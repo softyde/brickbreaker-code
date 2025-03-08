@@ -11,6 +11,7 @@ import * as De from 'blockly/msg/de';
 import React, { useRef } from 'react';
 
 import { useEffectOnce } from 'usehooks-ts';
+import defaultBlocks from './blockly/blocks';
 import * as notify from './blockly/lib';
 import { categoryIcons, isCategoryStyle } from './icons/categoryIcons';
 //import { UUID } from '../fileStorage';
@@ -364,213 +365,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
             //startHats: true,
         });
 
-        Blockly.defineBlocksWithJsonArray([
-            {
-                type: 'start_program',
-                message0: '%1 Programm starten',
-                tooltip: 'Programm starten',
-                nextStatement: null,
-                style: 'event_category',
-                extensions: ['add_my_custom_icon'],
-                args0: [
-                    {
-                        type: 'field_vertical_separator',
-                        name: 'separator',
-                    },
-                ],
-            },
-            {
-                type: 'setup_program',
-                message0: '%1 Roboter initialisieren',
-                tooltip: 'tbd',
-                nextStatement: null,
-                style: 'event_category',
-                extensions: ['add_my_custom_icon'],
+        Blockly.defineBlocksWithJsonArray(defaultBlocks);
 
-                args0: [
-                    {
-                        type: 'field_vertical_separator',
-                        name: 'separator',
-                    },
-                ],
-            },
-            {
-                type: 'move_straight_block',
-                message0: '%3 Fahre %1 %2cm',
-                style: 'movement_category',
-                extensions: ['add_my_custom_icon'],
-
-                args0: [
-                    {
-                        type: 'field_variable',
-                        name: 'VAR1',
-                        variable: 'Vorwärts',
-                    },
-                    {
-                        type: 'field_input',
-                        name: 'VAR2',
-                        text: '10',
-                        check: 'Number',
-                    },
-                    {
-                        type: 'field_vertical_separator',
-                        name: 'separator',
-                    },
-                ],
-                nextStatement: null,
-                previousStatement: null,
-            },
-            {
-                type: 'move_curve_block',
-                message0: '%2 Drehe um %1°',
-                style: 'movement_category',
-                extensions: ['add_my_custom_icon'],
-
-                args0: [
-                    {
-                        type: 'field_variable',
-                        name: 'VAR1',
-                        variable: '90',
-                    },
-                    {
-                        type: 'field_vertical_separator',
-                        name: 'VAR2',
-                    },
-                ],
-                nextStatement: null,
-                previousStatement: null,
-            },
-            {
-                type: 'move_follow_line',
-                message0: '%2 Folge der Linie für höchstens %1cm',
-                style: 'movement_category',
-                tooltip: 'Na was wohl: der Linie hinterherfahren.',
-                extensions: ['add_my_custom_icon'],
-
-                args0: [
-                    {
-                        type: 'field_variable',
-                        name: 'VAR1',
-                        variable: '10',
-                    },
-                    {
-                        type: 'field_vertical_separator',
-                        name: 'VAR2',
-                    },
-                ],
-                nextStatement: null,
-                previousStatement: null,
-            },
-            {
-                type: 'hub_beep',
-                message0: '%1 Einen Ton abspielen',
-                nextStatement: null,
-                previousStatement: null,
-                style: 'hub_category',
-                extensions: ['add_my_custom_icon'],
-                args0: [
-                    {
-                        type: 'field_vertical_separator',
-                        name: 'separator',
-                    },
-                ],
-            },
-            {
-                type: 'hub_block',
-                message0: '%4 %1 mit Oberseite %2 und Vorderseite %3',
-                nextStatement: null,
-                previousStatement: null,
-                style: 'hub_category',
-                extensions: ['add_my_custom_icon'],
-
-                args0: [
-                    {
-                        type: 'field_input',
-                        name: 'VAR1',
-                        text: 'Spike Prime',
-                    },
-                    {
-                        type: 'field_variable',
-                        name: 'VAR2',
-                        variable: 'z-Achse',
-                        variableTypes: [''],
-                    },
-                    {
-                        type: 'field_variable',
-                        name: 'VAR3',
-                        variable: 'x-Achse',
-                        variableTypes: [''],
-                    },
-                    {
-                        type: 'field_vertical_separator',
-                        name: 'VAR4',
-                    },
-                ],
-            },
-            {
-                type: 'line_follow_block',
-                message0: '%3 Sensoren zur Linienverfolgung an %1 und %2',
-                nextStatement: null,
-                previousStatement: null,
-                style: 'hub_category',
-                extensions: ['add_my_custom_icon'],
-
-                args0: [
-                    {
-                        type: 'field_dropdown',
-                        name: 'PORT_1',
-                        options: [
-                            ['Port A', 'PORTA'],
-                            ['Port B', 'PORTB'],
-                        ],
-                    },
-                    {
-                        type: 'field_dropdown',
-                        name: 'PORT_2',
-                        options: [
-                            ['Port A', 'PORTA'],
-                            ['Port B', 'PORTB'],
-                        ],
-                    },
-                    {
-                        type: 'field_vertical_separator',
-                        name: 'VAR4',
-                    },
-                ],
-            },
-            {
-                type: 'drive_init',
-                message0:
-                    '%3 Fahrwerk initialisieren mit %1 als Rad rechts und %2 als Rad links',
-                nextStatement: null,
-                previousStatement: null,
-                style: 'movement_category',
-                extensions: ['add_my_custom_icon'],
-
-                args0: [
-                    {
-                        type: 'field_dropdown',
-                        name: 'MOTOR_1',
-                        options: [
-                            ['Port A', 'PORTA'],
-                            ['Port B', 'PORTB'],
-                        ],
-                    },
-                    {
-                        type: 'field_dropdown',
-                        name: 'MOTOR_2',
-                        options: [
-                            ['Port A', 'PORTA'],
-                            ['Port B', 'PORTB'],
-                        ],
-                    },
-                    {
-                        type: 'field_vertical_separator',
-                        name: 'VAR4',
-                    },
-                ],
-            },
-        ]);
         /*
         const theme = Blockly.Theme.defineTheme('themeName', {
             base: Blockly.Themes.Classic,
@@ -634,7 +430,11 @@ const BlocklyEditor: React.FunctionComponent = () => {
                     contents: [
                         {
                             kind: 'block',
-                            type: 'drive_init',
+                            type: 'drive_hub',
+                        },
+                        {
+                            kind: 'block',
+                            type: 'drive_motor_block',
                         },
                         {
                             kind: 'block',
@@ -654,7 +454,9 @@ const BlocklyEditor: React.FunctionComponent = () => {
         };
         workspaceRef.current = Blockly.inject(blocklyEditorRef.current, {
             toolbox: toolbox,
+            //renderer: 'thrasos',
             renderer: 'zelos',
+            //renderer: 'geras',
             sounds: true,
             collapse: false,
             disable: false,
