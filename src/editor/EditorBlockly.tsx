@@ -322,6 +322,9 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 movement_category: {
                     colourPrimary: '#bc0cf2',
                 },
+                movement_category$light: {
+                    colourPrimary: '#D56BF8',
+                },
             },
             categoryStyles: {
                 event_category: {
@@ -338,7 +341,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 toolboxBackgroundColour: '#e4e7ed',
                 toolboxForegroundColour: '#000',
                 flyoutBackgroundColour: '#e4e7ed',
-                flyoutOpacity: 0.66,
+                flyoutOpacity: 0.85,
 
                 workspaceBackgroundColour: '#fcfcfc',
                 scrollbarColour: '#000000',
@@ -469,8 +472,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
             },
             grid: {
                 spacing: 40,
-                length: 6,
-                colour: '#ccc',
+                length: 41,
+                colour: '#ddd',
                 snap: true,
             },
             trashcan: true,

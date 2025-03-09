@@ -9,7 +9,7 @@ import Two from 'two.js';
 import { useTernaryDarkMode } from 'usehooks-ts';
 import logoSvg from './logo.svg';
 
-const defaultRotation = -Math.PI / 9; // radians
+const defaultRotation = 0; //-Math.PI / 9; // radians
 const rotationSpeedIncrement = 0.1; // radians per second
 
 type State = {
@@ -103,7 +103,7 @@ const Welcome: React.FunctionComponent<WelcomeProps> = ({ isVisible }) => {
                 timeDelta: time / 1000,
             });
 
-            logo.fill = fillColorRef.current;
+            //logo.fill = fillColorRef.current;
             logo.scale = Math.min(two.width, two.height) / 80;
             logo.rotation = stateRef.current.rotation;
 

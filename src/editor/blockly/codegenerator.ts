@@ -4,6 +4,13 @@
 import * as Blockly from 'blockly';
 import { Order, PythonGenerator } from 'blockly/python';
 import {
+    Direction,
+    StraightDirection,
+    VAR_AXLE_TRACK,
+    VAR_DEGREES,
+    VAR_DIAMETER,
+    VAR_DIRECTION,
+    VAR_DISTANCE,
     VAR_HUB_FRONT_AXIS,
     VAR_HUB_TOP_AXIS,
     VAR_MOTOR_DIRECTION,
@@ -103,14 +110,18 @@ pythonGenerator.forBlock['hub_block'] = (block, _generator) => {
     return `${robotHubName} = PrimeHub(top_side=${topAxis}, front_side=${frontAxis})`;
 };
 
-pythonGenerator.forBlock['drive_hub'] = (block, _generator) => {
-    const leftMotor = _generator.valueToCode(block, VAR_MOTOR_LEFT, Order.ATOMIC);
-    const rightMotor = _generator.valueToCode(block, VAR_MOTOR_RIGHT, Order.ATOMIC);
+pythonGenerator.forBlock['drive_hub'] = (block, generator) => {
+    const leftMotor = generator.valueToCode(block, VAR_MOTOR_LEFT, Order.ATOMIC);
+    const rightMotor = generator.valueToCode(block, VAR_MOTOR_RIGHT, Order.ATOMIC);
+
+    const diameter = block.getFieldValue(VAR_DIAMETER);
+    const axleTrack = block.getFieldValue(VAR_AXLE_TRACK);
 
     return `drive_left_motor = ${leftMotor}
 drive_right_motor = ${rightMotor}
 
-drive = DriveBase(drive_left_motor, drive_right_motor, wheel_diameter=, axle_track=)`;
+drive = DriveBase(drive_left_motor, drive_right_motor, ${diameter}, ${axleTrack})
+drive.use_gyro(True)`;
 };
 
 pythonGenerator.forBlock['drive_motor_block'] = (block, _generator) => {
@@ -118,6 +129,28 @@ pythonGenerator.forBlock['drive_motor_block'] = (block, _generator) => {
     const direction = block.getFieldValue(VAR_MOTOR_DIRECTION);
 
     return [`Motor(${port}, ${direction})`, Order.ATOMIC];
+};
+
+pythonGenerator.forBlock['move_straight_block'] = (block, _generator) => {
+    let distance = block.getFieldValue(VAR_DISTANCE) * 10;
+    const direction = block.getFieldValue(VAR_DIRECTION);
+
+    if (direction === StraightDirection.Backward) {
+        distance *= -1;
+    }
+
+    return `drive.straight(${distance})`;
+};
+
+pythonGenerator.forBlock['move_curve_block'] = (block, _generator) => {
+    let distance = block.getFieldValue(VAR_DEGREES);
+    const direction = block.getFieldValue(VAR_DIRECTION);
+
+    if (direction === Direction.Counterclockwise) {
+        distance *= -1;
+    }
+
+    return `drive.turn(${distance})`;
 };
 
 /* ---- */
@@ -136,24 +169,12 @@ drive_base = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=11
 drive_base.use_gyro(True)`;
 };
 
-pythonGenerator.forBlock['move_curve_block'] = (_block, _generator) => {
-    // Collect argument strings.
-    // const fieldValue = block.getFieldValue('MY_FIELD');
-    // const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-
-    return `drive_base.turn(90)`;
-};
-
 pythonGenerator.forBlock['line_follow_block'] = (_block, _generator) => {
     return `# Jaja, das wird irgendwann`;
 };
 
 pythonGenerator.forBlock['move_follow_line'] = (_block, _generator) => {
     return `# Hey, das ist eine Alpha!`;
-};
-
-pythonGenerator.forBlock['move_straight_block'] = (_block, _generator) => {
-    return `# brumm brumm brumm`;
 };
 
 pythonGenerator.forBlock['setup_program'] = (_block, _generator) => {
