@@ -159,7 +159,8 @@ ${source}`;
 
                 sourceMap.push({ line: lineNumber, id });
 
-                a[lineNumber] = line.substring(endIndex + 2);
+                a[lineNumber] =
+                    line.substring(0, startIndex) + line.substring(endIndex + 2);
             }
         }
 

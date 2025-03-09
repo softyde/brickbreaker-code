@@ -17,6 +17,8 @@ import {
     VAR_MOTOR_LEFT,
     VAR_MOTOR_PORT,
     VAR_MOTOR_RIGHT,
+    VAR_STATEMENTS,
+    VAR_TIMES,
 } from './blocks';
 //import { VAR_HUB_NAME } from './blocks';
 
@@ -151,6 +153,15 @@ pythonGenerator.forBlock['move_curve_block'] = (block, _generator) => {
     }
 
     return `drive.turn(${distance})`;
+};
+
+pythonGenerator.forBlock['repeat_xtimes_block'] = (block, generator) => {
+    const times = block.getFieldValue(VAR_TIMES);
+
+    const statements = generator.statementToCode(block, VAR_STATEMENTS);
+
+    return `for _ in range(${times}):
+${statements}`;
 };
 
 /* ---- */

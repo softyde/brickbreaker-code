@@ -18,6 +18,10 @@ export const VAR_DIRECTION = 'DIRECTION';
 
 export const VAR_DEGREES = 'DEGREES';
 
+export const VAR_TIMES = 'TIMES';
+
+export const VAR_STATEMENTS = 'STATEMENTS';
+
 export const CONNECTION_MOTOR = 'connection.motor';
 
 export enum Axis {
@@ -221,6 +225,35 @@ const blocks = [
                     ['rechts ↻', Direction.Clockwise],
                     ['links ↺', Direction.Counterclockwise],
                 ],
+            },
+        ],
+        nextStatement: null,
+        previousStatement: null,
+    },
+    {
+        type: 'repeat_xtimes_block',
+        message0: '%1 Wiederhole %2 Mal',
+        style: 'flow_category',
+        extensions: ['add_my_custom_icon'],
+        args0: [
+            {
+                type: 'field_vertical_separator',
+                name: 'separator',
+            },
+            {
+                type: 'field_number',
+                name: VAR_TIMES,
+                value: 2,
+                min: 1,
+                max: 1000,
+                precision: 1,
+            },
+        ],
+        message1: '%1',
+        args1: [
+            {
+                type: 'input_statement',
+                name: VAR_STATEMENTS,
             },
         ],
         nextStatement: null,

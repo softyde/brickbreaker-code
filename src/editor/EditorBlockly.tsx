@@ -325,6 +325,9 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 movement_category$light: {
                     colourPrimary: '#D56BF8',
                 },
+                flow_category: {
+                    colourPrimary: '#F2640C',
+                },
             },
             categoryStyles: {
                 event_category: {
@@ -335,6 +338,9 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 },
                 movement_category: {
                     colour: '#bc0cf2',
+                },
+                flow_category: {
+                    colour: '#F2640C',
                 },
             },
             componentStyles: {
@@ -450,6 +456,17 @@ const BlocklyEditor: React.FunctionComponent = () => {
                         {
                             kind: 'block',
                             type: 'move_follow_line',
+                        },
+                    ],
+                },
+                {
+                    kind: 'category',
+                    name: 'Ablauf',
+                    categorystyle: 'flow_category',
+                    contents: [
+                        {
+                            kind: 'block',
+                            type: 'repeat_xtimes_block',
                         },
                     ],
                 },
