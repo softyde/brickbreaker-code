@@ -27,3 +27,13 @@ export const blocklyHighlightBlock = createAction((id: string) => ({
 export const blocklyRemoveHighlightFromBlock = createAction(() => ({
     type: 'blockly.action.removeHighlightFromBlock',
 }));
+
+export const blocklyDidCreateBlock = createAction((blockId: string) => ({
+    type: 'blockly.action.didCreateBlock',
+    blockId,
+}));
+
+export const blocklyDidDeleteBlock = createAction((blockId: string) => ({
+    type: 'blockly.action.didDeleteBlock',
+    blockId,
+}));

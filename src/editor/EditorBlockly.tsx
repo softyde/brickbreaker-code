@@ -11,8 +11,10 @@ import * as De from 'blockly/msg/de';
 import React, { useRef } from 'react';
 
 import { useEffectOnce } from 'usehooks-ts';
+import * as BlocklyListener from './blockly/blockListener';
 import defaultBlocks from './blockly/blocks';
 import * as notify from './blockly/lib';
+import * as BlocklyVars from './blockly/variables';
 import { categoryIcons, isCategoryStyle } from './icons/categoryIcons';
 //import { UUID } from '../fileStorage';
 //import { useFileStoragePath } from '../fileStorage/hooks';
@@ -265,6 +267,43 @@ class CustomIcon extends Blockly.icons.Icon {
     }
 }
 
+function createShadowDom(
+    workspace: Blockly.Workspace,
+    blockType: string,
+    fieldConfigs = {},
+) {
+    // Block erstellen
+    const block = workspace.newBlock(blockType);
+
+    // Felder konfigurieren
+    for (const [fieldName, value] of Object.entries(fieldConfigs)) {
+        if (block.getField(fieldName)) {
+            block.setFieldValue(value, fieldName);
+        }
+    }
+
+    // In DOM umwandeln
+    const blockDom = Blockly.Xml.blockToDom(block) as Element;
+
+    // Neues shadow-Element erstellen
+    const shadowDom = Blockly.utils.xml.createElement('shadow');
+
+    // Attribute vom Block-Element zum Shadow-Element kopieren
+    for (let i = 0; i < blockDom.attributes.length; i++) {
+        const attr = blockDom.attributes[i];
+        shadowDom.setAttribute(attr.name, attr.value);
+    }
+
+    // Kinder-Elemente kopieren
+    while (blockDom.firstChild) {
+        shadowDom.appendChild(blockDom.firstChild);
+    }
+    // Block entfernen, da er nur temporär benötigt wurde
+    block.dispose();
+
+    return shadowDom;
+}
+
 const BlocklyEditor: React.FunctionComponent = () => {
     const blocklyEditorRef = useRef<HTMLDivElement>(null);
 
@@ -286,11 +325,44 @@ const BlocklyEditor: React.FunctionComponent = () => {
         Blockly.Extensions.register('add_my_custom_icon', function () {
             // 'this' bezieht sich auf die Block-Instanz
 
+            const block = this as Blockly.Block;
+            if (block.getIcon('my_icon')) {
+                console.log('My_Icon already exists');
+                return;
+            }
+
             const icon = new CustomIcon(this as Blockly.BlockSvg);
-            (this as Blockly.Block).addIcon(icon);
+
+            block.addIcon(icon);
+        });
+        Blockly.Extensions.register('add_shadow_number', function () {
+            // 'this' bezieht sich auf die Block-Instanz
+            const block = this as Blockly.Block;
+
+            block.inputList.forEach((element) => {
+                if (!Array.isArray(element.connection?.getCheck())) {
+                    return;
+                }
+
+                const shadow_check = (element.connection!.getCheck() as string[]).find(
+                    (a) => a.startsWith('shadow_'),
+                );
+
+                if (shadow_check) {
+                    const shadowDom = createShadowDom(
+                        workspaceRef.current!,
+                        shadow_check,
+                        {},
+                    ) as Element;
+
+                    element.connection?.setShadowDom(shadowDom);
+                }
+            });
         });
 
         // registerFirstContextMenuOptions();
+
+        BlocklyVars.initCustomVariableHandling();
 
         Blockly.registry.register(
             Blockly.registry.Type.TOOLBOX_ITEM,
@@ -327,6 +399,9 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 },
                 flow_category: {
                     colourPrimary: '#F2640C',
+                },
+                distance_sensor_category: {
+                    colourPrimary: '#6B9DF8',
                 },
             },
             categoryStyles: {
@@ -470,6 +545,21 @@ const BlocklyEditor: React.FunctionComponent = () => {
                         },
                     ],
                 },
+                {
+                    kind: 'category',
+                    name: 'Sensoren',
+                    categorystyle: 'sensor_category',
+                    contents: [
+                        {
+                            kind: 'block',
+                            type: 'distance_sensor_block',
+                        },
+                        {
+                            kind: 'block',
+                            type: 'distance_sensor_input',
+                        },
+                    ],
+                },
             ],
         };
         workspaceRef.current = Blockly.inject(blocklyEditorRef.current, {
@@ -504,6 +594,9 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 pinch: true,
             },
         });
+
+        BlocklyListener.init(workspaceRef.current!);
+
         // Erstelle einen ResizeObserver, um auf Größenänderungen zu reagieren
         resizeObserverRef.current = new ResizeObserver(() => {
             // Debounce die Resize-Funktion

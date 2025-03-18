@@ -17,6 +17,7 @@ import {
     VAR_MOTOR_LEFT,
     VAR_MOTOR_PORT,
     VAR_MOTOR_RIGHT,
+    VAR_NUMBER,
     VAR_STATEMENTS,
     VAR_TIMES,
 } from './blocks';
@@ -25,6 +26,22 @@ import {
 const robotHubName = 'my_robot';
 
 class BlocklyPythonGenerator extends PythonGenerator {
+    variablePrefix = 0;
+
+    init(workspace: Blockly.Workspace): void {
+        super.init(workspace);
+
+        this.resetVariablePrefix();
+    }
+
+    resetVariablePrefix(): void {
+        this.variablePrefix = 0;
+    }
+
+    getNextVariableName(): string {
+        return `var_${this.variablePrefix++}`;
+    }
+
     prefixWithBlock(v: string, b: Blockly.Block): string {
         if (b.outputConnection) {
             return v;
@@ -156,12 +173,26 @@ pythonGenerator.forBlock['move_curve_block'] = (block, _generator) => {
 };
 
 pythonGenerator.forBlock['repeat_xtimes_block'] = (block, generator) => {
-    const times = block.getFieldValue(VAR_TIMES);
+    const x = generator.statementToCode(block, VAR_TIMES).trim();
+    const varName = generator.getNextVariableName();
 
     const statements = generator.statementToCode(block, VAR_STATEMENTS);
 
-    return `for _ in range(${times}):
+    return `${varName} = int(${x})
+for _ in range(${varName}):
 ${statements}`;
+};
+
+pythonGenerator.forBlock['shadow_Number_Int_gt_Zero'] = (block, _generator) => {
+    const value = block.getFieldValue(VAR_NUMBER);
+
+    return `${value}`;
+};
+
+pythonGenerator.forBlock['distance_sensor_block'] = (_block, _generator) => {
+    //  const value = block.getFieldValue(VAR_NUMBER);
+
+    return ``;
 };
 
 /* ---- */

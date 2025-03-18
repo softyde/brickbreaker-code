@@ -20,6 +20,8 @@ export const VAR_DEGREES = 'DEGREES';
 
 export const VAR_TIMES = 'TIMES';
 
+export const VAR_NUMBER = 'NUMBER';
+
 export const VAR_STATEMENTS = 'STATEMENTS';
 
 export const CONNECTION_MOTOR = 'connection.motor';
@@ -234,19 +236,20 @@ const blocks = [
         type: 'repeat_xtimes_block',
         message0: '%1 Wiederhole %2 Mal',
         style: 'flow_category',
-        extensions: ['add_my_custom_icon'],
+        extensions: ['add_my_custom_icon', 'add_shadow_number'],
         args0: [
             {
                 type: 'field_vertical_separator',
                 name: 'separator',
             },
             {
-                type: 'field_number',
+                type: 'input_value',
                 name: VAR_TIMES,
-                value: 2,
+                check: ['Number', 'shadow_Number_Int_gt_Zero'],
+                /*   value: 2,
                 min: 1,
                 max: 1000,
-                precision: 1,
+                precision: 1,*/
             },
         ],
         message1: '%1',
@@ -259,7 +262,100 @@ const blocks = [
         nextStatement: null,
         previousStatement: null,
     },
+    {
+        type: 'shadow_Number_Int_gt_Zero',
+        message0: '%1',
+        style: 'flow_category',
+        args0: [
+            {
+                type: 'field_number',
+                name: VAR_NUMBER,
+                value: 1,
+                min: 1,
+                max: 1000,
+                precision: 1,
+            },
+        ],
+        output: 'Number',
+    },
+    {
+        type: 'distance_sensor_input',
+        message0: '%1 Entfernung in cm',
+        output: 'Number',
+        inputsInline: true,
+        style: 'distance_sensor_category',
+        extensions: ['add_my_custom_icon', 'dynamic_var_list'],
 
+        args0: [
+            {
+                type: 'input_dummy',
+                name: 'LIST.DIST_SENSOR',
+            },
+        ],
+    },
+    {
+        type: 'distance_sensor_block',
+        message0: '%1 %2 an %3',
+        style: 'sensor_category',
+        extensions: ['add_my_custom_icon', 'xxx'],
+        previousStatement: null,
+        nextStatement: null,
+        args0: [
+            {
+                type: 'field_vertical_separator',
+            },
+            {
+                type: 'field_input',
+                name: 'VAR.DIST_SENSOR.1',
+                text: 'Entfernungssensor',
+                spellcheck: false,
+            },
+            {
+                type: 'field_dropdown',
+                name: VAR_MOTOR_PORT,
+                options: [
+                    ['Anschluss A', Port.A],
+                    ['Anschluss B', Port.B],
+                    ['Anschluss C', Port.C],
+                    ['Anschluss D', Port.D],
+                    ['Anschluss E', Port.E],
+                    ['Anschluss F', Port.F],
+                ],
+            },
+        ],
+    },
+    /*
+
+{
+  "type": "dynamic_dropdown",
+  "message0": "day %1",
+  "args0": [
+    {
+      "type": "input_dummy",
+      "name": "INPUT"
+    }
+  ],
+  "extensions": ["dynamic_menu_extension"]
+}
+
+Blockly.Extensions.register('dynamic_menu_extension',
+  function() {
+    this.getInput('INPUT')
+      .appendField(new Blockly.FieldDropdown(
+        function() {
+          var options = [];
+          var now = Date.now();
+          for(var i = 0; i < 7; i++) {
+            var dateString = String(new Date(now)).substring(0, 3);
+            options.push([dateString, dateString.toUpperCase()]);
+            now += 24 * 60 * 60 * 1000;
+          }
+          return options;
+        }), 'DAY');
+  });
+
+
+    */
     /* ---------------------------------------------------------------------------------------------------- */
     {
         type: 'setup_program',

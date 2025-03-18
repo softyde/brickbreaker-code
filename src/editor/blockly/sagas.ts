@@ -6,7 +6,7 @@ import { EventChannel, Task, buffers, eventChannel } from 'redux-saga';
 
 import { cancel } from 'redux-saga/effects';
 import {
-    delay,
+    //delay,
     fork,
     put,
     race,
@@ -37,6 +37,8 @@ import {
 import { OpenFileManager, SourceMapType } from '../lib';
 import {
     blocklyDidChangeModel,
+    blocklyDidCreateBlock,
+    blocklyDidDeleteBlock,
     blocklyDidDispose,
     blocklyGenerateSource,
     blocklyHighlightBlock,
@@ -46,7 +48,6 @@ import pythonGenerator from './codegenerator';
 import * as notify from './lib';
 
 function* handleBlocklyWorkspaceDidChange(
-    ms: number,
     chan: EventChannel<Blockly.Events.Abstract>,
     workspace: Blockly.Workspace,
 ): Generator {
@@ -72,6 +73,34 @@ function* handleBlocklyWorkspaceDidChange(
             continue;
         }
 
+        if (event.type === Blockly.Events.BLOCK_DELETE) {
+            console.log('*** DELETED');
+
+            const deleted = event as Blockly.Events.BlockDelete;
+
+            if (!deleted.ids) {
+                throw 'empty id list';
+            }
+
+            for (let i = 0; i < deleted.ids.length; i++) {
+                yield* put(blocklyDidDeleteBlock(deleted.ids[i]));
+            }
+        }
+
+        if (event.type === Blockly.Events.BLOCK_CREATE) {
+            console.log('*** CREATED');
+
+            const created = event as Blockly.Events.BlockCreate;
+
+            if (!created.ids) {
+                throw 'empty id list';
+            }
+
+            for (let i = 0; i < created.ids.length; i++) {
+                yield* put(blocklyDidCreateBlock(created.ids[i]));
+            }
+        }
+
         yield* put(editorHighlightBlockCode());
 
         const state = Blockly.serialization.workspaces.save(workspace);
@@ -79,9 +108,6 @@ function* handleBlocklyWorkspaceDidChange(
         const value = JSON.stringify(state);
 
         yield* put(blocklyDidChangeModel(value));
-
-        // throttle the writes so we don't do it too often while user is editing quickly
-        yield* delay(ms);
     }
 }
 
@@ -95,6 +121,8 @@ function* handleBlocklyDidChangeModel(
     yield* put(fileStorageStoreBlocklyValue(uuid, data));
     yield* put(blocklyGenerateSource(uuid));
 
+    // throttle the writes so we don't do it too often while user is editing quickly
+    //    yield* delay(ms);
     // failures are ignored
 }
 
@@ -102,7 +130,7 @@ function* handleBlocklyGenerateSource(
     workspace: Blockly.Workspace,
     action: ReturnType<typeof blocklyGenerateSource>,
 ): Generator {
-    console.debug('=== generate source');
+    //console.debug('=== generate source');
 
     try {
         const setupBlocks = workspace.getBlocksByType('setup_program');
@@ -111,6 +139,7 @@ function* handleBlocklyGenerateSource(
         const blocks = [...setupBlocks, ...startBlocks];
 
         pythonGenerator.init(workspace);
+
         let source = '';
         blocks.forEach((block) => {
             source += pythonGenerator.blockToCode(block);
@@ -204,7 +233,6 @@ function* handleEditorActivateFile(
             let lis: Task | undefined;
 
             if (didLoad.data !== null) {
-                console.debug('data loaded', didLoad.data);
                 const data = JSON.parse(didLoad.data);
 
                 Blockly.serialization.workspaces.load(data, workspace, {
@@ -265,6 +293,130 @@ function handleBlocklyRemoveHighlightFromBlock(workspace: Blockly.Workspace) {
     }
 }
 
+const findVariableName = (
+    workspace: Blockly.Workspace,
+    variableName: string,
+    varId: string,
+    type: string,
+): string => {
+    for (;;) {
+        const variable = workspace.getVariable(variableName, type);
+
+        if (!variable || variable.getId() === varId) {
+            return variableName;
+        }
+
+        const index = variableName.search(/(\d)+$/);
+        if (index < 0) {
+            variableName += ' 1';
+        } else {
+            let num = parseInt(variableName.substring(index), 10);
+
+            num += 1;
+
+            variableName = variableName.substring(0, index) + num;
+        }
+    }
+};
+
+function getVariableType(name: string) {
+    if (name.startsWith('VAR.')) {
+        name = name.substring(4);
+    }
+
+    const index = name.lastIndexOf('.');
+    if (index >= 0) {
+        name = name.substring(0, index);
+    }
+
+    return name;
+}
+
+function createVariable(
+    workspace: Blockly.Workspace,
+    varType: string,
+    varId: string,
+    value: string,
+) {
+    console.debug(`>>> create variable ${value} == ${varId}, type=${varType}`);
+    workspace.createVariable(value, varType, varId);
+}
+
+function handleBlocklyDidCreateBlock(
+    workspace: Blockly.Workspace,
+    action: ReturnType<typeof blocklyDidCreateBlock>,
+) {
+    console.log(`created ${action.blockId}`);
+
+    const block = workspace.getBlockById(action.blockId);
+    if (!block) {
+        throw `block with id ${action.blockId} not found`;
+    }
+
+    block.inputList
+        .filter((i) => i.type === Blockly.inputs.inputTypes.DUMMY)
+        .forEach((i) => {
+            i.fieldRow
+                .filter((b) => b.name && b.name.startsWith('VAR.'))
+                .forEach((input) => {
+                    const varType = getVariableType(input.name!);
+                    let value = block.getFieldValue(input.name!);
+                    const id = `${input.name}.${block.id}`;
+
+                    const newValue = findVariableName(workspace, value, id, varType);
+
+                    if (newValue !== value) {
+                        value = newValue;
+                        input.setValue(value, false);
+                    }
+
+                    createVariable(workspace, varType, id, value);
+
+                    //input.setValidator((_value: string) => {
+                    //    console.log('validator called for ' + varType);
+                    //});
+                });
+        });
+}
+
+function handleBlocklyDidDeleteBlock(
+    workspace: Blockly.Workspace,
+    action: ReturnType<typeof blocklyDidCreateBlock>,
+) {
+    console.log(`deleted ${action.blockId}`);
+
+    const variables = workspace.getAllVariables();
+
+    variables.forEach((variable) => {
+        const id = variable.getId();
+        console.log(`${id} = ${variable.name} / ${variable.type}`);
+
+        if (id.startsWith('VAR.') && id.endsWith(`.${action.blockId}`)) {
+            console.log(`delete var ${id}`);
+            workspace.deleteVariableById(id);
+        }
+    });
+
+    workspace.getAllBlocks().forEach((block) => {
+        block.inputList
+            .filter(
+                (input) =>
+                    input.type === Blockly.inputs.inputTypes.DUMMY &&
+                    input.name.startsWith('LIST.'),
+            )
+            .forEach((input) => {
+                const i = input.fieldRow.find(
+                    (f) => f.name?.startsWith('VALUE.'),
+                )! as Blockly.FieldDropdown;
+                i.markDirty();
+                i.forceRerender();
+                const o = i.getOptions(false);
+                console.log(i.isOptionListDynamic());
+                i.setValue(o[0]);
+            });
+    });
+}
+
 function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
     const isFileStorageInitialized = yield* select(
         (s: RootState) => s.fileStorage.isInitialized,
@@ -292,7 +444,7 @@ function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
                     workspace.addChangeListener(emit);
                     return () => workspace.removeChangeListener(emit);
                 },
-                buffers.sliding(1),
+                buffers.expanding(),
             );
 
             defer.push(() => didWorkspaceChangeChan.close());
@@ -301,7 +453,6 @@ function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
             // https://github.com/redux-saga/redux-saga/issues/620#issuecomment-259161095
             yield* fork(
                 handleBlocklyWorkspaceDidChange,
-                1000,
                 didWorkspaceChangeChan,
                 workspace,
             );
@@ -324,6 +475,18 @@ function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
             yield* takeEvery(
                 blocklyHighlightBlock,
                 handleBlocklyHighlightBlock,
+                workspace,
+            );
+
+            yield* takeEvery(
+                blocklyDidCreateBlock,
+                handleBlocklyDidCreateBlock,
+                workspace,
+            );
+
+            yield* takeEvery(
+                blocklyDidDeleteBlock,
+                handleBlocklyDidDeleteBlock,
                 workspace,
             );
 
