@@ -37,3 +37,13 @@ export const blocklyDidDeleteBlock = createAction((blockId: string) => ({
     type: 'blockly.action.didDeleteBlock',
     blockId,
 }));
+
+export const blocklyDidChangeVar = createAction(
+    (blockId: string, name: string, oldValue: string, newValue: string) => ({
+        type: 'blockly.action.didChangeVar',
+        blockId,
+        name,
+        oldValue,
+        newValue,
+    }),
+);

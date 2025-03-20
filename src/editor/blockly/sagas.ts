@@ -37,6 +37,7 @@ import {
 import { OpenFileManager, SourceMapType } from '../lib';
 import {
     blocklyDidChangeModel,
+    blocklyDidChangeVar,
     blocklyDidCreateBlock,
     blocklyDidDeleteBlock,
     blocklyDidDispose,
@@ -46,6 +47,7 @@ import {
 } from './actions';
 import pythonGenerator from './codegenerator';
 import * as notify from './lib';
+import { VAR_ENTRY_NONE } from './variables';
 
 function* handleBlocklyWorkspaceDidChange(
     chan: EventChannel<Blockly.Events.Abstract>,
@@ -99,6 +101,26 @@ function* handleBlocklyWorkspaceDidChange(
             for (let i = 0; i < created.ids.length; i++) {
                 yield* put(blocklyDidCreateBlock(created.ids[i]));
             }
+        }
+
+        if (event.type === Blockly.Events.BLOCK_CHANGE) {
+            console.log('*** CHANGED');
+
+            const changed = event as Blockly.Events.BlockChange;
+
+            if (changed.element === 'field' && changed.name?.startsWith('VAR.')) {
+                console.log(changed);
+                yield* put(
+                    blocklyDidChangeVar(
+                        changed.blockId!,
+                        changed.name,
+                        changed.oldValue as string,
+                        changed.newValue as string,
+                    ),
+                );
+            }
+
+            console.log(changed);
         }
 
         yield* put(editorHighlightBlockCode());
@@ -339,7 +361,11 @@ function createVariable(
     value: string,
 ) {
     console.debug(`>>> create variable ${value} == ${varId}, type=${varType}`);
-    workspace.createVariable(value, varType, varId);
+
+    const existingVar = workspace.getVariableById(varId);
+    if (!existingVar) {
+        workspace.createVariable(value, varType, varId);
+    }
 }
 
 function handleBlocklyDidCreateBlock(
@@ -372,9 +398,25 @@ function handleBlocklyDidCreateBlock(
 
                     createVariable(workspace, varType, id, value);
 
-                    //input.setValidator((_value: string) => {
-                    //    console.log('validator called for ' + varType);
-                    //});
+                    workspace.getAllBlocks().forEach((block) => {
+                        block.inputList
+                            .filter(
+                                (input) =>
+                                    input.type === Blockly.inputs.inputTypes.DUMMY &&
+                                    input.name.startsWith('LIST.'),
+                            )
+                            .forEach((input) => {
+                                const field = input.fieldRow.find(
+                                    (f) => f.name?.startsWith('VALUE.'),
+                                )! as Blockly.FieldDropdown;
+
+                                const value = field.getValue();
+                                if (!value || value === VAR_ENTRY_NONE) {
+                                    const firstOptions = field.getOptions(false)[0];
+                                    field.setValue(firstOptions[1]);
+                                }
+                            });
+                    });
                 });
         });
 }
@@ -385,6 +427,8 @@ function handleBlocklyDidDeleteBlock(
 ) {
     console.log(`deleted ${action.blockId}`);
 
+    const deletedVarIds: string[] = [];
+
     const variables = workspace.getAllVariables();
 
     variables.forEach((variable) => {
@@ -393,6 +437,7 @@ function handleBlocklyDidDeleteBlock(
 
         if (id.startsWith('VAR.') && id.endsWith(`.${action.blockId}`)) {
             console.log(`delete var ${id}`);
+            deletedVarIds.push(id);
             workspace.deleteVariableById(id);
         }
     });
@@ -405,14 +450,57 @@ function handleBlocklyDidDeleteBlock(
                     input.name.startsWith('LIST.'),
             )
             .forEach((input) => {
-                const i = input.fieldRow.find(
+                const field = input.fieldRow.find(
                     (f) => f.name?.startsWith('VALUE.'),
                 )! as Blockly.FieldDropdown;
-                i.markDirty();
-                i.forceRerender();
-                const o = i.getOptions(false);
-                console.log(i.isOptionListDynamic());
-                i.setValue(o[0]);
+
+                const value = field.getValue();
+                if (value) {
+                    if (deletedVarIds.indexOf(value) >= 0) {
+                        const firstOptions = field.getOptions(false)[0];
+                        field.setValue(firstOptions[1]);
+                    }
+                }
+            });
+    });
+}
+
+function handleBlocklyDidChangeVar(
+    workspace: Blockly.Workspace,
+    action: ReturnType<typeof blocklyDidChangeVar>,
+) {
+    const id = `${action.name}.${action.blockId}`; // TODO see above
+    const varType = getVariableType(action.name!);
+
+    let newValue = action.newValue || action.oldValue;
+
+    newValue = findVariableName(workspace, newValue, id, varType);
+
+    const variable = workspace.getVariableById(id);
+    variable!.name = newValue;
+
+    const block = workspace.getBlockById(action.blockId)!;
+    const field = block.getField(action.name)!;
+    field.setValue(newValue);
+
+    workspace.getAllBlocks().forEach((block) => {
+        block.inputList
+            .filter(
+                (input) =>
+                    input.type === Blockly.inputs.inputTypes.DUMMY &&
+                    input.name.startsWith('LIST.'),
+            )
+            .forEach((input) => {
+                const field = input.fieldRow.find(
+                    (f) => f.name?.startsWith('VALUE.'),
+                )! as Blockly.FieldDropdown;
+
+                const value = field.getValue();
+                if (value === id) {
+                    field.getOptions(false);
+                    field.setValue(id);
+                    field.forceRerender();
+                }
             });
     });
 }
@@ -490,10 +578,12 @@ function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
                 workspace,
             );
 
+            yield* takeEvery(blocklyDidChangeVar, handleBlocklyDidChangeVar, workspace);
+
             console.log('waiting for dispose');
             yield* take(blocklyDidDispose);
 
-            console.log('you should never see this');
+            console.error('you should never see this');
         } finally {
             for (const callback of defer.reverse()) {
                 callback();

@@ -297,7 +297,7 @@ const blocks = [
         type: 'distance_sensor_block',
         message0: '%1 %2 an %3',
         style: 'sensor_category',
-        extensions: ['add_my_custom_icon', 'xxx'],
+        extensions: ['add_my_custom_icon'],
         previousStatement: null,
         nextStatement: null,
         args0: [

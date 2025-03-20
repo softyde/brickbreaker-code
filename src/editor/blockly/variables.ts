@@ -3,6 +3,8 @@
 
 import * as Blockly from 'blockly';
 
+export const VAR_ENTRY_NONE = 'NONE';
+
 function getVariableType(name: string) {
     if (name.startsWith('LIST.')) {
         name = name.substring(5);
@@ -38,7 +40,7 @@ function asd(this: Blockly.Block) {
                     });
 
                     if (result.length === 0) {
-                        result.push(['<KEINER>', 'NONE']);
+                        result.push(['<KEINER>', VAR_ENTRY_NONE]);
                     }
 
                     return result;

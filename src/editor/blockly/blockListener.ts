@@ -32,44 +32,44 @@ export const removeLifecycleListener = (id: number): void => {
     }
 };
 
-const changeListener = (event: Blockly.Events.Abstract): void => {
-    let blockEvent: Blockly.Events.BlockDelete | Blockly.Events.BlockCreate | undefined;
+// const changeListener = (event: Blockly.Events.Abstract): void => {
+//     let blockEvent: Blockly.Events.BlockDelete | Blockly.Events.BlockCreate | undefined;
 
-    if (event.type === Blockly.Events.BLOCK_CREATE) {
-        blockEvent = event as Blockly.Events.BlockCreate;
-    } else if (event.type === Blockly.Events.BLOCK_DELETE) {
-        blockEvent = event as Blockly.Events.BlockDelete;
-    }
+//     if (event.type === Blockly.Events.BLOCK_CREATE) {
+//         blockEvent = event as Blockly.Events.BlockCreate;
+//     } else if (event.type === Blockly.Events.BLOCK_DELETE) {
+//         blockEvent = event as Blockly.Events.BlockDelete;
+//     }
 
-    if (blockEvent) {
-        if (!blockEvent.ids) {
-            console.warn('block event without ids occured');
-            return;
-        }
+//     if (blockEvent) {
+//         if (!blockEvent.ids) {
+//             console.warn('block event without ids occured');
+//             return;
+//         }
 
-        blockEvent.ids.forEach((id) => {
-            _listeners.forEach((listenerRef, key, object) => {
-                const [listenerId, listener] = listenerRef;
+//         blockEvent.ids.forEach((id) => {
+//             _listeners.forEach((listenerRef, key, object) => {
+//                 const [listenerId, listener] = listenerRef;
 
-                if (listenerId === id) {
-                    if (listener) {
-                        console.debug(`block event ${event.type} for ${id}`);
-                        listener(
-                            id,
-                            event.type === Blockly.Events.BLOCK_CREATE
-                                ? EventType.CREATE
-                                : EventType.DELETE,
-                        );
-                    }
-                }
+//                 if (listenerId === id) {
+//                     if (listener) {
+//                         console.debug(`block event ${event.type} for ${id}`);
+//                         listener(
+//                             id,
+//                             event.type === Blockly.Events.BLOCK_CREATE
+//                                 ? EventType.CREATE
+//                                 : EventType.DELETE,
+//                         );
+//                     }
+//                 }
 
-                if (event.type === Blockly.Events.BLOCK_DELETE) {
-                    object.delete(key);
-                }
-            });
-        });
-    }
-};
+//                 if (event.type === Blockly.Events.BLOCK_DELETE) {
+//                     object.delete(key);
+//                 }
+//             });
+//         });
+//     }
+// };
 
 // Funktion um die Dropdown-Menüs zu aktualisieren
 // function refreshVariableDropdowns(_workspace: Blockly.Workspace) {
@@ -98,18 +98,18 @@ const changeListener = (event: Blockly.Events.Abstract): void => {
 //     });*/
 // }
 
-function getVariableType(name: string) {
-    if (name.startsWith('VAR.')) {
-        name = name.substring(4);
-    }
+// function getVariableType(name: string) {
+//     if (name.startsWith('VAR.')) {
+//         name = name.substring(4);
+//     }
 
-    const index = name.lastIndexOf('.');
-    if (index >= 0) {
-        name = name.substring(0, index);
-    }
+//     const index = name.lastIndexOf('.');
+//     if (index >= 0) {
+//         name = name.substring(0, index);
+//     }
 
-    return name;
-}
+//     return name;
+// }
 
 // function getVariableId(name: string, blockId: string) {
 //     return `${name}.${blockId}`;
@@ -187,121 +187,120 @@ function getVariableType(name: string) {
 //     }
 // };
 
-function xxx(this: Blockly.Block) {
-    console.debug(`extension for block ${this.id}`);
+// function xxx(this: Blockly.Block) {
+//     console.debug(`extension for block ${this.id}`);
 
-    this.inputList
-        .filter((i) => i.type === Blockly.inputs.inputTypes.DUMMY)
-        .forEach((i) => {
-            i.fieldRow
-                .filter((b) => b.name && b.name.startsWith('VAR.'))
-                .forEach((input) => {
-                    const varType = getVariableType(input.name!);
-                    //const _value = this.getFieldValue(input.name!);
-                    //const _id = `${input.name}.${this.id}`;
-                    //createVariable(workspace, varType, id, value);
+//     this.inputList
+//         .filter((i) => i.type === Blockly.inputs.inputTypes.DUMMY)
+//         .forEach((i) => {
+//             i.fieldRow
+//                 .filter((b) => b.name && b.name.startsWith('VAR.'))
+//                 .forEach((input) => {
+//                     const varType = getVariableType(input.name!);
+//                     //const _value = this.getFieldValue(input.name!);
+//                     //const _id = `${input.name}.${this.id}`;
+//                     //createVariable(workspace, varType, id, value);
 
-                    input.setValidator((_value: string) => {
-                        console.log('validator called for ' + varType);
-                    });
-                });
-        });
+//                     input.setValidator((_value: string) => {
+//                         console.log('validator called for ' + varType);
+//                     });
+//                 });
+//         });
 
-    // this.setOnChange((changeEvent) => {
-    //     //  console.log(`--> ${changeEvent.type} (received via ${this.id})`);
+//     // this.setOnChange((changeEvent) => {
+//     //     //  console.log(`--> ${changeEvent.type} (received via ${this.id})`);
 
-    //     const workspace = this.workspace;
+//     //     const workspace = this.workspace;
 
-    //     if (changeEvent.type === Blockly.Events.FINISHED_LOADING) {
-    //         const createEvent = changeEvent as Blockly.Events.BlockCreate;
+//     //     if (changeEvent.type === Blockly.Events.FINISHED_LOADING) {
+//     //         const createEvent = changeEvent as Blockly.Events.BlockCreate;
 
-    //         console.log(`creating ${createEvent.blockId} vs ${createEvent.ids}`);
+//     //         console.log(`creating ${createEvent.blockId} vs ${createEvent.ids}`);
 
-    //         if (createEvent.blockId === this.id) {
-    //             const b = workspace.getBlockById(this.id);
+//     //         if (createEvent.blockId === this.id) {
+//     //             const b = workspace.getBlockById(this.id);
 
-    //             console.log(`isInFlyout=${b?.isInFlyout}`);
+//     //             console.log(`isInFlyout=${b?.isInFlyout}`);
 
-    //             if (!b?.isInFlyout) {
-    //                 console.log(
-    //                     `create event for ${createEvent.blockId} <-> ${this.id}`,
-    //                 );
+//     //             if (!b?.isInFlyout) {
+//     //                 console.log(
+//     //                     `create event for ${createEvent.blockId} <-> ${this.id}`,
+//     //                 );
 
-    //                 this.inputList
-    //                     .filter((i) => i.type === Blockly.inputs.inputTypes.DUMMY)
-    //                     .forEach((i) => {
-    //                         i.fieldRow
-    //                             .filter((b) => b.name && b.name.startsWith('VAR.'))
-    //                             .forEach((input) => {
-    //                                 const varType = getVariableType(input.name!);
-    //                                 let value = this.getFieldValue(input.name!);
-    //                                 const id = `${input.name}.${this.id}`;
+//     //                 this.inputList
+//     //                     .filter((i) => i.type === Blockly.inputs.inputTypes.DUMMY)
+//     //                     .forEach((i) => {
+//     //                         i.fieldRow
+//     //                             .filter((b) => b.name && b.name.startsWith('VAR.'))
+//     //                             .forEach((input) => {
+//     //                                 const varType = getVariableType(input.name!);
+//     //                                 let value = this.getFieldValue(input.name!);
+//     //                                 const id = `${input.name}.${this.id}`;
 
-    //                                 const newValue = findVariableName(
-    //                                     workspace,
-    //                                     value,
-    //                                     id,
-    //                                     varType,
-    //                                 );
+//     //                                 const newValue = findVariableName(
+//     //                                     workspace,
+//     //                                     value,
+//     //                                     id,
+//     //                                     varType,
+//     //                                 );
 
-    //                                 if (newValue !== value) {
-    //                                     console.log(
-    //                                         `replace value ${value} -> ${newValue}`,
-    //                                     );
-    //                                     value = newValue;
-    //                                     input.setValue(value, true);
-    //                                 }
+//     //                                 if (newValue !== value) {
+//     //                                     console.log(
+//     //                                         `replace value ${value} -> ${newValue}`,
+//     //                                     );
+//     //                                     value = newValue;
+//     //                                     input.setValue(value, true);
+//     //                                 }
 
-    //                                 createVariable(workspace, varType, id, value);
-    //                             });
-    //                     });
-    //             }
-    //         }
-    //     }
+//     //                                 createVariable(workspace, varType, id, value);
+//     //                             });
+//     //                     });
+//     //             }
+//     //         }
+//     //     }
 
-    //     if (changeEvent.type === Blockly.Events.BLOCK_CHANGE) {
-    //         const ev = changeEvent as Blockly.Events.BlockChange;
+//     //     if (changeEvent.type === Blockly.Events.BLOCK_CHANGE) {
+//     //         const ev = changeEvent as Blockly.Events.BlockChange;
 
-    //         if (ev.element === 'field' && ev.blockId === this.id) {
-    //             console.log(`field changed ${ev.name}`);
-    //         }
-    //     }
+//     //         if (ev.element === 'field' && ev.blockId === this.id) {
+//     //             console.log(`field changed ${ev.name}`);
+//     //         }
+//     //     }
 
-    //     /*if (
-    //         changeEvent.type === Blockly.Events.BLOCK_CREATE ||
-    //         (changeEvent.type === Blockly.Events.BLOCK_CHANGE &&
-    //             changeEvent.element === 'field' &&
-    //             changeEvent.name === 'VAR_NAME')
-    //     ) {
-    //         const workspace = this.workspace;
-    //         const varName = this.getFieldValue('VAR_NAME');
-    //         updateVariableStore(workspace, varName, true);
-    //     }
+//     //     /*if (
+//     //         changeEvent.type === Blockly.Events.BLOCK_CREATE ||
+//     //         (changeEvent.type === Blockly.Events.BLOCK_CHANGE &&
+//     //             changeEvent.element === 'field' &&
+//     //             changeEvent.name === 'VAR_NAME')
+//     //     ) {
+//     //         const workspace = this.workspace;
+//     //         const varName = this.getFieldValue('VAR_NAME');
+//     //         updateVariableStore(workspace, varName, true);
+//     //     }
 
-    //     if (
-    //         changeEvent.type === Blockly.Events.BLOCK_DELETE &&
-    //         changeEvent.blockId === this.id
-    //     ) {
-    //         const workspace = this.workspace;
-    //         const varName = this.getFieldValue('VAR_NAME');
-    //         updateVariableStore(workspace, varName, false);
-    //     }*/
+//     //     if (
+//     //         changeEvent.type === Blockly.Events.BLOCK_DELETE &&
+//     //         changeEvent.blockId === this.id
+//     //     ) {
+//     //         const workspace = this.workspace;
+//     //         const varName = this.getFieldValue('VAR_NAME');
+//     //         updateVariableStore(workspace, varName, false);
+//     //     }*/
 
-    //     // Wenn Block gelöscht wird, entferne Variable aus der Liste
-    //     if (changeEvent.type === Blockly.Events.BLOCK_DELETE) {
-    //         const deleteEvent = changeEvent as Blockly.Events.BlockDelete;
+//     //     // Wenn Block gelöscht wird, entferne Variable aus der Liste
+//     //     if (changeEvent.type === Blockly.Events.BLOCK_DELETE) {
+//     //         const deleteEvent = changeEvent as Blockly.Events.BlockDelete;
 
-    //         console.debug(`DELETE ${deleteEvent.ids}`);
+//     //         console.debug(`DELETE ${deleteEvent.ids}`);
 
-    //         deleteEvent.ids!.forEach((id) => {
-    //             deleteVariables(workspace, id);
-    //         });
-    //     }
-    // });
-}
+//     //         deleteEvent.ids!.forEach((id) => {
+//     //             deleteVariables(workspace, id);
+//     //         });
+//     //     }
+//     // });
+// }
 
-export const init = (workspace: Blockly.Workspace) => {
-    workspace.addChangeListener(changeListener);
-
-    Blockly.Extensions.register('xxx', xxx);
+export const init = (_workspace: Blockly.Workspace) => {
+    //    workspace.addChangeListener(changeListener);
+    //Blockly.Extensions.register('xxx', xxx);
 };
