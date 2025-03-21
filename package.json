@@ -9,6 +9,7 @@
     },
     "dependencies": {
         "@babel/core": "^7.23.9",
+        "@blockly/block-shareable-procedures": "^5.0.12",
         "@blueprintjs/core": "^5.8.2",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
         "@pybricks/firmware": "7.22.0",

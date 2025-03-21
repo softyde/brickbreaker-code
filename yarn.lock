@@ -1639,6 +1639,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@blockly/block-shareable-procedures@npm:^5.0.12":
+  version: 5.0.12
+  resolution: "@blockly/block-shareable-procedures@npm:5.0.12"
+  peerDependencies:
+    blockly: ^11.0.0
+  checksum: 3226d87fceeb1728b77318243b21fa2b63938c98415cfbcba5617eefc5bb669835b1ec3992abc19b4c307a00b2579ebd6354e076ab133a5f48fda65b805331f3
+  languageName: node
+  linkType: hard
+
 "@blueprintjs/colors@npm:^5.0.9":
   version: 5.0.9
   resolution: "@blueprintjs/colors@npm:5.0.9"
@@ -3031,6 +3040,7 @@ __metadata:
   resolution: "@pybricks/pybricks-code@workspace:."
   dependencies:
     "@babel/core": ^7.23.9
+    "@blockly/block-shareable-procedures": ^5.0.12
     "@blueprintjs/core": ^5.8.2
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.11
     "@pybricks/firmware": 7.22.0

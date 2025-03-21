@@ -3,6 +3,7 @@
 
 import './editorBlockly.scss';
 
+import * as BlocklyProcedures from '@blockly/block-shareable-procedures';
 import * as Blockly from 'blockly/core';
 
 import * as De from 'blockly/msg/de';
@@ -361,6 +362,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
         });
 
         // registerFirstContextMenuOptions();
+        BlocklyProcedures.unregisterProcedureBlocks();
+        Blockly.common.defineBlocks(BlocklyProcedures.blocks);
 
         BlocklyVars.initCustomVariableHandling();
 
@@ -403,10 +406,21 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 distance_sensor_category: {
                     colourPrimary: '#6B9DF8',
                 },
+                sensor_category: {
+                    colourPrimary: '#6B9DF8',
+                },
+                procedure_blocks: {
+                    // Name is defined by plugin
+
+                    colourPrimary: '#0AB50A',
+                },
             },
             categoryStyles: {
                 event_category: {
                     colour: '#f2bd0c',
+                },
+                function_category: {
+                    colour: '#0AB50A',
                 },
                 hub_category: {
                     colour: '#0c74f2',
@@ -416,6 +430,9 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 },
                 flow_category: {
                     colour: '#F2640C',
+                },
+                sensor_category: {
+                    colour: '#6B9DF8',
                 },
             },
             componentStyles: {
@@ -487,6 +504,12 @@ const BlocklyEditor: React.FunctionComponent = () => {
                             type: 'start_program',
                         },
                     ],
+                },
+                {
+                    kind: 'category',
+                    name: 'Funktionen',
+                    categorystyle: 'function_category',
+                    custom: 'PROCEDURE',
                 },
                 {
                     kind: 'category',

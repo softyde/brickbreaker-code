@@ -31,10 +31,10 @@ If it does: don't use it for anything serious.**
 - [x] source map works both ways: block <> code
 - [x] develop some useful blocks
 - [x] run it on a real spike prime device (dev progress https://youtu.be/rxz_a8NYH68)
+- [x] improve variable handling (dev progress https://youtu.be/X3-U1x4zmDw)
 
 -> CURRENT
-- [x] improve variable handling (dev progress https://youtu.be/X3-U1x4zmDw)
-- [ ] support user-defined methods
+- [x] support user-defined methods
 - [ ] develop some even more useful blocks (vars, parameters, etc.)
 - [ ] cleanup code
 - [ ] fix broken tests

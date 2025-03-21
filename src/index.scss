@@ -224,6 +224,11 @@ a.#{bp.$ns}-button {
     }
 }
 
+.bp5-overlay {
+    // <70 does not cover blockly toolboxes
+    z-index: 70;
+}
+
 // make scrollbars fit our style
 ::-webkit-scrollbar {
     width: 16px;

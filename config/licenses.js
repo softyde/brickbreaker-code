@@ -710,6 +710,7 @@ const licenseTextOverrides = {
     'dexie-react-hooks': dexieLicense,
     'upper-case': changeCaseLicense,
     'blockly': apache2License,
+    '@blockly/block-shareable-procedures': apache2License,
     // REVISIT: See https://github.com/pyodide/pyodide/issues/3081.
     pyodide: mpl20,
     gud: `MIT License,
