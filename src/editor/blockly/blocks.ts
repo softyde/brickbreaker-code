@@ -324,6 +324,27 @@ const blocks = [
             },
         ],
     },
+
+    // Block for variable setter.
+    {
+        type: 'variables_set',
+        message0: '%{BKY_VARIABLES_SET}',
+        extensions: ['add_shadow_number'],
+        previousStatement: null,
+        nextStatement: null,
+        args0: [
+            {
+                type: 'field_variable',
+                name: 'VAR',
+                variable: '%{BKY_VARIABLES_DEFAULT_NAME}',
+            },
+            {
+                type: 'input_value', // This expects an input of any type
+                name: 'VALUE',
+                check: ['Number', 'shadow_Number_Int_gt_Zero'],
+            },
+        ],
+    },
     /*
 
 {
