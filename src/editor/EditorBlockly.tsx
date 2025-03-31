@@ -334,11 +334,6 @@ const BlocklyEditor: React.FunctionComponent = () => {
         });
     };
 
-    //const { activeFileUuid } = useSelector((s) => s.editor);
-    //const fileName = useFileStoragePath(activeFileUuid ?? ('' as UUID));
-    //const isBlocky = fileName?.endsWith(blockyFileExtension);
-
-    //
     return (
         <>
             <div className={'pb-editor-blockly'} ref={blocklyEditorRef} />

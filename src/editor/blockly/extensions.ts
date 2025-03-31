@@ -129,13 +129,6 @@ class CustomCategory extends Blockly.ToolboxCategory {
         }
 
         return document.createElement('div');
-
-        // (this.svgRoot as SVGElement).appendChild(doc.documentElement);
-        // const img = document.createElement('img') as HTMLImageElement;
-        // img.src = CategoryStartIcon;
-        // img.width = 32;
-        // img.height = 32;
-        // return img;
     }
 }
 
@@ -222,43 +215,6 @@ class CustomIcon extends Blockly.icons.Icon {
         //this.myBubble?.dispose();
         //this.myOtherReference?.dispose();
     }
-}
-
-export function createShadowDom(
-    workspace: Blockly.Workspace,
-    blockType: string,
-    fieldConfigs = {},
-) {
-    // Block erstellen
-    const block = workspace.newBlock(blockType);
-
-    // Felder konfigurieren
-    for (const [fieldName, value] of Object.entries(fieldConfigs)) {
-        if (block.getField(fieldName)) {
-            block.setFieldValue(value, fieldName);
-        }
-    }
-
-    // In DOM umwandeln
-    const blockDom = Blockly.Xml.blockToDom(block) as Element;
-
-    // Neues shadow-Element erstellen
-    const shadowDom = Blockly.utils.xml.createElement('shadow');
-
-    // Attribute vom Block-Element zum Shadow-Element kopieren
-    for (let i = 0; i < blockDom.attributes.length; i++) {
-        const attr = blockDom.attributes[i];
-        shadowDom.setAttribute(attr.name, attr.value);
-    }
-
-    // Kinder-Elemente kopieren
-    while (blockDom.firstChild) {
-        shadowDom.appendChild(blockDom.firstChild);
-    }
-    // Block entfernen, da er nur temporär benötigt wurde
-    block.dispose();
-
-    return shadowDom;
 }
 
 export const registerExtensions = function () {
