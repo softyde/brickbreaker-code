@@ -17,6 +17,7 @@ Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 
 **This is an alpha. And nothing will work.  
 If it does: don't use it for anything serious.**
+(0.1.0-alpha2 / 01.04.2025)
 
 ---
 
@@ -35,6 +36,7 @@ If it does: don't use it for anything serious.**
 - [x] support user-defined methods
 -> CURRENT
 - [x] custom rendering for connection types
+- [x] dark mode support
 - [ ] develop some even more useful blocks (vars, parameters, etc.)
 - [ ] cleanup code
 - [ ] fix broken tests
