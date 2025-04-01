@@ -8,15 +8,16 @@ import * as Blockly from 'blockly/core';
 
 import * as De from 'blockly/msg/de';
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import { useEffectOnce } from 'usehooks-ts';
+import { useEffectOnce, useTernaryDarkMode } from 'usehooks-ts';
 import defaultBlocks from './blockly/blocks';
 import { RendererName, initRenderer } from './blockly/custom_renderer';
 import * as blocklyShadow from './blockly/extension_shadow';
 import { registerExtensions } from './blockly/extensions';
 
 import * as notify from './blockly/lib';
+import * as Themes from './blockly/themes';
 import * as BlocklyVars from './blockly/variables';
 
 Blockly.setLocale(De as unknown as { [key: string]: string });
@@ -26,6 +27,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
 
     const workspaceRef = useRef<Blockly.WorkspaceSvg | null>(null);
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
+
+    const { isDarkMode } = useTernaryDarkMode();
 
     useEffectOnce(() => {
         // istanbul ignore if: should never happen
@@ -41,97 +44,6 @@ const BlocklyEditor: React.FunctionComponent = () => {
         BlocklyVars.initCustomVariableHandling();
 
         registerExtensions();
-
-        const theme = Blockly.Theme.defineTheme('themeName', {
-            name: 'themeName',
-            base: Blockly.Themes.Classic,
-            blockStyles: {
-                logic_blocks: {
-                    colourPrimary: '#4a148c',
-                },
-                hub_category: {
-                    colourPrimary: '#0c74f2',
-                    //colourSecondary: '#0c74f2',
-                    //colourTertiary: '#0c74f2',
-                },
-                event_category: {
-                    colourPrimary: '#f2bd0c',
-                    //colourSecondary: '#f2d985',
-                    //colourTertiary: '#735906',
-                    hat: 'cap',
-                },
-                movement_category: {
-                    colourPrimary: '#bc0cf2',
-                },
-                movement_category$light: {
-                    colourPrimary: '#D56BF8',
-                },
-                flow_category: {
-                    colourPrimary: '#F2640C',
-                },
-                distance_sensor_category: {
-                    colourPrimary: '#6B9DF8',
-                },
-                sensor_category: {
-                    colourPrimary: '#6B9DF8',
-                },
-                procedure_blocks: {
-                    // Name is defined by plugin
-
-                    colourPrimary: '#0AB50A',
-                },
-            },
-            categoryStyles: {
-                event_category: {
-                    colour: '#f2bd0c',
-                },
-                function_category: {
-                    colour: '#0AB50A',
-                },
-                hub_category: {
-                    colour: '#0c74f2',
-                },
-                movement_category: {
-                    colour: '#bc0cf2',
-                },
-                flow_category: {
-                    colour: '#F2640C',
-                },
-                sensor_category: {
-                    colour: '#6B9DF8',
-                },
-            },
-            componentStyles: {
-                toolboxBackgroundColour: '#e4e7ed',
-                toolboxForegroundColour: '#000',
-                flyoutBackgroundColour: '#e4e7ed',
-                flyoutOpacity: 0.85,
-
-                workspaceBackgroundColour: '#fcfcfc',
-                scrollbarColour: '#000000',
-                scrollbarOpacity: 0.5,
-
-                /*workspaceBackgroundColour: '#1e1e1e',
-                toolboxBackgroundColour: 'blackBackground',
-                toolboxForegroundColour: '#fff',
-                flyoutBackgroundColour: '#252526',
-                flyoutForegroundColour: '#ccc',
-                flyoutOpacity: 1,
-                scrollbarColour: '#797979',
-                insertionMarkerColour: '#fff',
-                insertionMarkerOpacity: 0.3,
-                scrollbarOpacity: 0.4,
-                cursorColour: '#d0d0d0',*/
-                //blackBackground: '#333',
-            },
-            fontStyle: {
-                family: '-apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", sans-serif',
-                weight: 'normal',
-                size: 14,
-            },
-            //startHats: true,
-        });
-
         Blockly.defineBlocksWithJsonArray(defaultBlocks);
 
         /*
@@ -271,7 +183,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
             disable: false,
             comments: true,
             media: './blockly/',
-            theme: theme,
+            theme: isDarkMode ? Themes.darkTheme : Themes.defaultTheme,
             maxInstances: {
                 setup_program: 1,
                 start_program: 1,
@@ -338,6 +250,12 @@ const BlocklyEditor: React.FunctionComponent = () => {
             }
         });
     };
+
+    useEffect(() => {
+        workspaceRef.current?.setTheme(
+            isDarkMode ? Themes.darkTheme : Themes.defaultTheme,
+        );
+    }, [isDarkMode]);
 
     return (
         <>

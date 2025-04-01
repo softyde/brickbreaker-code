@@ -3,16 +3,49 @@
 
 .blocklyToolboxContents {
     .blocklyToolboxCategory {
+        &[aria-selected='true'] {
+            .blocklyTreeRow {
+                position: relative;
+
+                margin-left: 10px;
+                margin-right: 30px;
+
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+
+                .blocklyTreeRowContentContainer {
+                    ::after {
+                        content: '';
+
+                        z-index: 10000;
+                        display: block;
+                        position: absolute;
+                        right: -20px;
+                        top: 0;
+                        height: 100%;
+                        width: 20px;
+                        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L0,100 L20,50 Z' fill='%23ffffff' /%3E%3C/svg%3E");
+                        background-size: cover;
+                    }
+                }
+            }
+        }
+
         .blocklyTreeRow {
             height: unset;
-            min-height: 60px;
+            min-height: 45px;
 
-            margin: 5px 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+
+            margin-left: 20px;
+            margin-right: 20px;
 
             border-radius: 5px;
             padding: 0;
 
             display: flex;
+            white-space: initial;
 
             .blocklyTreeRowContentContainer {
                 display: flex;
@@ -23,6 +56,14 @@
 
                 svg {
                     padding-right: 5px;
+                }
+
+                .blocklyTreeLabel {
+                    max-width: 250px;
+
+                    color: white;
+
+                    //display: inline-flex;
                 }
             }
         }

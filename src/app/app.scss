@@ -114,7 +114,7 @@ $dark-splitter-color-hover: color.adjust(
     top: calc(50% - bp.$pt-grid-size * $height * 0.5);
     left: bp.$pt-grid-size * $width * -0.5 + 2px;
 
-    .splitter-layout-vertical & {
+    .splitter-layout-vertical > & {
         $width: 2.7;
         $height: 1.4;
 
