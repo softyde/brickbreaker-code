@@ -12,6 +12,7 @@ import React, { useRef } from 'react';
 
 import { useEffectOnce } from 'usehooks-ts';
 import defaultBlocks from './blockly/blocks';
+import { RendererName, initRenderer } from './blockly/custom_renderer';
 import * as blocklyShadow from './blockly/extension_shadow';
 import { registerExtensions } from './blockly/extensions';
 
@@ -256,10 +257,14 @@ const BlocklyEditor: React.FunctionComponent = () => {
                 },
             ],
         };
+
+        initRenderer();
+
         workspaceRef.current = Blockly.inject(blocklyEditorRef.current, {
             toolbox: toolbox,
             //renderer: 'thrasos',
-            renderer: 'zelos',
+            //renderer: 'zelos',
+            renderer: RendererName,
             //renderer: 'geras',
             sounds: true,
             collapse: false,

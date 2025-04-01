@@ -54,7 +54,7 @@ const blocks = [
         type: 'start_program',
         message0: '%1 Programm starten',
         tooltip: 'Programm starten',
-        nextStatement: null,
+        nextStatement: 'BLAFASEL',
         style: 'event_category',
         extensions: ['add_my_custom_icon'],
         args0: [
@@ -298,8 +298,8 @@ const blocks = [
         message0: '%1 %2 an %3',
         style: 'sensor_category',
         extensions: ['add_my_custom_icon'],
-        previousStatement: null,
-        nextStatement: null,
+        previousStatement: ['INIT_CONNECTION'],
+        nextStatement: ['INIT_CONNECTION'],
         args0: [
             {
                 type: 'field_vertical_separator',
@@ -382,7 +382,7 @@ Blockly.Extensions.register('dynamic_menu_extension',
         type: 'setup_program',
         message0: '%1 Roboter initialisieren',
         tooltip: 'tbd',
-        nextStatement: null,
+        nextStatement: ['INIT_CONNECTION'],
         style: 'event_category',
         extensions: ['add_my_custom_icon'],
 
