@@ -96,6 +96,14 @@ export const Toolbox = {
             contents: [
                 {
                     kind: 'block',
+                    type: 'number_condition',
+                },
+                {
+                    kind: 'block',
+                    type: 'if_block',
+                },
+                {
+                    kind: 'block',
                     type: 'repeat_xtimes_block',
                 },
             ],

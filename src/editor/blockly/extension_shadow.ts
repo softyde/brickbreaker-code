@@ -84,7 +84,7 @@ export const registerExtension = function () {
                 return;
             }
 
-            const [shadowType, ...parameters] = shadow_check.split('-');
+            const [shadowType, ...parameters] = shadow_check.split('/');
 
             const shadowDom = createShadowDom(
                 this.workspace,

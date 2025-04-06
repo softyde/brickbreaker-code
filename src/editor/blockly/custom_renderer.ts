@@ -86,7 +86,7 @@ class CustomConstantsProvider extends Blockly.zelos.ConstantProvider {
     }
 
     makeCustomNotch(numNotches: number) {
-        const height = 2 * this.GRID_UNIT;
+        const height = 1.5 * this.GRID_UNIT;
 
         const notchWidth = 4 * this.GRID_UNIT;
         const notchSpacing = 2 * this.GRID_UNIT;
@@ -111,9 +111,9 @@ class CustomConstantsProvider extends Blockly.zelos.ConstantProvider {
                 }
 
                 result +=
-                    lineOnAxis('v', height) +
+                    lineOnAxis('v', -height) +
                     lineOnAxis('h', dir * notchWidth) +
-                    lineOnAxis('v', -height);
+                    lineOnAxis('v', height);
             }
 
             return result;

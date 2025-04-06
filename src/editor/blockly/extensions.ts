@@ -43,7 +43,7 @@ class SeperatorField extends Blockly.Field {
                 x1: 0,
                 y1: 0,
                 x2: 0,
-                y2: 16, // this.height_,
+                y2: 24, // this.height_,
             },
             this.fieldGroup_,
         );
@@ -121,8 +121,8 @@ class CustomCategory extends Blockly.ToolboxCategory {
 
             const svg = doc.documentElement as unknown as SVGElement;
 
-            svg.setAttribute('width', '24px');
-            svg.setAttribute('height', '24px');
+            svg.setAttribute('width', '32px');
+            svg.setAttribute('height', '32px');
             svg.setAttribute('style', 'fill: white');
 
             return svg;
@@ -171,8 +171,8 @@ class CustomIcon extends Blockly.icons.Icon {
 
             const svg = doc.documentElement as unknown as SVGElement;
 
-            svg.setAttribute('width', '24px');
-            svg.setAttribute('height', '24px');
+            svg.setAttribute('width', '28px');
+            svg.setAttribute('height', '28px');
             svg.setAttribute('style', 'fill: white');
 
             (this.svgRoot as SVGElement).appendChild(doc.documentElement);

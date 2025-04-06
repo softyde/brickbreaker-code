@@ -18,6 +18,7 @@ import {
     VAR_NUMBER,
     VAR_STATEMENTS,
     VAR_TIMES,
+    var_port,
 } from './blocks';
 //import { VAR_HUB_NAME } from './blocks';
 
@@ -174,12 +175,11 @@ pythonGenerator.forBlock['move_straight_block'] = (block, generator) => {
     const drive = block.getFieldValue('VALUE.DRIVE');
     const driveVar = generator.getVariableName(drive);
 
-    let distance =
-        parseFloat(generator.statementToCode(block, VAR_DISTANCE).trim()) * 10;
+    let distance = generator.statementToCode(block, VAR_DISTANCE).trim() + '* 10';
     const direction = block.getFieldValue(VAR_DIRECTION);
 
     if (direction === StraightDirection.Backward) {
-        distance *= -1;
+        distance = `-${distance}`;
     }
 
     return `${driveVar}.straight(${distance}, then=Stop.HOLD, wait=True)`;
@@ -202,19 +202,45 @@ pythonGenerator.forBlock['move_curve_block'] = (block, generator) => {
 
 pythonGenerator.forBlock['repeat_xtimes_block'] = (block, generator) => {
     const x = generator.statementToCode(block, VAR_TIMES).trim();
-    const varName = generator.getNextVariableName();
 
     const statements = generator.statementToCode(block, VAR_STATEMENTS);
 
-    return `${varName} = int(${x})
-for _ in range(${varName}):
+    return `for _ in range(int(${x})):
 ${statements}`;
 };
 
-pythonGenerator.forBlock['distance_sensor_block'] = (_block, _generator) => {
-    //  const value = block.getFieldValue(VAR_NUMBER);
+pythonGenerator.forBlock['if_block'] = (block, generator) => {
+    const x = generator.statementToCode(block, 'condition').trim();
 
-    return ``;
+    const statements = generator.statementToCode(block, VAR_STATEMENTS);
+
+    return `if ${x}:
+${statements}`;
+};
+
+pythonGenerator.forBlock['distance_sensor_block'] = (block, generator) => {
+    const sensor = block.getFieldValue('VAR.DIST_SENSOR');
+    const sensorVar = generator.getVariableName(sensor);
+
+    const port = block.getFieldValue(var_port);
+
+    return `${sensorVar} = UltrasonicSensor(${port})`;
+};
+
+pythonGenerator.forBlock['number_condition'] = (block, generator) => {
+    const varA = generator.statementToCode(block, 'var_a').trim();
+    const varB = generator.statementToCode(block, 'var_b').trim();
+
+    const condition = block.getFieldValue('var_condition');
+
+    return `(${varA}) ${condition} (${varB})`;
+};
+
+pythonGenerator.forBlock['distance_sensor_input'] = (block, generator) => {
+    const sensor = block.getFieldValue('VALUE.DIST_SENSOR');
+    const sensorVar = generator.getVariableName(sensor);
+
+    return `(${sensorVar}.distance() / 10)`;
 };
 
 /* ---- */

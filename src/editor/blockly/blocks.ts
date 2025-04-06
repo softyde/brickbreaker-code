@@ -7,6 +7,8 @@ export const VAR_HUB_FRONT_AXIS = 'HUB_FRONT_AXIS';
 export const VAR_MOTOR_PORT = 'MOTOR_PORT';
 export const VAR_MOTOR_DIRECTION = 'MOTOR_DIRECTION';
 
+export const var_port = 'port';
+
 export const VAR_MOTOR_LEFT = 'MOTOR_LEFT';
 export const VAR_MOTOR_RIGHT = 'MOTOR_RIGHT';
 
@@ -41,7 +43,7 @@ function shadowNumber(
     max: number,
     precision: number,
 ): string {
-    return `${shadow_number}-${value}-${min}-${max}-${precision}`;
+    return `${shadow_number}/${value}/${min}/${max}/${precision}`;
 }
 
 export enum Axis {
@@ -304,8 +306,65 @@ const blocks = [
                 name: VAR_STATEMENTS,
             },
         ],
-        nextStatement: null,
-        previousStatement: null,
+        nextStatement: STATEMENT_DEFAULT,
+        previousStatement: STATEMENT_DEFAULT,
+    },
+    {
+        type: 'number_condition',
+        message0: '%1 %2 %3',
+        style: 'flow_category',
+        inputsInline: true,
+        extensions: [add_shadow_fields],
+        args0: [
+            {
+                type: 'input_value',
+                name: 'var_a',
+                check: ['Number', shadowNumber(1, -10000, 10000, 0.1)],
+            },
+            {
+                type: 'field_dropdown',
+                name: 'var_condition',
+                options: [
+                    ['<', '<'],
+                    ['≤', '<='],
+                    ['=', '=='],
+                    ['≥', '>='],
+                    ['>', '>'],
+                ],
+            },
+            {
+                type: 'input_value',
+                name: 'var_b',
+                check: ['Number', shadowNumber(2, -10000, 10000, 0.1)],
+            },
+        ],
+        output: 'Boolean',
+    },
+    {
+        type: 'if_block',
+        message0: '%1 Wenn %2, dann',
+        style: 'flow_category',
+        extensions: ['add_my_custom_icon'],
+        args0: [
+            {
+                type: 'field_vertical_separator',
+                name: 'separator',
+            },
+            {
+                type: 'input_value',
+                name: 'condition',
+                check: ['Boolean'],
+            },
+        ],
+        message1: '%1',
+        args1: [
+            {
+                type: 'input_statement',
+                name: VAR_STATEMENTS,
+            },
+        ],
+        nextStatement: STATEMENT_DEFAULT,
+        previousStatement: STATEMENT_DEFAULT,
     },
     {
         type: shadow_number,
@@ -316,7 +375,7 @@ const blocks = [
                 type: shadow_number_type,
                 name: VAR_NUMBER,
                 value: 1,
-                min: 1,
+                min: -1000,
                 max: 1000,
                 precision: 1,
             },
@@ -341,23 +400,23 @@ const blocks = [
     {
         type: 'distance_sensor_block',
         message0: '%1 %2 an %3',
-        style: 'sensor_category',
+        style: 'distance_sensor_category',
         extensions: ['add_my_custom_icon'],
-        previousStatement: ['INIT_CONNECTION'],
-        nextStatement: ['INIT_CONNECTION'],
+        previousStatement: STATEMENT_INIT,
+        nextStatement: STATEMENT_INIT,
         args0: [
             {
                 type: 'field_vertical_separator',
             },
             {
                 type: 'field_input',
-                name: 'VAR.DIST_SENSOR.1',
+                name: 'VAR.DIST_SENSOR',
                 text: 'Entfernungssensor',
                 spellcheck: false,
             },
             {
                 type: 'field_dropdown',
-                name: VAR_MOTOR_PORT,
+                name: var_port,
                 options: [
                     ['Anschluss A', Port.A],
                     ['Anschluss B', Port.B],
