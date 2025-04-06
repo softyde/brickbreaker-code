@@ -29,6 +29,21 @@ export const CONNECTION_MOTOR = 'connection.motor';
 export const STATEMENT_INIT = 'init';
 export const STATEMENT_DEFAULT = 'default';
 
+export const shadow = 'shadow_';
+export const shadow_number = `${shadow}number`;
+export const add_shadow_fields = 'add_shadow_fields';
+
+export const shadow_number_type = 'shadow-number-type';
+
+function shadowNumber(
+    value: number,
+    min: number,
+    max: number,
+    precision: number,
+): string {
+    return `${shadow_number}-${value}-${min}-${max}-${precision}`;
+}
+
 export enum Axis {
     X = 'Axis.X',
     Y = 'Axis.Y',
@@ -57,7 +72,7 @@ const blocks = [
         type: 'start_program',
         message0: '%1 Programm starten',
         tooltip: 'Programm starten',
-        nextStatement: 'BLAFASEL',
+        nextStatement: STATEMENT_DEFAULT,
         style: 'event_category',
         extensions: ['add_my_custom_icon'],
         args0: [
@@ -128,7 +143,7 @@ const blocks = [
             },
             {
                 type: 'field_input',
-                name: 'VAR.MOTOR.1',
+                name: 'VAR.MOTOR',
                 text: 'Motor 1',
                 spellcheck: false,
             },
@@ -156,62 +171,57 @@ const blocks = [
     },
     {
         type: 'move_hub_block',
-        message0: '%1 %2 mit ⌀ %3mm und ↕ %4mm',
+        message0: '%1 %2 mit ⌀ %3mm und ↕ %4mm mit %5 und %6',
+        inputsInline: true,
+
         args0: [
             {
                 type: 'field_vertical_separator',
             },
             {
                 type: 'field_input',
-                name: 'VAR.HUB',
+                name: 'VAR.DRIVE',
                 text: 'Fahrwerk',
                 spellcheck: false,
             },
             {
                 type: 'input_value',
                 name: VAR_DIAMETER,
-                check: ['Number', 'shadow_Number_Int_gt_Zero'],
-                value: 56,
-                min: 8,
-                max: 120,
-                precision: 1,
+                check: ['Number', shadowNumber(56, 8, 120, 1)],
             },
             {
                 type: 'input_value',
                 name: VAR_AXLE_TRACK,
-                check: ['Number', 'shadow_Number_Int_gt_Zero'],
-                value: 112,
-                min: 16,
-                max: 240,
-                precision: 1,
+                check: ['Number', shadowNumber(112, 16, 240, 1)],
+            },
+            {
+                type: 'input_dummy',
+                name: 'LIST.MOTOR.1',
+            },
+            {
+                type: 'input_dummy',
+                name: 'LIST.MOTOR.2',
             },
         ],
-        message1: 'mit Rad links %1',
+        /*message1: 'mit %1',
         args1: [
-            {
-                type: 'input_value',
-                name: VAR_MOTOR_LEFT,
-                check: CONNECTION_MOTOR,
-            },
+
         ],
-        message2: 'und Rad rechts %1',
+        message2: 'und %1',
         args2: [
-            {
-                type: 'input_value',
-                name: VAR_MOTOR_RIGHT,
-                check: CONNECTION_MOTOR,
-            },
-        ],
+
+        ], */
         previousStatement: STATEMENT_INIT,
         nextStatement: STATEMENT_INIT,
         style: 'movement_category',
-        extensions: ['add_my_custom_icon', 'add_shadow_number'],
+        extensions: ['add_my_custom_icon', add_shadow_fields, 'dynamic_var_list'],
     },
     {
         type: 'move_straight_block',
-        message0: '%1 Fahre %2cm %3',
+        message0: '%1 %2 fahre %3cm %4',
         style: 'movement_category',
-        extensions: ['add_my_custom_icon'],
+        extensions: ['add_my_custom_icon', 'dynamic_var_list', add_shadow_fields],
+        inputsInline: true,
 
         args0: [
             {
@@ -219,12 +229,13 @@ const blocks = [
                 name: 'separator',
             },
             {
-                type: 'field_number',
+                type: 'input_dummy',
+                name: 'LIST.DRIVE',
+            },
+            {
+                type: 'input_value',
                 name: VAR_DISTANCE,
-                value: 10.0,
-                min: 0.1,
-                max: 200.0,
-                precision: 0.1,
+                check: ['Number', shadowNumber(10, 0.1, 200, 0.1)],
             },
             {
                 type: 'field_dropdown',
@@ -235,14 +246,14 @@ const blocks = [
                 ],
             },
         ],
-        nextStatement: null,
-        previousStatement: null,
+        nextStatement: STATEMENT_DEFAULT,
+        previousStatement: STATEMENT_DEFAULT,
     },
     {
         type: 'move_curve_block',
-        message0: '%1 Drehe %2° nach %3',
+        message0: '%1 %2 drehe %3° nach %4',
         style: 'movement_category',
-        extensions: ['add_my_custom_icon'],
+        extensions: ['add_my_custom_icon', 'dynamic_var_list', add_shadow_fields],
 
         args0: [
             {
@@ -250,12 +261,13 @@ const blocks = [
                 name: 'separator',
             },
             {
-                type: 'field_number',
+                type: 'input_dummy',
+                name: 'LIST.DRIVE',
+            },
+            {
+                type: 'input_value',
                 name: VAR_DEGREES,
-                value: 90.0,
-                min: 0.1,
-                max: 360.0,
-                precision: 0.1,
+                check: ['Number', shadowNumber(90, 0.1, 360, 0.1)],
             },
             {
                 type: 'field_dropdown',
@@ -266,14 +278,14 @@ const blocks = [
                 ],
             },
         ],
-        nextStatement: null,
-        previousStatement: null,
+        nextStatement: STATEMENT_DEFAULT,
+        previousStatement: STATEMENT_DEFAULT,
     },
     {
         type: 'repeat_xtimes_block',
         message0: '%1 Wiederhole %2 Mal',
         style: 'flow_category',
-        extensions: ['add_my_custom_icon', 'add_shadow_number'],
+        extensions: ['add_my_custom_icon', add_shadow_fields],
         args0: [
             {
                 type: 'field_vertical_separator',
@@ -282,11 +294,7 @@ const blocks = [
             {
                 type: 'input_value',
                 name: VAR_TIMES,
-                check: ['Number', 'shadow_Number_Int_gt_Zero'],
-                /*   value: 2,
-                min: 1,
-                max: 1000,
-                precision: 1,*/
+                check: ['Number', shadowNumber(2, 1, 1000, 1)],
             },
         ],
         message1: '%1',
@@ -300,12 +308,12 @@ const blocks = [
         previousStatement: null,
     },
     {
-        type: 'shadow_Number_Int_gt_Zero',
+        type: shadow_number,
         message0: '%1',
         style: 'flow_category',
         args0: [
             {
-                type: 'field_number',
+                type: shadow_number_type,
                 name: VAR_NUMBER,
                 value: 1,
                 min: 1,
@@ -366,7 +374,7 @@ const blocks = [
     {
         type: 'variables_set',
         message0: '%{BKY_VARIABLES_SET}',
-        extensions: ['add_shadow_number'],
+        extensions: [add_shadow_fields],
         previousStatement: null,
         nextStatement: null,
         args0: [
@@ -378,7 +386,7 @@ const blocks = [
             {
                 type: 'input_value', // This expects an input of any type
                 name: 'VALUE',
-                check: ['Number', 'shadow_Number_Int_gt_Zero'],
+                check: ['Number', shadow_number],
             },
         ],
     },

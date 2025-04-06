@@ -2,6 +2,30 @@
 // Copyright (c) 2025 Philipp Anné
 
 import * as Blockly from 'blockly';
+import { add_shadow_fields, shadow, shadow_number, shadow_number_type } from './blocks';
+
+type ShadowFieldNumberState = {
+    value: string | number | null;
+    min: number;
+    max: number;
+    precision: number;
+};
+
+class ShadowFieldNumber extends Blockly.FieldNumber {
+    override saveState(_doFullSerialization?: boolean): ShadowFieldNumberState {
+        return {
+            value: this.getValue(),
+            min: this.getMin(),
+            max: this.getMax(),
+            precision: this.getPrecision(),
+        };
+    }
+
+    override loadState(state: ShadowFieldNumberState) {
+        this.setConstraints(state.min, state.max, state.precision);
+        this.setValue(state.value);
+    }
+}
 
 function createShadowDom(
     workspace: Blockly.Workspace,
@@ -41,27 +65,49 @@ function createShadowDom(
 }
 
 export const registerExtension = function () {
-    Blockly.Extensions.register('add_shadow_number', function () {
+    Blockly.fieldRegistry.register(shadow_number_type, ShadowFieldNumber);
+
+    Blockly.Extensions.register(add_shadow_fields, function () {
         // 'this' bezieht sich auf die Block-Instanz
         const block = this as Blockly.Block;
 
         block.inputList.forEach((element) => {
-            if (!Array.isArray(element.connection?.getCheck())) {
+            if (!element.connection || !Array.isArray(element.connection.getCheck())) {
                 return;
             }
 
-            const shadow_check = (element.connection!.getCheck() as string[]).find(
-                (a) => a.startsWith('shadow_'),
+            const shadow_check = (element.connection.getCheck() as string[]).find((a) =>
+                a.startsWith(shadow),
             );
 
-            if (shadow_check) {
-                const shadowDom = createShadowDom(
-                    this.workspace,
-                    shadow_check,
-                    {},
-                ) as Element;
+            if (!shadow_check) {
+                return;
+            }
 
-                element.connection?.setShadowDom(shadowDom);
+            const [shadowType, ...parameters] = shadow_check.split('-');
+
+            const shadowDom = createShadowDom(
+                this.workspace,
+                shadowType,
+                {},
+            ) as Element;
+
+            element.connection.setShadowDom(shadowDom);
+
+            const shadowBlock = element.connection.targetConnection?.getSourceBlock();
+            if (!shadowBlock) {
+                throw 'das sollte nicht so sein';
+            }
+
+            switch (shadowType) {
+                case shadow_number: {
+                    const field = shadowBlock.inputList[0]
+                        .fieldRow[0] as Blockly.FieldNumber;
+                    field.setConstraints(parameters[1], parameters[2], parameters[3]);
+                    field.setValue(parameters[0]);
+
+                    break;
+                }
             }
         });
     });

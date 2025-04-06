@@ -27,12 +27,21 @@ export const Toolbox = {
             categorystyle: 'movement_category',
             contents: [
                 {
+                    kind: 'label',
+                    text: 'Blöcke zum Initialisieren',
+                    //                    'web-class': 'myLabelStyle',
+                },
+                {
                     kind: 'block',
                     type: 'move_motor_block',
                 },
                 {
                     kind: 'block',
                     type: 'move_hub_block',
+                },
+                {
+                    kind: 'label',
+                    text: 'Blöcke zum Fahren',
                 },
                 {
                     kind: 'block',

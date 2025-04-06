@@ -372,15 +372,15 @@ function handleBlocklyDidCreateBlock(
     workspace: Blockly.Workspace,
     action: ReturnType<typeof blocklyDidCreateBlock>,
 ) {
-    console.log(`created ${action.blockId}`);
-
     const block = workspace.getBlockById(action.blockId);
     if (!block) {
         throw `block with id ${action.blockId} not found`;
     }
 
+    console.debug(`created ${action.blockId} = ${block.type}, ${block.isShadow()}`);
+
     block.inputList
-        .filter((i) => i.type === Blockly.inputs.inputTypes.DUMMY)
+        //    .filter((i) => i.type === Blockly.inputs.inputTypes.DUMMY)
         .forEach((i) => {
             i.fieldRow
                 .filter((b) => b.name && b.name.startsWith('VAR.'))
