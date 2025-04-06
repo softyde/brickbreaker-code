@@ -149,7 +149,9 @@ pythonGenerator.forBlock['move_hub_block'] = (block, generator) => {
     const motor2Var = generator.getVariableName(motor2);
 
     return `${hubVar} = DriveBase(${motor1Var}, ${motor2Var}, ${diameter}, ${axleTrack})
-${hubVar}.use_gyro(True)`;
+${hubVar}.use_gyro(True)
+${hubVar}.settings(straight_speed=200, straight_acceleration=100, turn_rate=30, turn_acceleration=100)
+`;
 };
 
 pythonGenerator.forBlock['hub_block'] = (block, _generator) => {
@@ -180,7 +182,7 @@ pythonGenerator.forBlock['move_straight_block'] = (block, generator) => {
         distance *= -1;
     }
 
-    return `${driveVar}.straight(${distance})`;
+    return `${driveVar}.straight(${distance}, then=Stop.HOLD, wait=True)`;
 };
 
 pythonGenerator.forBlock['move_curve_block'] = (block, generator) => {
@@ -195,7 +197,7 @@ pythonGenerator.forBlock['move_curve_block'] = (block, generator) => {
         angle *= -1;
     }
 
-    return `${driveVar}.turn(${angle})`;
+    return `${driveVar}.turn(${angle}, then=Stop.HOLD, wait=True)`;
 };
 
 pythonGenerator.forBlock['repeat_xtimes_block'] = (block, generator) => {
