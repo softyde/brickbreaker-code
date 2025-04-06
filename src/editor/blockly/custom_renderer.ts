@@ -7,6 +7,7 @@
  */
 
 import * as Blockly from 'blockly';
+import { STATEMENT_INIT } from './blocks';
 
 /**
  * Ein benutzerdefinierter Renderer für Blockly
@@ -72,15 +73,10 @@ class CustomConstantsProvider extends Blockly.zelos.ConstantProvider {
             const nextConnection = connection
                 .getSourceBlock()
                 .nextConnection?.getCheck();
-            console.debug(
-                `${prevConnection} ${nextConnection}`,
-                prevConnection,
-                nextConnection,
-            );
 
             if (
-                prevConnection?.includes('INIT_CONNECTION') ||
-                nextConnection?.includes('INIT_CONNECTION')
+                prevConnection?.includes(STATEMENT_INIT) ||
+                nextConnection?.includes(STATEMENT_INIT)
             ) {
                 customShape = this.makeCustomNotch(2);
             }

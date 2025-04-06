@@ -26,6 +26,9 @@ export const VAR_STATEMENTS = 'STATEMENTS';
 
 export const CONNECTION_MOTOR = 'connection.motor';
 
+export const STATEMENT_INIT = 'init';
+export const STATEMENT_DEFAULT = 'default';
+
 export enum Axis {
     X = 'Axis.X',
     Y = 'Axis.Y',
@@ -57,6 +60,21 @@ const blocks = [
         nextStatement: 'BLAFASEL',
         style: 'event_category',
         extensions: ['add_my_custom_icon'],
+        args0: [
+            {
+                type: 'field_vertical_separator',
+                name: 'separator',
+            },
+        ],
+    },
+    {
+        type: 'setup_program',
+        message0: '%1 Roboter initialisieren',
+        tooltip: 'tbd',
+        nextStatement: STATEMENT_INIT,
+        style: 'event_category',
+        extensions: ['add_my_custom_icon'],
+
         args0: [
             {
                 type: 'field_vertical_separator',
@@ -97,12 +115,23 @@ const blocks = [
         ],
     },
     {
-        type: 'drive_motor_block',
-        message0: 'Motor an %1 dreht sich %2',
-        output: CONNECTION_MOTOR,
-        style: 'movement_category$light',
+        type: 'move_motor_block',
+        message0: '%1 %2 an %3 dreht sich %4',
+        previousStatement: STATEMENT_INIT,
+        nextStatement: STATEMENT_INIT,
+        style: 'movement_category',
+        extensions: ['add_my_custom_icon'],
 
         args0: [
+            {
+                type: 'field_vertical_separator',
+            },
+            {
+                type: 'field_input',
+                name: 'VAR.MOTOR.1',
+                text: 'Motor 1',
+                spellcheck: false,
+            },
             {
                 type: 'field_dropdown',
                 name: VAR_MOTOR_PORT,
@@ -126,23 +155,31 @@ const blocks = [
         ],
     },
     {
-        type: 'drive_hub',
-        message0: '%1 Fahrwerk mit Raddurchmesser %2mm und Abstand %3mm',
+        type: 'move_hub_block',
+        message0: '%1 %2 mit ⌀ %3mm und ↕ %4mm',
         args0: [
             {
                 type: 'field_vertical_separator',
             },
             {
-                type: 'field_number',
+                type: 'field_input',
+                name: 'VAR.HUB',
+                text: 'Fahrwerk',
+                spellcheck: false,
+            },
+            {
+                type: 'input_value',
                 name: VAR_DIAMETER,
+                check: ['Number', 'shadow_Number_Int_gt_Zero'],
                 value: 56,
                 min: 8,
                 max: 120,
                 precision: 1,
             },
             {
-                type: 'field_number',
+                type: 'input_value',
                 name: VAR_AXLE_TRACK,
+                check: ['Number', 'shadow_Number_Int_gt_Zero'],
                 value: 112,
                 min: 16,
                 max: 240,
@@ -165,10 +202,10 @@ const blocks = [
                 check: CONNECTION_MOTOR,
             },
         ],
-        previousStatement: null,
-        nextStatement: null,
+        previousStatement: STATEMENT_INIT,
+        nextStatement: STATEMENT_INIT,
         style: 'movement_category',
-        extensions: ['add_my_custom_icon'],
+        extensions: ['add_my_custom_icon', 'add_shadow_number'],
     },
     {
         type: 'move_straight_block',
@@ -378,21 +415,7 @@ Blockly.Extensions.register('dynamic_menu_extension',
 
     */
     /* ---------------------------------------------------------------------------------------------------- */
-    {
-        type: 'setup_program',
-        message0: '%1 Roboter initialisieren',
-        tooltip: 'tbd',
-        nextStatement: ['INIT_CONNECTION'],
-        style: 'event_category',
-        extensions: ['add_my_custom_icon'],
 
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-        ],
-    },
     {
         type: 'move_follow_line',
         message0: '%2 Folge der Linie für höchstens %1cm',

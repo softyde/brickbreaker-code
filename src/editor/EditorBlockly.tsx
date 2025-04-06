@@ -18,6 +18,7 @@ import { registerExtensions } from './blockly/extensions';
 
 import * as notify from './blockly/lib';
 import * as Themes from './blockly/themes';
+import { Toolbox } from './blockly/toolbox';
 import * as BlocklyVars from './blockly/variables';
 
 Blockly.setLocale(De as unknown as { [key: string]: string });
@@ -62,118 +63,10 @@ const BlocklyEditor: React.FunctionComponent = () => {
         });*/
 
         Blockly.ContextMenuItems.registerCommentOptions();
-
-        const toolbox = {
-            // There are two kinds of toolboxes. The simpler one is a flyout toolbox.
-            kind: 'categoryToolbox',
-            // The contents is the blocks and other items that exist in your toolbox.
-            contents: [
-                {
-                    kind: 'category',
-                    name: 'Ereignisse',
-                    categorystyle: 'event_category',
-                    contents: [
-                        {
-                            kind: 'block',
-                            type: 'setup_program',
-                        },
-                        {
-                            kind: 'block',
-                            type: 'start_program',
-                        },
-                    ],
-                },
-                {
-                    kind: 'category',
-                    name: 'Funktionen',
-                    categorystyle: 'function_category',
-                    custom: 'PROCEDURE',
-                },
-                {
-                    kind: 'category',
-                    name: 'Variablen',
-                    //custom: 'VARIABLE_DYNAMIC',
-                    custom: 'VARIABLE',
-                },
-                {
-                    kind: 'category',
-                    name: 'Hub',
-                    categorystyle: 'hub_category',
-                    contents: [
-                        {
-                            kind: 'block',
-                            type: 'hub_block',
-                        },
-                        {
-                            kind: 'block',
-                            type: 'line_follow_block',
-                        },
-                        {
-                            kind: 'block',
-                            type: 'hub_beep',
-                        },
-                    ],
-                },
-                {
-                    kind: 'category',
-                    name: 'Bewegung',
-                    categorystyle: 'movement_category',
-                    contents: [
-                        {
-                            kind: 'block',
-                            type: 'drive_hub',
-                        },
-                        {
-                            kind: 'block',
-                            type: 'drive_motor_block',
-                        },
-                        {
-                            kind: 'block',
-                            type: 'move_straight_block',
-                        },
-                        {
-                            kind: 'block',
-                            type: 'move_curve_block',
-                        },
-                        {
-                            kind: 'block',
-                            type: 'move_follow_line',
-                        },
-                    ],
-                },
-                {
-                    kind: 'category',
-                    name: 'Ablauf',
-                    categorystyle: 'flow_category',
-                    contents: [
-                        {
-                            kind: 'block',
-                            type: 'repeat_xtimes_block',
-                        },
-                    ],
-                },
-                {
-                    kind: 'category',
-                    name: 'Sensoren',
-                    categorystyle: 'sensor_category',
-                    contents: [
-                        {
-                            kind: 'block',
-                            type: 'distance_sensor_block',
-                        },
-                        {
-                            kind: 'block',
-                            type: 'distance_sensor_input',
-                        },
-                    ],
-                },
-            ],
-        };
-
         initRenderer();
 
         workspaceRef.current = Blockly.inject(blocklyEditorRef.current, {
-            toolbox: toolbox,
+            toolbox: Toolbox,
             //renderer: 'thrasos',
             //renderer: 'zelos',
             renderer: RendererName,

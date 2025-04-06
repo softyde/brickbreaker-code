@@ -129,7 +129,7 @@ pythonGenerator.forBlock['hub_block'] = (block, _generator) => {
     return `${robotHubName} = PrimeHub(top_side=${topAxis}, front_side=${frontAxis})`;
 };
 
-pythonGenerator.forBlock['drive_hub'] = (block, generator) => {
+pythonGenerator.forBlock['move_hub_block'] = (block, generator) => {
     const leftMotor = generator.valueToCode(block, VAR_MOTOR_LEFT, Order.ATOMIC);
     const rightMotor = generator.valueToCode(block, VAR_MOTOR_RIGHT, Order.ATOMIC);
 
