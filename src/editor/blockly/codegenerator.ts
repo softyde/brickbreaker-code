@@ -31,6 +31,10 @@ class BlocklyPythonGenerator extends PythonGenerator {
         super.init(workspace);
 
         this.resetVariablePrefix();
+
+        this.addReservedWords(
+            'PrimeHub,Motor,ColorSensor,UltrasonicSensor,ForceSensor,Button,Color,Direction,Port,Side,Stop,Axis,DriveBase,wait,StopWatch',
+        );
     }
 
     resetVariablePrefix(): void {
@@ -183,6 +187,24 @@ pythonGenerator.forBlock['move_straight_block'] = (block, generator) => {
     }
 
     return `${driveVar}.straight(${distance}, then=Stop.HOLD, wait=True)`;
+};
+
+pythonGenerator.forBlock['start_move_block'] = (block, generator) => {
+    const drive = block.getFieldValue('VALUE.DRIVE');
+    const driveVar = generator.getVariableName(drive);
+
+    const direction = block.getFieldValue(VAR_DIRECTION);
+
+    return `${driveVar}.drive(${
+        direction === StraightDirection.Forward ? '' : '-'
+    }200, 0)`;
+};
+
+pythonGenerator.forBlock['stop_move_block'] = (block, generator) => {
+    const drive = block.getFieldValue('VALUE.DRIVE');
+    const driveVar = generator.getVariableName(drive);
+
+    return `${driveVar}.break()`;
 };
 
 pythonGenerator.forBlock['move_curve_block'] = (block, generator) => {

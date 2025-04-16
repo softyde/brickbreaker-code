@@ -53,6 +53,14 @@ export const Toolbox = {
                 },
                 {
                     kind: 'block',
+                    type: 'start_move_block',
+                },
+                {
+                    kind: 'block',
+                    type: 'stop_move_block',
+                },
+                {
+                    kind: 'block',
                     type: 'move_follow_line',
                 },
             ],

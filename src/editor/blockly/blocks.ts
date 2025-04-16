@@ -252,6 +252,54 @@ const blocks = [
         previousStatement: STATEMENT_DEFAULT,
     },
     {
+        type: 'start_move_block',
+        message0: '%1 %2 fahre %3',
+        style: 'movement_category',
+        extensions: ['add_my_custom_icon', 'dynamic_var_list'],
+        inputsInline: true,
+
+        args0: [
+            {
+                type: 'field_vertical_separator',
+                name: 'separator',
+            },
+            {
+                type: 'input_dummy',
+                name: 'LIST.DRIVE',
+            },
+            {
+                type: 'field_dropdown',
+                name: VAR_DIRECTION,
+                options: [
+                    ['vorwärts ↑', StraightDirection.Forward],
+                    ['rückwärts ↓', StraightDirection.Backward],
+                ],
+            },
+        ],
+        nextStatement: STATEMENT_DEFAULT,
+        previousStatement: STATEMENT_DEFAULT,
+    },
+    {
+        type: 'stop_move_block',
+        message0: '%1 %2 halte an',
+        style: 'movement_category',
+        extensions: ['add_my_custom_icon', 'dynamic_var_list'],
+        inputsInline: true,
+
+        args0: [
+            {
+                type: 'field_vertical_separator',
+                name: 'separator',
+            },
+            {
+                type: 'input_dummy',
+                name: 'LIST.DRIVE',
+            },
+        ],
+        nextStatement: STATEMENT_DEFAULT,
+        previousStatement: STATEMENT_DEFAULT,
+    },
+    {
         type: 'move_curve_block',
         message0: '%1 %2 drehe %3° nach %4',
         style: 'movement_category',
