@@ -12,6 +12,8 @@
     display: flex;
     flex-wrap: nowrap;
 
+    //background: linear-gradient(180deg, #efd5ff 0%, #515ada 100%);
+
     // make small buttons more square and slightly smaller (some of this is
     // done in react)
     @media screen and (max-width: pb.$narrow-screen-limit) {

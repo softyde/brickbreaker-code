@@ -18,11 +18,20 @@
     }
 }
 
+.bp5-tabs.bp5-vertical > .bp5-tab-list .bp5-tab-indicator-wrapper .bp5-tab-indicator {
+    background-color: rgba(95, 181, 195, 1);
+    margin: -5px;
+    border-radius: 5px;
+}
+
 .pb-activities {
     // TODO: submit upstream patch to allow setting tablist class
     &-tablist,
     & .#{bp.$ns}-tab-list {
+        padding: 5px;
         @include pb.background-contrast(6%);
+
+        border-right: 1px solid white;
     }
 
     &-tabview {
@@ -33,13 +42,13 @@
         @include pb.background-contrast(0%);
 
         // on small screens, make the activity view an overlay instead of inline
-        @media screen and (max-width: pb.$narrow-screen-limit) {
-            position: absolute;
-            top: 0px;
-            // FIXME: this should be a variable
-            left: 47px;
-            height: calc(100% - pb.$status-bar-height);
-            z-index: bp.$pt-z-index-overlay;
-        }
+        // @media screen and (max-width: pb.$narrow-screen-limit) {
+        //     position: absolute;
+        //     top: 0px;
+        //     // FIXME: this should be a variable
+        //     left: 47px;
+        //     height: calc(100% - pb.$status-bar-height);
+        //     z-index: bp.$pt-z-index-overlay;
+        // }
     }
 }

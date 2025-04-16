@@ -2,13 +2,13 @@
 // Copyright (c) 2022-2023 The Pybricks Authors
 
 import './activities.scss';
-import { Icon, Tab, Tabs } from '@blueprintjs/core';
-import { Cog, Document } from '@blueprintjs/icons';
+import { Tab, Tabs } from '@blueprintjs/core';
 import React, { useCallback, useEffect, useRef } from 'react';
 import Explorer from '../explorer/Explorer';
 import Settings from '../settings/Settings';
 import { Activity, useActivitiesSelectedActivity } from './hooks';
 import { useI18n } from './i18n';
+import * as Icons from './icons/icons';
 
 /**
  * React component that acts as a tab control to select activities.
@@ -112,12 +112,7 @@ const Activities: React.FunctionComponent = () => {
                 aria-label={i18n.translate('explorer')}
                 className="pb-activities-tablist-tab"
                 id={Activity.Explorer}
-                title={
-                    <Icon
-                        htmlTitle={i18n.translate('explorer')}
-                        icon={<Document size={35} />}
-                    />
-                }
+                title={<Icons.Documents />}
                 panel={<Explorer />}
                 panelClassName="pb-activities-tabview"
                 onMouseDown={(e) => e.stopPropagation()}
@@ -127,12 +122,7 @@ const Activities: React.FunctionComponent = () => {
                 aria-label={i18n.translate('settings')}
                 className="pb-activities-tablist-tab"
                 id={Activity.Settings}
-                title={
-                    <Icon
-                        htmlTitle={i18n.translate('settings')}
-                        icon={<Cog size={35} />}
-                    />
-                }
+                title={<Icons.Settings />}
                 panel={<Settings />}
                 panelClassName="pb-activities-tabview"
                 onMouseDown={(e) => e.stopPropagation()}

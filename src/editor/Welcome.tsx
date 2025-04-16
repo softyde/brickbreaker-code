@@ -102,11 +102,9 @@ const Welcome: React.FunctionComponent<WelcomeProps> = ({ isVisible }) => {
                 type: ActionType.Update,
                 timeDelta: time / 1000,
             });
-
             //logo.fill = fillColorRef.current;
-            logo.scale = Math.min(two.width, two.height) / 80;
+            logo.scale = Math.min(two.width, two.height) / 90;
             logo.rotation = stateRef.current.rotation;
-
             two.scene.position.x = two.width / 2;
             two.scene.position.y = two.height / 2;
         });
