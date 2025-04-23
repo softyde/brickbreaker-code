@@ -45,8 +45,9 @@ If it does: don't use it for anything serious.**
 - [ ] peace & love  
 
 
-https://github.com/user-attachments/assets/3902bbb7-fdc5-4a02-a4bc-eb94b919a1d5
+### Screenshot (more or less up to date)
 
+![screenshot](.README/screenshot.png)
 
 # Contributing
 
@@ -60,6 +61,3 @@ For more details, see the file [CONTRIBUTING.md](./CONTRIBUTING.md).
 LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.
 </small>
 
-### Screenshot (more or less up to date)
-
-![screenshot](.README/screenshot.png)
