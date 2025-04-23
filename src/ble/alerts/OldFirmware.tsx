@@ -5,8 +5,8 @@ import './index.scss';
 import { Button, Intent } from '@blueprintjs/core';
 import { Download, InfoSign } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 type OldFirmwareProps = {
     onFlashFirmware: () => void;
@@ -15,14 +15,14 @@ type OldFirmwareProps = {
 const OldFirmware: React.FunctionComponent<OldFirmwareProps> = ({
     onFlashFirmware,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('bleAlerts');
 
     return (
         <>
-            <p>{i18n.translate('oldFirmware.message')}</p>
+            <p>{t('oldFirmware.message')}</p>
             <div className="pb-ble-alerts-buttons">
                 <Button icon={<Download />} onClick={onFlashFirmware}>
-                    {i18n.translate('oldFirmware.flashFirmware.label')}
+                    {t('oldFirmware.flashFirmware.label')}
                 </Button>
             </div>
         </>

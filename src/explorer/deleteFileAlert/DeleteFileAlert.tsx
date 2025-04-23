@@ -4,15 +4,15 @@
 import { Alert, Classes, Intent } from '@blueprintjs/core';
 import { Trash } from '@blueprintjs/icons';
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useSelector } from '../../reducers';
 import { deleteFileAlertDidAccept, deleteFileAlertDidCancel } from './actions';
-import { useI18n } from './i18n';
 
 const DeleteFileAlert: React.FunctionComponent = () => {
     const { isOpen, fileName } = useSelector((s) => s.explorer.deleteFileAlert);
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('deleteFileAlert');
 
     // a11y: focus primary button when dialog is opened
     const handleOpened = useCallback((node: HTMLElement) => {
@@ -38,13 +38,13 @@ const DeleteFileAlert: React.FunctionComponent = () => {
             isOpen={isOpen}
             icon={<Trash />}
             intent={Intent.DANGER}
-            confirmButtonText={i18n.translate('action.accept')}
-            cancelButtonText={i18n.translate('action.cancel')}
+            confirmButtonText={t('action.accept')}
+            cancelButtonText={t('action.cancel')}
             onConfirm={() => dispatch(deleteFileAlertDidAccept())}
             onCancel={() => dispatch(deleteFileAlertDidCancel())}
             onOpened={handleOpened}
         >
-            {i18n.translate('message', { fileName })}
+            {t('message', { fileName })}
         </Alert>
     );
 };

@@ -4,11 +4,11 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Code, Error } from '@blueprintjs/icons';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { editorGoto } from '../../editor/actions';
 import { useFileStorageUuid } from '../../fileStorage/hooks';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 type CompilerErrorProps = {
     error: string[];
@@ -16,7 +16,7 @@ type CompilerErrorProps = {
 
 const CompilerError: React.FunctionComponent<CompilerErrorProps> = ({ error }) => {
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('mpyAlerts');
 
     const [file, line] = useMemo(() => {
         for (const line of error) {
@@ -34,14 +34,14 @@ const CompilerError: React.FunctionComponent<CompilerErrorProps> = ({ error }) =
 
     return (
         <>
-            <p>{i18n.translate('compilerError.message')}</p>
+            <p>{t('compilerError.message')}</p>
             <pre className="pb-mpy-alerts-compile-error">{error.join('\n')}</pre>
             {file && uuid && (
                 <Button
                     icon={<Code />}
                     onClick={() => dispatch(editorGoto(uuid, line))}
                 >
-                    {i18n.translate('compilerError.gotoErrorButton')}
+                    {t('compilerError.gotoErrorButton')}
                 </Button>
             )}
         </>

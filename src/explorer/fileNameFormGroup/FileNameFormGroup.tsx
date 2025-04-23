@@ -5,8 +5,8 @@ import { Classes, Code, FormGroup, InputGroup, Intent, Tag } from '@blueprintjs/
 import type { AriaButtonProps } from '@react-types/button';
 import React, { useCallback, useRef } from 'react';
 import { useButton } from 'react-aria';
+import { useTranslation } from 'react-i18next';
 import { FileNameValidationResult } from '../../pybricksMicropython/lib';
-import { useI18n } from './i18n';
 
 /**
  * Trims trailing and leading whitespace and replaces additional whitespace
@@ -40,7 +40,7 @@ function replaceInvalidCharacters(value: string): string {
 type FixItButtonProps = Pick<AriaButtonProps<'a'>, 'onPress'>;
 
 const FixItButton: React.FunctionComponent<FixItButtonProps> = (props) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('fileNameForm');
     const ref = useRef<HTMLAnchorElement>(null);
 
     const { buttonProps } = useButton(
@@ -51,7 +51,7 @@ const FixItButton: React.FunctionComponent<FixItButtonProps> = (props) => {
         ref,
     );
 
-    return <a {...buttonProps}>{i18n.translate('helpText.fixIt')}</a>;
+    return <a {...buttonProps}>{t('helpText.fixIt')}</a>;
 };
 
 type FileNameHelpTextProps = {
@@ -71,7 +71,7 @@ const FileNameHelpText: React.FunctionComponent<FileNameHelpTextProps> = ({
     validation,
     onFix,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('fileNameForm');
 
     const handleHasSpaces = useCallback(() => {
         onFix(replaceSpaces(fileName));
@@ -87,27 +87,26 @@ const FileNameHelpText: React.FunctionComponent<FileNameHelpTextProps> = ({
 
     switch (validation) {
         case FileNameValidationResult.IsOk:
-            return <>{i18n.translate('helpText.isOk')}</>;
+            return <>{t('helpText.isOk')}</>;
         case FileNameValidationResult.IsEmpty:
-            return <>{i18n.translate('helpText.isEmpty')}</>;
+            return <>{t('helpText.isEmpty')}</>;
         case FileNameValidationResult.HasSpaces:
             return (
                 <>
-                    {i18n.translate('helpText.hasSpaces')}{' '}
-                    <FixItButton onPress={handleHasSpaces} />
+                    {t('helpText.hasSpaces')} <FixItButton onPress={handleHasSpaces} />
                 </>
             );
         case FileNameValidationResult.HasFileExtension:
             return (
                 <>
-                    {i18n.translate('helpText.hasFileExtension')}{' '}
+                    {t('helpText.hasFileExtension')}{' '}
                     <FixItButton onPress={handleHasFileExtension} />
                 </>
             );
         case FileNameValidationResult.HasInvalidFirstCharacter:
             return (
                 <>
-                    {i18n.translate('helpText.hasInvalidFirstCharacter', {
+                    {t('helpText.hasInvalidFirstCharacter', {
                         letters: <Code className={Classes.CODE}>a…z</Code>,
                         underscore: <Code className={Classes.CODE}>_</Code>,
                     })}
@@ -116,7 +115,7 @@ const FileNameHelpText: React.FunctionComponent<FileNameHelpTextProps> = ({
         case FileNameValidationResult.HasInvalidCharacters:
             return (
                 <>
-                    {i18n.translate('helpText.hasInvalidCharacters', {
+                    {t('helpText.hasInvalidCharacters', {
                         letters: <Code className={Classes.CODE}>a…z</Code>,
                         numbers: <Code className={Classes.CODE}>0…9</Code>,
                         underscore: <Code className={Classes.CODE}>_</Code>,
@@ -125,7 +124,7 @@ const FileNameHelpText: React.FunctionComponent<FileNameHelpTextProps> = ({
                 </>
             );
         case FileNameValidationResult.AlreadyExists:
-            return <>{i18n.translate('helpText.alreadyExists')}</>;
+            return <>{t('helpText.alreadyExists')}</>;
     }
 };
 
@@ -152,7 +151,7 @@ const FileNameFormGroup: React.FunctionComponent<FileNameFormGroupProps> = ({
     inputRef,
     onChange,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('fileNameForm');
 
     const fileNameIntent =
         validationResult === FileNameValidationResult.IsOk
@@ -161,7 +160,7 @@ const FileNameFormGroup: React.FunctionComponent<FileNameFormGroupProps> = ({
 
     return (
         <FormGroup
-            label={i18n.translate('label')}
+            label={t('label')}
             intent={fileNameIntent}
             subLabel={
                 <FileNameHelpText

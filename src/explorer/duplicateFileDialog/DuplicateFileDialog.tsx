@@ -3,6 +3,7 @@
 
 import { Button, Classes, Dialog } from '@blueprintjs/core';
 import React, { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useFileStorageMetadata } from '../../fileStorage/hooks';
 import {
@@ -12,10 +13,9 @@ import {
 import { useSelector } from '../../reducers';
 import FileNameFormGroup from '../fileNameFormGroup/FileNameFormGroup';
 import { duplicateFileDialogDidAccept, duplicateFileDialogDidCancel } from './actions';
-import { useI18n } from './i18n';
 
 const DuplicateFileDialog: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('duplicateFile');
     const dispatch = useDispatch();
     const isOpen = useSelector((s) => s.explorer.duplicateFileDialog.isOpen);
     const oldName = useSelector((s) => s.explorer.duplicateFileDialog.fileName);
@@ -46,7 +46,7 @@ const DuplicateFileDialog: React.FunctionComponent = () => {
 
     return (
         <Dialog
-            title={i18n.translate('title', {
+            title={t('title', {
                 fileName: oldName,
             })}
             isOpen={isOpen}
@@ -74,7 +74,7 @@ const DuplicateFileDialog: React.FunctionComponent = () => {
                             disabled={result !== FileNameValidationResult.IsOk}
                             type="submit"
                         >
-                            {i18n.translate('action.accept')}
+                            {t('action.accept')}
                         </Button>
                     </div>
                 </div>

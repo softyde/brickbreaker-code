@@ -1,7 +1,7 @@
 {
     "helpButton": {
         "label": "Help",
-        "description": "Click to show help for the {helpForLabel} checkbox."
+        "description": "Click to show help for the {{helpForLabel}} checkbox."
     },
     "helpDialog": {
         "title": "Help",

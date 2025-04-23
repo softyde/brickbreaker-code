@@ -6,6 +6,7 @@ import { Button, Tab, TabId, Tabs, Text } from '@blueprintjs/core';
 import { Cross, Manual } from '@blueprintjs/icons';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useId } from 'react-aria';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import SplitterLayout from 'react-splitter-layout';
 import { useLocalStorage } from 'usehooks-ts';
@@ -17,7 +18,6 @@ import { useSettingIsShowDocsEnabled } from '../settings/hooks';
 import BlocklyEditor from './EditorBlockly';
 import EditorText from './EditorText';
 import { editorActivateFile, editorCloseFile } from './actions';
-import { useI18n } from './i18n';
 
 type FileNameProps = {
     /** The DOM ID. */
@@ -54,11 +54,11 @@ type TabCloseButtonProps = {
 const TabCloseButton: React.FunctionComponent<TabCloseButtonProps> = ({ uuid }) => {
     const fileName = useFileStoragePath(uuid) ?? '';
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('editor');
 
     return (
         <Button
-            title={i18n.translate('closeFile.tooltip', {
+            title={t('closeFile.tooltip', {
                 fileName,
             })}
             minimal={true}
@@ -130,7 +130,7 @@ const EditorTabs: React.FunctionComponent<EditorTabsProps> = ({ onChange }) => {
         tabsRef.current?.['moveSelectionIndicator']();
     }, [tabsRef]);
 
-    const i18n = useI18n();
+    const { t } = useTranslation('editor');
 
     useEffect(() => {
         // @ts-expect-error: using private property
@@ -141,8 +141,8 @@ const EditorTabs: React.FunctionComponent<EditorTabsProps> = ({ onChange }) => {
             return;
         }
 
-        tablist.setAttribute('aria-label', i18n.translate('tablist.label'));
-    }, [i18n]);
+        tablist.setAttribute('aria-label', t('tablist.label'));
+    }, [t]);
 
     return (
         <Tabs
@@ -176,7 +176,7 @@ const Editor: React.FunctionComponent = () => {
     const { isSettingShowDocsEnabled, toggleIsSettingShowDocsEnabled } =
         useSettingIsShowDocsEnabled();
 
-    const i18n = useI18n();
+    const { t } = useTranslation('editor');
     const isEmpty = useSelector((s) => s.editor.openFileUuids.length === 0);
     const { activeFileUuid } = useSelector((s) => s.editor);
     const fileName = useFileStoragePath(activeFileUuid ?? ('' as UUID));
@@ -206,11 +206,7 @@ const Editor: React.FunctionComponent = () => {
                 minimal
                 large
                 icon={<Manual />}
-                title={
-                    isSettingShowDocsEnabled
-                        ? i18n.translate('docs.hide')
-                        : i18n.translate('docs.show')
-                }
+                title={isSettingShowDocsEnabled ? t('docs.hide') : t('docs.show')}
                 onClick={toggleIsSettingShowDocsEnabled}
             />
         </div>

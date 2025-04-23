@@ -5,10 +5,10 @@ import { Classes } from '@blueprintjs/core';
 import { Help } from '@blueprintjs/icons';
 import React, { useCallback, useEffect, useState } from 'react';
 import { OverlayContainer } from 'react-aria';
+import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'usehooks-ts';
 import { Button } from './Button';
 import HelpDialog from './HelpDialog';
-import { useI18n } from './i18n';
 
 type HelpButtonProps = {
     /** The label of the control this button provides help for. */
@@ -21,7 +21,7 @@ const HelpButton: React.FunctionComponent<HelpButtonProps> = ({
     helpForLabel,
     content,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('components');
 
     const {
         value: isDialogOpen,
@@ -50,9 +50,9 @@ const HelpButton: React.FunctionComponent<HelpButtonProps> = ({
     return (
         <>
             <Button
-                label={i18n.translate('helpButton.label')}
+                label={t('helpButton.label')}
                 hideLabel
-                description={i18n.translate('helpButton.description', {
+                description={t('helpButton.description', {
                     helpForLabel,
                 })}
                 minimal
@@ -63,7 +63,7 @@ const HelpButton: React.FunctionComponent<HelpButtonProps> = ({
             {isDialogMounted && (
                 <OverlayContainer className={Classes.PORTAL}>
                     <HelpDialog
-                        title={i18n.translate('helpDialog.title')}
+                        title={t('helpDialog.title')}
                         isOpen={isDialogOpen}
                         openButton={openButton}
                         onClose={setIsDialogOpenFalse}

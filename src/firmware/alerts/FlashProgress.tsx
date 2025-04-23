@@ -4,8 +4,8 @@
 import { Intent, ProgressBar } from '@blueprintjs/core';
 import { Download } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 type FlashProgressProps = {
     action: 'erase' | 'flash';
@@ -16,13 +16,13 @@ const FlashProgress: React.FunctionComponent<FlashProgressProps> = ({
     action,
     progress,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('firmwareAlerts');
 
     return (
         <>
             {action === 'erase' && (
                 <p>
-                    {i18n.translate('flashProgress.erasing', {
+                    {t('flashProgress.erasing', {
                         percent: progress ? i18n.formatPercentage(progress) : '',
                     })}
                 </p>
@@ -30,7 +30,7 @@ const FlashProgress: React.FunctionComponent<FlashProgressProps> = ({
 
             {action === 'flash' && (
                 <p>
-                    {i18n.translate('flashProgress.flashing', {
+                    {t('flashProgress.flashing', {
                         percent: progress ? i18n.formatPercentage(progress) : '',
                     })}
                 </p>

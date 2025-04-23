@@ -1,4 +1,4 @@
 {
     "label": "Stopp",
-    "tooltip": "Alles stoppen ({key})"
+    "tooltip": "Alles stoppen ({{key}})"
 }

@@ -2,6 +2,7 @@
 // Copyright (c) 2020-2023 The Pybricks Authors
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { toggleBluetooth } from '../../../ble/actions';
 import { BleConnectionState } from '../../../ble/reducers';
@@ -10,7 +11,6 @@ import { useSelector } from '../../../reducers';
 import ActionButton, { ActionButtonProps } from '../../ActionButton';
 import connectedIcon from './connected.svg';
 import disconnectedIcon from './disconnected.svg';
-import { useI18n } from './i18n';
 
 type BluetoothButtonProps = Pick<ActionButtonProps, 'id'>;
 
@@ -22,16 +22,14 @@ const BluetoothButton: React.FunctionComponent<BluetoothButtonProps> = ({ id }) 
         bootloaderConnection === BootloaderConnectionState.Disconnected &&
         bleConnection === BleConnectionState.Disconnected;
 
-    const i18n = useI18n();
+    const { t } = useTranslation('bluetoothButton');
     const dispatch = useDispatch();
 
     return (
         <ActionButton
             id={id}
-            label={i18n.translate('label')}
-            tooltip={i18n.translate(
-                isDisconnected ? 'tooltip.connect' : 'tooltip.disconnect',
-            )}
+            label={t('label')}
+            tooltip={t(isDisconnected ? 'tooltip.connect' : 'tooltip.disconnect')}
             icon={isDisconnected ? disconnectedIcon : connectedIcon}
             enabled={isDisconnected || bleConnection === BleConnectionState.Connected}
             showProgress={

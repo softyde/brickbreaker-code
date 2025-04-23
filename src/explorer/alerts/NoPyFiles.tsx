@@ -4,15 +4,15 @@
 import { Intent } from '@blueprintjs/core';
 import { InfoSign } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { pythonFileExtension } from '../../pybricksMicropython/lib';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 const NoPyFiles: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('explorerAlerts');
     return (
         <>
-            {i18n.translate('noPyFiles.message', {
+            {t('noPyFiles.message', {
                 py: <code>{pythonFileExtension}</code>,
                 zip: 'ZIP',
             })}

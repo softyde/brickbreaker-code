@@ -19,6 +19,7 @@ import tomorrowNightEightiesTheme from 'monaco-themes/themes/Tomorrow-Night-Eigh
 import xcodeTheme from 'monaco-themes/themes/Xcode_default.json';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useId } from 'react-aria';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useEffectOnce, useTernaryDarkMode } from 'usehooks-ts';
 import { UUID } from '../fileStorage';
@@ -29,7 +30,6 @@ import { isMacOS } from '../utils/os';
 import Welcome from './Welcome';
 import { editorDidChangeLine } from './actions';
 import { blocklyRemoveHighlightFromBlock } from './blockly/actions';
-import { useI18n } from './i18n';
 import * as pybricksMicroPython from './pybricksMicroPython';
 import { pybricksMicroPythonId } from './pybricksMicroPython';
 import { UntitledHintContribution } from './untitledHint';
@@ -119,7 +119,7 @@ type EditorContextMenuProps = {
 const EditorContextMenu: React.FunctionComponent<EditorContextMenuProps> = ({
     editor,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('editor');
     const selection = editor?.getSelection();
     const hasSelection = selection && !selection.isEmpty();
 
@@ -128,9 +128,9 @@ const EditorContextMenu: React.FunctionComponent<EditorContextMenuProps> = ({
     const canRedo = model && model.canRedo();
 
     return (
-        <Menu aria-label={i18n.translate('contextMenu.label')} role="menu">
+        <Menu aria-label={t('contextMenu.label')} role="menu">
             <EditorContextMenuItem
-                label={i18n.translate('copy')}
+                label={t('copy')}
                 icon={<Duplicate />}
                 keyboardShortcut={isMacOS() ? 'Cmd-C' : 'Ctrl-C'}
                 disabled={!hasSelection}
@@ -138,7 +138,7 @@ const EditorContextMenu: React.FunctionComponent<EditorContextMenuProps> = ({
                 editorAction="editor.action.clipboardCopyAction"
             />
             <EditorContextMenuItem
-                label={i18n.translate('paste')}
+                label={t('paste')}
                 icon={<Clipboard />}
                 keyboardShortcut={isMacOS() ? 'Cmd-V' : 'Ctrl-V'}
                 disabled={!model}
@@ -146,7 +146,7 @@ const EditorContextMenu: React.FunctionComponent<EditorContextMenuProps> = ({
                 editorAction="editor.action.clipboardPasteAction"
             />
             <EditorContextMenuItem
-                label={i18n.translate('selectAll')}
+                label={t('selectAll')}
                 icon={<Blank />}
                 keyboardShortcut={isMacOS() ? 'Cmd-A' : 'Ctrl-A'}
                 disabled={!model}
@@ -155,7 +155,7 @@ const EditorContextMenu: React.FunctionComponent<EditorContextMenuProps> = ({
             />
             <MenuDivider />
             <EditorContextMenuItem
-                label={i18n.translate('undo')}
+                label={t('undo')}
                 icon={<Undo />}
                 keyboardShortcut={isMacOS() ? 'Cmd-Z' : 'Ctrl-Z'}
                 disabled={!canUndo}
@@ -163,7 +163,7 @@ const EditorContextMenu: React.FunctionComponent<EditorContextMenuProps> = ({
                 editorAction="undo"
             />
             <EditorContextMenuItem
-                label={i18n.translate('redo')}
+                label={t('redo')}
                 icon={<Redo />}
                 keyboardShortcut={isMacOS() ? 'Cmd-Shift-Z' : 'Ctrl-Shift-Z'}
                 disabled={!canRedo}
@@ -226,7 +226,7 @@ const EditorText: React.FunctionComponent = () => {
         useSettingIsShowDocsEnabled(); */
     const { isDarkMode } = useTernaryDarkMode();
 
-    const i18n = useI18n();
+    const { t } = useTranslation('editor');
 
     useEffect(() => {
         monaco.editor.setTheme(isDarkMode ? tomorrowNightEightiesId : xcodeId);
@@ -235,20 +235,17 @@ const EditorText: React.FunctionComponent = () => {
     useEditor(
         editor,
         (editor) => {
-            const contrib = new UntitledHintContribution(
-                editor,
-                i18n.translate('placeholder'),
-            );
+            const contrib = new UntitledHintContribution(editor, t('placeholder'));
             return () => contrib.dispose();
         },
-        [i18n],
+        [t],
     );
 
     /*    useEditorAction(
         editor,
         () => ({
             id: 'pybricks.action.toggleDocs',
-            label: i18n.translate('toggleDocs'),
+            label: t('toggleDocs'),
             run: () => toggleIsSettingShowDocsEnabled(),
             keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyD],
         }),
@@ -259,14 +256,14 @@ const EditorText: React.FunctionComponent = () => {
         editor,
         () => ({
             id: 'pybricks.action.check',
-            label: i18n.translate('check'),
+            label: t('check'),
             run: (e) => {
                 // for checking, use the most recent compiler
                 dispatch(compile(e.getValue(), 6, []));
             },
             keybindings: [monaco.KeyCode.F2],
         }),
-        [i18n, dispatch],
+        [t, dispatch],
     );
 
     useEditorAction(
@@ -360,7 +357,7 @@ const EditorText: React.FunctionComponent = () => {
             <ContextMenu
                 className={classNames('pb-editor-tabpanel', isEmpty && 'pb-empty')}
                 role="tabpanel"
-                aria-label={isEmpty ? i18n.translate('welcome') : fileName}
+                aria-label={isEmpty ? t('welcome') : fileName}
                 // NB: we have to create a new context menu each time it is
                 // shown in order to get some state, like canUndo and canRedo
                 // that don't have events to monitor changes.

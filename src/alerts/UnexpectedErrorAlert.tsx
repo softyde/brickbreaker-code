@@ -13,8 +13,8 @@ import {
 import { ChevronDown, ChevronRight, Duplicate, Error, Virus } from '@blueprintjs/icons';
 import React, { useState } from 'react';
 import { useId } from 'react-aria';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../toasterTypes';
-import { useI18n } from './i18n';
 
 type UnexpectedErrorAlertProps = {
     error: Error;
@@ -23,13 +23,13 @@ type UnexpectedErrorAlertProps = {
 const UnexpectedErrorAlert: React.FunctionComponent<UnexpectedErrorAlertProps> = ({
     error,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('unexpectedError');
     const [isExpanded, setIsExpanded] = useState(false);
     const labelId = useId();
 
     return (
         <>
-            <p>{i18n.translate('message')}</p>
+            <p>{t('message')}</p>
             <p>{error.message}</p>
             {error.stack && (
                 <>
@@ -41,7 +41,7 @@ const UnexpectedErrorAlert: React.FunctionComponent<UnexpectedErrorAlertProps> =
                             icon={isExpanded ? <ChevronDown /> : <ChevronRight />}
                             onClick={() => setIsExpanded((v) => !v)}
                         />
-                        <span id={labelId}>{i18n.translate('technicalInfo')}</span>
+                        <span id={labelId}>{t('technicalInfo')}</span>
                     </span>
                     <Collapse isOpen={isExpanded}>
                         <Pre className="pb-alerts-stack-trace">{error.stack}</Pre>
@@ -59,7 +59,7 @@ const UnexpectedErrorAlert: React.FunctionComponent<UnexpectedErrorAlertProps> =
                             )
                         }
                     >
-                        {i18n.translate('copyErrorMessage')}
+                        {t('copyErrorMessage')}
                     </Button>
                     <AnchorButton
                         intent={Intent.DANGER}
@@ -70,7 +70,7 @@ const UnexpectedErrorAlert: React.FunctionComponent<UnexpectedErrorAlertProps> =
                         target="_blank"
                         rel="noopener"
                     >
-                        {i18n.translate('reportBug')}
+                        {t('reportBug')}
                     </AnchorButton>
                 </ButtonGroup>
             </div>

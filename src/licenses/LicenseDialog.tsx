@@ -21,9 +21,9 @@ import type { Node, Selection } from '@react-types/shared';
 import classNames from 'classnames';
 import React, { useCallback, useState } from 'react';
 import { mergeProps, useFocusRing, useListBox, useOption } from 'react-aria';
+import { useTranslation } from 'react-i18next';
 import { useFetch } from 'usehooks-ts';
 import { appName } from '../app/constants';
-import { useI18n } from './i18n';
 
 interface LicenseInfo {
     readonly name: string;
@@ -137,7 +137,7 @@ type LicenseListPanelProps = {
 const LicenseListPanel: React.FunctionComponent<LicenseListPanelProps> = ({
     onItemSelected,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('licenses');
     const { data, error } = useFetch<LicenseList>('static/oss-licenses.json');
 
     const handleSelectionChanged = useCallback(
@@ -160,11 +160,11 @@ const LicenseListPanel: React.FunctionComponent<LicenseListPanelProps> = ({
         <div className="pb-license-list">
             {data === undefined ? (
                 <NonIdealState>
-                    {error ? i18n.translate('error.fetchFailed') : <Spinner />}
+                    {error ? t('error.fetchFailed') : <Spinner />}
                 </NonIdealState>
             ) : (
                 <ListBox
-                    aria-label={i18n.translate('packageList.label')}
+                    aria-label={t('packageList.label')}
                     selectionMode="single"
                     onSelectionChange={handleSelectionChanged}
                     items={data}
@@ -183,32 +183,29 @@ type LicenseInfoPanelProps = {
 
 const LicenseInfoPanel = React.forwardRef<HTMLDivElement, LicenseInfoPanelProps>(
     ({ licenseInfo }, ref) => {
-        const i18n = useI18n();
+        const { t } = useTranslation('licenses');
 
         return (
             <div className="pb-license-info" ref={ref}>
                 {licenseInfo === undefined ? (
-                    <NonIdealState>
-                        {i18n.translate('help.selectPackage')}
-                    </NonIdealState>
+                    <NonIdealState>{t('help.selectPackage')}</NonIdealState>
                 ) : (
                     <>
                         <Card>
                             <p>
-                                <strong>{i18n.translate('packageLabel')}</strong>{' '}
-                                {licenseInfo.name}{' '}
+                                <strong>{t('packageLabel')}</strong> {licenseInfo.name}{' '}
                                 <span className={Classes.TEXT_MUTED}>
                                     v{licenseInfo.version}
                                 </span>
                             </p>
                             {licenseInfo.author && (
                                 <p>
-                                    <strong>{i18n.translate('authorLabel')}</strong>{' '}
+                                    <strong>{t('authorLabel')}</strong>{' '}
                                     {licenseInfo.author}
                                 </p>
                             )}
                             <p>
-                                <strong>{i18n.translate('licenseLabel')}</strong>{' '}
+                                <strong>{t('licenseLabel')}</strong>{' '}
                                 {licenseInfo.license}
                             </p>
                         </Card>
@@ -235,18 +232,18 @@ const LicenseDialog: React.FunctionComponent<LicenseDialogProps> = ({
 }) => {
     const [licenseInfo, setLicenseInfo] = useState<LicenseInfo | undefined>(undefined);
     const infoDiv = React.useRef<HTMLDivElement>(null);
-    const i18n = useI18n();
+    const { t } = useTranslation('licenses');
 
     return (
         <Dialog
             className="pb-license-dialog"
-            title={i18n.translate('title')}
+            title={t('title')}
             isOpen={isOpen}
             onClose={onClose}
         >
             <div className={Classes.DIALOG_BODY}>
                 <Callout className={Classes.INTENT_PRIMARY} icon={<InfoSign />}>
-                    {i18n.translate('description', {
+                    {t('description', {
                         name: appName,
                     })}
                 </Callout>

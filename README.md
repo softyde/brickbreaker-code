@@ -35,11 +35,12 @@ If it does: don't use it for anything serious.**
 - [x] run it on a real spike prime device (dev progress https://youtu.be/rxz_a8NYH68)
 - [x] improve variable handling (dev progress https://youtu.be/X3-U1x4zmDw)
 - [x] support user-defined methods
--> CURRENT
 - [x] custom rendering for connection types
 - [x] dark mode support
+- [x] __⇉ CURRENT__ language selection (de/en)
 - [ ] develop some even more useful blocks (vars, parameters, etc.)
 - [ ] cleanup code
+- [ ] fix dependencies
 - [ ] fix broken tests
 - [ ] peace & love  
 

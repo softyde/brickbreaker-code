@@ -5,6 +5,7 @@ import 'react-splitter-layout/lib/index.css';
 import './app.scss';
 import { Classes, Spinner } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import SplitterLayout from 'react-splitter-layout';
 import { useLocalStorage, useTernaryDarkMode } from 'usehooks-ts';
 import Activities from '../activities/Activities';
@@ -18,7 +19,6 @@ import Toolbar from '../toolbar/Toolbar';
 import Tour from '../tour/Tour';
 import { isMacOS } from '../utils/os';
 import { useAppLastDocsPageSetting } from './hooks';
-import { useI18n } from './i18n';
 
 const Editor = React.lazy(async () => {
     const [sagaModule, blocklySagaModule, componentModule] = await Promise.all([
@@ -160,10 +160,10 @@ const Docs: React.FunctionComponent = () => {
 };
 
 const App: React.FunctionComponent = () => {
-    const i18n = useI18n();
     const { isDarkMode } = useTernaryDarkMode();
     const { isSettingShowDocsEnabled } = useSettingIsShowDocsEnabled();
     const [isDragging, setIsDragging] = useState(false);
+    const { t } = useTranslation();
 
     const [docsSplit, setDocsSplit] = useLocalStorage('app-docs-split', 30);
     const [terminalSplit, setTerminalSplit] = useLocalStorage('app-terminal-split', 30);
@@ -199,7 +199,7 @@ const App: React.FunctionComponent = () => {
             <div className="pb-app-body">
                 <aside
                     className="pb-app-activities"
-                    aria-label={i18n.translate('landmark.activities')}
+                    aria-label={t('landmark.activities')}
                 >
                     <Activities />
                 </aside>
@@ -223,7 +223,7 @@ const App: React.FunctionComponent = () => {
                         >
                             <main
                                 className="pb-app-editor"
-                                aria-label={i18n.translate('landmark.editor')}
+                                aria-label={t('landmark.editor')}
                             >
                                 <Toolbar />
                                 <React.Suspense
@@ -234,7 +234,7 @@ const App: React.FunctionComponent = () => {
                             </main>
                             <aside
                                 className="pb-app-terminal"
-                                aria-label={i18n.translate('landmark.terminal')}
+                                aria-label={t('landmark.terminal')}
                             >
                                 <React.Suspense
                                     fallback={<Spinner className="h-100" />}
@@ -245,7 +245,7 @@ const App: React.FunctionComponent = () => {
                         </SplitterLayout>
                         <aside
                             className="pb-app-docs"
-                            aria-label={i18n.translate('landmark.documentation')}
+                            aria-label={t('landmark.documentation')}
                         >
                             {isDragging && <div className="pb-app-docs-drag-helper" />}
                             <Docs />

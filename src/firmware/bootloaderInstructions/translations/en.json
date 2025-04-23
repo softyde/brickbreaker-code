@@ -1,11 +1,11 @@
 {
     "warning": {
         "linux": {
-            "message": "If you have never used Pybricks with USB on Linux, you will need to configure udev rules before you can install the firmware. {learnMore}",
+            "message": "If you have never used Pybricks with USB on Linux, you will need to configure udev rules before you can install the firmware. {{learnMore}}",
             "learnMore": "Learn more."
         },
         "windows": {
-            "message": "Are you using Pybricks on this computer for the first time? You may need to manually install the USB driver for this hub type. {instructions}",
+            "message": "Are you using Pybricks on this computer for the first time? You may need to manually install the USB driver for this hub type. {{instructions}}",
             "instructions": "Click for instructions."
         }
     },
@@ -27,22 +27,22 @@
             "batteries": "Make sure the hub has new or fully-charged batteries.",
             "turnOff": "Make sure the hub is turned off.",
             "usb": "Disconnect the USB cable.",
-            "app": "Open the {lego} PoweredUp app in 'Create' mode and start a new project."
+            "app": "Open the {{lego}} PoweredUp app in 'Create' mode and start a new project."
         },
         "bootloaderMode": {
             "title": "Enter update mode (see video):",
             "disconnectIo": "Disconnect any device from port A on the hub.",
-            "holdButton": "Press and hold the {button} on the hub.",
+            "holdButton": "Press and hold the {{button}} on the hub.",
             "connectUsb": "Connect the USB cable.",
-            "waitForLight": "Wait for the {light} to start blinking {lightPattern}.",
+            "waitForLight": "Wait for the {{light}} to start blinking {{lightPattern}}.",
             "waitAppConnect": "The app will automatically connect and start restoring the firmware.",
-            "releaseButton": "Release the {button}.",
-            "keepHolding": "Keep holding the {button} in the next steps. We'll tell you when to let go."
+            "releaseButton": "Release the {{button}}.",
+            "keepHolding": "Keep holding the {{button}} in the next steps. We'll tell you when to let go."
         },
         "connect": {
             "title": "Install:",
-            "clickConnectAndFlash": "Click the {flashButton} button below.",
-            "selectDevice": "In the pop-up dialog, select {deviceName} and click {connectButton}.",
+            "clickConnectAndFlash": "Click the {{flashButton}} button below.",
+            "selectDevice": "In the pop-up dialog, select {{deviceName}} and click {{connectButton}}.",
             "connectButton": "Connect"
         }
     }

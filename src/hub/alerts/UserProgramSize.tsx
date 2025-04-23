@@ -4,8 +4,8 @@
 import { Intent } from '@blueprintjs/core';
 import { Error } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 type UserProgramSizeProps = {
     /** The actual size of the program in bytes. */
@@ -18,16 +18,16 @@ const UserProgramSize: React.FunctionComponent<UserProgramSizeProps> = ({
     actual,
     max,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('hubAlerts');
     return (
         <>
             <p>
-                {i18n.translate('userProgramSize.message', {
+                {t('userProgramSize.message', {
                     actual: i18n.formatNumber(actual),
                     max: i18n.formatNumber(max),
                 })}
             </p>
-            <p>{i18n.translate('userProgramSize.suggestion')}</p>
+            <p>{t('userProgramSize.suggestion')}</p>
         </>
     );
 };

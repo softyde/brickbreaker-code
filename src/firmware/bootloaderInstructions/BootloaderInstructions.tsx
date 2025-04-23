@@ -6,6 +6,7 @@ import { Callout, Intent } from '@blueprintjs/core';
 import { WarningSign } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import {
     legoRegisteredTrademark,
@@ -33,7 +34,6 @@ import moveHubRecoveryMp4 from './assets/recover-movehub-540.mp4';
 import moveHubRecoveryVtt from './assets/recover-movehub-metadata.vtt';
 import technicHubRecoveryMp4 from './assets/recover-technichub-540.mp4';
 import technicHubRecoveryVtt from './assets/recover-technichub-metadata.vtt';
-import { useI18n } from './i18n';
 
 type BootloaderInstructionsProps = {
     /**
@@ -112,23 +112,23 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
     flashButtonText,
 }) => {
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('bootloaderInstructions');
 
     const { button, light, lightPattern } = useMemo(() => {
         return {
-            button: i18n.translate(
+            button: t(
                 hubHasBluetoothButton(hubType) ? 'button.bluetooth' : 'button.power',
             ),
-            light: i18n.translate(
+            light: t(
                 hubHasBluetoothButton(hubType) ? 'light.bluetooth' : 'light.status',
             ),
-            lightPattern: i18n.translate(
+            lightPattern: t(
                 hubHasBluetoothButton(hubType)
                     ? 'lightPattern.bluetooth'
                     : 'lightPattern.status',
             ),
         };
-    }, [i18n, hubType]);
+    }, [t, hubType]);
 
     const metadataTrackRef = useRef<HTMLTrackElement>(null);
     const [activeStep, setActiveStep] = useState('');
@@ -164,24 +164,24 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
         () => (
             <>
                 <li>
-                    {i18n.translate(
+                    {t(
                         hubHasUSB(hubType)
                             ? 'instructionGroup.prepare.usb'
                             : 'instructionGroup.prepare.batteries',
                     )}
                 </li>
-                <li>{i18n.translate('instructionGroup.prepare.turnOff')}</li>
+                <li>{t('instructionGroup.prepare.turnOff')}</li>
                 {/* For non-usb recovery, show step about official app */}
                 {recovery && !hubHasUSB(hubType) && (
                     <li>
-                        {i18n.translate('instructionGroup.prepare.app', {
+                        {t('instructionGroup.prepare.app', {
                             lego: legoRegisteredTrademark,
                         })}
                     </li>
                 )}
             </>
         ),
-        [i18n, recovery, hubType],
+        [t, recovery, hubType],
     );
 
     const bootloaderModeSteps = useMemo(
@@ -194,7 +194,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                             activeStep === 'disconnect-io' && 'pb-active-step',
                         )}
                     >
-                        {i18n.translate('instructionGroup.bootloaderMode.disconnectIo')}
+                        {t('instructionGroup.bootloaderMode.disconnectIo')}
                     </li>
                 )}
 
@@ -203,7 +203,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                         activeStep === 'hold-button' && 'pb-active-step',
                     )}
                 >
-                    {i18n.translate('instructionGroup.bootloaderMode.holdButton', {
+                    {t('instructionGroup.bootloaderMode.holdButton', {
                         button,
                     })}
                 </li>
@@ -216,7 +216,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                             activeStep === 'connect-usb' && 'pb-active-step',
                         )}
                     >
-                        {i18n.translate('instructionGroup.bootloaderMode.connectUsb')}
+                        {t('instructionGroup.bootloaderMode.connectUsb')}
                     </li>
                 )}
 
@@ -225,7 +225,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                         activeStep === 'wait-for-light' && 'pb-active-step',
                     )}
                 >
-                    {i18n.translate('instructionGroup.bootloaderMode.waitForLight', {
+                    {t('instructionGroup.bootloaderMode.waitForLight', {
                         button,
                         light,
                         lightPattern,
@@ -238,7 +238,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                             activeStep === 'connect-usb' && 'pb-active-step',
                         )}
                     >
-                        {i18n.translate('instructionGroup.bootloaderMode.connectUsb')}
+                        {t('instructionGroup.bootloaderMode.connectUsb')}
                     </li>
                 )}
 
@@ -248,9 +248,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                             activeStep === 'wait-app-connect' && 'pb-active-step',
                         )}
                     >
-                        {i18n.translate(
-                            'instructionGroup.bootloaderMode.waitAppConnect',
-                        )}
+                        {t('instructionGroup.bootloaderMode.waitAppConnect')}
                     </li>
                 )}
 
@@ -261,12 +259,9 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                             activeStep === 'release-button' && 'pb-active-step',
                         )}
                     >
-                        {i18n.translate(
-                            'instructionGroup.bootloaderMode.releaseButton',
-                            {
-                                button,
-                            },
-                        )}
+                        {t('instructionGroup.bootloaderMode.releaseButton', {
+                            button,
+                        })}
                     </li>
                 ) : (
                     <li
@@ -274,14 +269,14 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                             activeStep === 'keep-holding' && 'pb-active-step',
                         )}
                     >
-                        {i18n.translate('instructionGroup.bootloaderMode.keepHolding', {
+                        {t('instructionGroup.bootloaderMode.keepHolding', {
                             button,
                         })}
                     </li>
                 )}
             </>
         ),
-        [recovery, activeStep, i18n, button, hubType, light, lightPattern],
+        [recovery, activeStep, t, button, hubType, light, lightPattern],
     );
 
     return (
@@ -317,13 +312,11 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
             <div className="pb-spacer" />
 
             <p>
-                <strong>{i18n.translate('instructionGroup.prepare.title')}</strong>
+                <strong>{t('instructionGroup.prepare.title')}</strong>
             </p>
             <ol>{prepareSteps}</ol>
             <p>
-                <strong>
-                    {i18n.translate('instructionGroup.bootloaderMode.title')}
-                </strong>
+                <strong>{t('instructionGroup.bootloaderMode.title')}</strong>
             </p>
             <ol start={countValidChildren(prepareSteps.props.children) + 1}>
                 {bootloaderModeSteps}
@@ -331,9 +324,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
             {(hubHasUSB(hubType) || (!hubHasUSB(hubType) && !recovery)) && (
                 <>
                     <p>
-                        <strong>
-                            {i18n.translate('instructionGroup.connect.title')}
-                        </strong>
+                        <strong>{t('instructionGroup.connect.title')}</strong>
                     </p>
                     <ol
                         start={
@@ -343,15 +334,12 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                         }
                     >
                         <li>
-                            {i18n.translate(
-                                'instructionGroup.connect.clickConnectAndFlash',
-                                {
-                                    flashButton: <strong>{flashButtonText}</strong>,
-                                },
-                            )}
+                            {t('instructionGroup.connect.clickConnectAndFlash', {
+                                flashButton: <strong>{flashButtonText}</strong>,
+                            })}
                         </li>
                         <li>
-                            {i18n.translate('instructionGroup.connect.selectDevice', {
+                            {t('instructionGroup.connect.selectDevice', {
                                 deviceName: (
                                     <strong>
                                         {bootloaderDeviceNameMap.get(hubType)}
@@ -359,9 +347,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                                 ),
                                 connectButton: (
                                     <strong>
-                                        {i18n.translate(
-                                            'instructionGroup.connect.connectButton',
-                                        )}
+                                        {t('instructionGroup.connect.connectButton')}
                                     </strong>
                                 ),
                             })}
@@ -372,7 +358,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
 
             {hubHasUSB(hubType) && isLinux() && (
                 <Callout intent={Intent.WARNING} icon={<WarningSign />}>
-                    {i18n.translate('warning.linux.message', {
+                    {t('warning.linux.message', {
                         learnMore: (
                             <>
                                 <a
@@ -380,7 +366,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                                     target="_blank"
                                     rel="noopener"
                                 >
-                                    {i18n.translate('warning.linux.learnMore')}
+                                    {t('warning.linux.learnMore')}
                                 </a>
                                 <ExternalLinkIcon />
                             </>
@@ -391,7 +377,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
 
             {hubHasUSB(hubType) && isWindows() && (
                 <Callout intent={Intent.WARNING} icon={<WarningSign />}>
-                    {i18n.translate('warning.windows.message', {
+                    {t('warning.windows.message', {
                         instructions: (
                             <a
                                 onMouseDown={(e) => {
@@ -403,7 +389,7 @@ const BootloaderInstructions: React.FunctionComponent<BootloaderInstructionsProp
                                     );
                                 }}
                             >
-                                {i18n.translate('warning.windows.instructions')}
+                                {t('warning.windows.instructions')}
                             </a>
                         ),
                     })}

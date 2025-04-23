@@ -4,6 +4,7 @@
 import { AnchorButton, Button, Intent } from '@blueprintjs/core';
 import { Download, Help, InfoSign } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     pybricksUsbDfuTroubleshootingUrl,
     pybricksUsbLinuxUdevRulesUrl,
@@ -11,7 +12,6 @@ import {
 import ExternalLinkIcon from '../../components/ExternalLinkIcon';
 import type { CreateToast } from '../../toasterTypes';
 import { isLinux, isWindows } from '../../utils/os';
-import { useI18n } from './i18n';
 
 type NoDfuHubProps = {
     onInstallWindowsDriver: () => void;
@@ -20,18 +20,18 @@ type NoDfuHubProps = {
 const NoDfuHub: React.FunctionComponent<NoDfuHubProps> = ({
     onInstallWindowsDriver,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('firmwareAlerts');
 
     return (
         <>
-            <p>{i18n.translate('noDfuHub.message')}</p>
+            <p>{t('noDfuHub.message')}</p>
 
-            {isWindows() && <p>{i18n.translate('noDfuHub.suggestion1.windows')}</p>}
-            {isLinux() && <p>{i18n.translate('noDfuHub.suggestion1.linux')}</p>}
+            {isWindows() && <p>{t('noDfuHub.suggestion1.windows')}</p>}
+            {isLinux() && <p>{t('noDfuHub.suggestion1.linux')}</p>}
             <div className="pb-ble-alerts-buttons">
                 {isWindows() && (
                     <Button icon={<Download />} onClick={onInstallWindowsDriver}>
-                        {i18n.translate('noDfuHub.installUsbDriverButton')}
+                        {t('noDfuHub.installUsbDriverButton')}
                     </Button>
                 )}
                 {isLinux() && (
@@ -41,7 +41,7 @@ const NoDfuHub: React.FunctionComponent<NoDfuHubProps> = ({
                         target="_blank"
                         rel="noopener"
                     >
-                        {i18n.translate('noDfuHub.configureUdevRulesButton')}
+                        {t('noDfuHub.configureUdevRulesButton')}
                         <ExternalLinkIcon />
                     </AnchorButton>
                 )}
@@ -51,7 +51,7 @@ const NoDfuHub: React.FunctionComponent<NoDfuHubProps> = ({
                     target="_blank"
                     rel="noopener"
                 >
-                    {i18n.translate('noDfuHub.troubleshootButton')}
+                    {t('noDfuHub.troubleshootButton')}
                     <ExternalLinkIcon />
                 </AnchorButton>
             </div>

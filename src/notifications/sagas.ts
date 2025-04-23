@@ -5,7 +5,6 @@
 
 import { ActionProps, Intent, LinkProps } from '@blueprintjs/core';
 import { Error, Help, InfoSign, Refresh, WarningSign } from '@blueprintjs/icons';
-import { Replacements } from '@shopify/react-i18n';
 import React from 'react';
 import { channel } from 'redux-saga';
 import { delay, getContext, put, take, takeEvery } from 'typed-redux-saga/macro';
@@ -97,6 +96,8 @@ function dispatchAction(
     };
 }
 
+export type $Dictionary<T = unknown> = { [key: string]: T };
+
 /**
  * Shows a message. If a message with the same `messageId` is already
  * showing, it will be closed before showing the new message.
@@ -109,7 +110,7 @@ function dispatchAction(
 function* showSingleton(
     level: Level,
     messageId: I18nId,
-    replacements?: Replacements,
+    replacements?: $Dictionary | undefined,
     action?: ActionProps & LinkProps,
     onDismiss?: (didTimeoutExpire: boolean) => void,
 ): Generator {

@@ -1,5 +1,5 @@
 {
-    "title": "Offizielle {lego} Firmware wiederherstellen",
+    "title": "Offizielle {{lego}} Firmware wiederherstellen",
     "backButton": {
         "label": "Zurück"
     },
@@ -11,7 +11,7 @@
     },
     "selectHubPanel": {
         "title": "Hub auswählen",
-        "message": "Wählen Sie den Hub aus, auf dem die offizielle {lego} Firmware wiederhergestellt werden soll, und klicken Sie dann auf {next}."
+        "message": "Wählen Sie den Hub aus, auf dem die offizielle {{lego}} Firmware wiederhergestellt werden soll, und klicken Sie dann auf {{next}}."
     },
     "restoreFirmwarePanel": {
         "title": "Firmware wiederherstellen",
@@ -19,7 +19,7 @@
             "ble": {
                 "message": "Wenn der Fortschrittsbalken fertig ist, wird der Hub neu gestartet und die App wird sich verbinden. Die offizielle Firmware wurde wiederhergestellt."
             },
-            "updateApp": "Sobald die Wiederherstellung abgeschlossen ist, verwenden Sie die {app} App, um die neueste offizielle Firmware zu erhalten.",
+            "updateApp": "Sobald die Wiederherstellung abgeschlossen ist, verwenden Sie die {{app}} App, um die neueste offizielle Firmware zu erhalten.",
             "updateAppVersion": "Sie können dafür Version 2 (Legacy) oder Version 3 verwenden."
         },
         "flashButton": "Wiederherstellen"

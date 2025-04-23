@@ -18,8 +18,8 @@ import {
     useModal,
     useOverlay,
 } from 'react-aria';
+import { useTranslation } from 'react-i18next';
 import { usePopper } from 'react-popper';
-import { useI18n } from './i18n';
 
 type HelpDialogProps = {
     /** The title of the dialog. */
@@ -43,7 +43,7 @@ const HelpDialog: React.FunctionComponent<PropsWithChildren<HelpDialogProps>> = 
     onAnimationEnd,
     children,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('components');
 
     // this is the dialog element and the popper element
     const ref = useRef<HTMLDivElement>(null);
@@ -140,9 +140,7 @@ const HelpDialog: React.FunctionComponent<PropsWithChildren<HelpDialogProps>> = 
                                 </div>
                                 <DismissButton
                                     id={dismissId}
-                                    aria-label={i18n.translate(
-                                        'helpDialog.closeButton.label',
-                                    )}
+                                    aria-label={t('helpDialog.closeButton.label')}
                                     onDismiss={onClose}
                                 />
                             </div>

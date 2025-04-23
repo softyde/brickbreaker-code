@@ -4,6 +4,7 @@
 import { Colors, Icon } from '@blueprintjs/core';
 import { Archive, Play, Plus } from '@blueprintjs/icons';
 import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Joyride, {
     ACTIONS,
     CallBackProps,
@@ -19,17 +20,16 @@ import { Activity, useActivitiesSelectedActivity } from '../activities/hooks';
 import { appName, legoRegisteredTrademark, pybricksBlue } from '../app/constants';
 import { useSelector } from '../reducers';
 import { tourStart, tourStop } from './actions';
-import { useI18n } from './i18n';
 
 const WelcomeStep = React.memo(function WelcomeStep() {
-    const i18n = useI18n();
+    const { t } = useTranslation('tour');
 
     return (
         <>
-            <p>{i18n.translate('steps.welcome.message', { appName })}</p>
+            <p>{t('steps.welcome.message', { appName })}</p>
             <p>
-                {i18n.translate('steps.welcome.action', {
-                    next: <strong>{i18n.translate('next')}</strong>,
+                {t('steps.welcome.action', {
+                    next: <strong>{t('next')}</strong>,
                 })}
             </p>
         </>
@@ -37,11 +37,11 @@ const WelcomeStep = React.memo(function WelcomeStep() {
 });
 
 const AddFileStep = React.memo(function AddFileStep() {
-    const i18n = useI18n();
+    const { t } = useTranslation('tour');
 
     return (
         <p>
-            {i18n.translate('steps.newFile.message', {
+            {t('steps.newFile.message', {
                 icon: <Icon icon={<Plus />} style={{ verticalAlign: 'text-top' }} />,
             })}
         </p>
@@ -49,13 +49,13 @@ const AddFileStep = React.memo(function AddFileStep() {
 });
 
 const BackupFilesStep = React.memo(function BackupFilesStep() {
-    const i18n = useI18n();
+    const { t } = useTranslation('tour');
 
     return (
         <>
-            <p>{i18n.translate('steps.backupFiles.message')}</p>
+            <p>{t('steps.backupFiles.message')}</p>
             <p>
-                {i18n.translate('steps.backupFiles.action', {
+                {t('steps.backupFiles.action', {
                     icon: (
                         <Icon
                             icon={<Archive />}
@@ -69,11 +69,11 @@ const BackupFilesStep = React.memo(function BackupFilesStep() {
 });
 
 const FlashPybricksFirmwareStep = React.memo(function FlashPybricksFirmwareStep() {
-    const i18n = useI18n();
+    const { t } = useTranslation('tour');
 
     return (
         <p>
-            {i18n.translate('steps.flashPybricksFirmware.message', {
+            {t('steps.flashPybricksFirmware.message', {
                 appName,
             })}
         </p>
@@ -81,11 +81,11 @@ const FlashPybricksFirmwareStep = React.memo(function FlashPybricksFirmwareStep(
 });
 
 const RestoreOfficialFirmwareStep = React.memo(function RestoreOfficialFirmwareStep() {
-    const i18n = useI18n();
+    const { t } = useTranslation('tour');
 
     return (
         <p>
-            {i18n.translate('steps.restoreOfficialFirmware.message', {
+            {t('steps.restoreOfficialFirmware.message', {
                 lego: legoRegisteredTrademark,
             })}
         </p>
@@ -93,24 +93,24 @@ const RestoreOfficialFirmwareStep = React.memo(function RestoreOfficialFirmwareS
 });
 
 const ConnectToHubStep = React.memo(function ConnectToHubStep() {
-    const i18n = useI18n();
+    const { t } = useTranslation('tour');
 
-    return <p>{i18n.translate('steps.connectToHub.message')}</p>;
+    return <p>{t('steps.connectToHub.message')}</p>;
 });
 
 const DownloadAndRunStep = React.memo(function DownloadAndRunStep() {
-    const i18n = useI18n();
+    const { t } = useTranslation('tour');
 
     return (
         <>
             <p>
-                {i18n.translate('steps.downloadAndRun.message', {
+                {t('steps.downloadAndRun.message', {
                     icon: (
                         <Icon icon={<Play />} style={{ verticalAlign: 'text-top' }} />
                     ),
                 })}
             </p>
-            <p>{i18n.translate('steps.downloadAndRun.runAgain')}</p>
+            <p>{t('steps.downloadAndRun.runAgain')}</p>
         </>
     );
 });
@@ -125,7 +125,7 @@ const Tour: React.FunctionComponent = () => {
     const { isRunning } = useSelector((s) => s.tour);
     const { isDarkMode } = useTernaryDarkMode();
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('tour');
 
     const steps = useMemo<Step[]>(
         () => [
@@ -199,14 +199,14 @@ const Tour: React.FunctionComponent = () => {
 
     const locale = useMemo<Locale>(
         () => ({
-            back: i18n.translate('back'),
-            close: i18n.translate('close'),
-            last: i18n.translate('last'),
-            next: i18n.translate('next'),
-            open: i18n.translate('open'),
-            skip: i18n.translate('skip'),
+            back: t('back'),
+            close: t('close'),
+            last: t('last'),
+            next: t('next'),
+            open: t('open'),
+            skip: t('skip'),
         }),
-        [i18n],
+        [t],
     );
 
     const callback = useCallback(

@@ -2,13 +2,13 @@
 // Copyright (c) 2020-2024 The Pybricks Authors
 
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useDebounce } from 'usehooks-ts';
 import { hubStartRepl } from '../../../hub/actions';
 import { HubRuntimeState } from '../../../hub/reducers';
 import { useSelector } from '../../../reducers';
 import ActionButton, { ActionButtonProps } from '../../ActionButton';
-import { useI18n } from './i18n';
 import icon from './icon.svg';
 
 type ReplButtonProps = Pick<ActionButtonProps, 'id'>;
@@ -16,7 +16,7 @@ type ReplButtonProps = Pick<ActionButtonProps, 'id'>;
 const ReplButton: React.FunctionComponent<ReplButtonProps> = ({ id }) => {
     const { runtime, useLegacyDownload, useLegacyStartUserProgram, hasRepl } =
         useSelector((s) => s.hub);
-    const i18n = useI18n();
+    const { t } = useTranslation('replButton');
     const dispatch = useDispatch();
 
     const action = useCallback(
@@ -29,8 +29,8 @@ const ReplButton: React.FunctionComponent<ReplButtonProps> = ({ id }) => {
     return (
         <ActionButton
             id={id}
-            label={i18n.translate('label')}
-            tooltip={i18n.translate('tooltip')}
+            label={t('label')}
+            tooltip={t('tooltip')}
             icon={icon}
             enabled={hasRepl && runtime === HubRuntimeState.Idle}
             showProgress={busy}

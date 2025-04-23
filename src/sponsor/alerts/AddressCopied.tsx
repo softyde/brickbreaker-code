@@ -4,12 +4,12 @@
 import { Intent } from '@blueprintjs/core';
 import { InfoSign } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 const AddressCopied: React.FunctionComponent = () => {
-    const i18n = useI18n();
-    return <p>{i18n.translate('addressCopied.message')}</p>;
+    const { t } = useTranslation('sponsorAlerts');
+    return <p>{t('addressCopied.message')}</p>;
 };
 
 export const addressCopied: CreateToast = (onAction) => {

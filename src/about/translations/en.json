@@ -1,6 +1,6 @@
 {
-    "title": "About {appName}",
-    "description": "MicroPython for {lego} Powered Up smart hubs.",
+    "title": "About {{appName}}",
+    "description": "MicroPython for {{lego}} Powered Up smart hubs.",
     "licenseButton": { "label": "Software Licenses" },
     "changelogButton": { "label": "Changelog" },
     "websiteButton": { "label": "Pybricks Website" }

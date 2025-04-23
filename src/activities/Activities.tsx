@@ -4,10 +4,10 @@
 import './activities.scss';
 import { Tab, Tabs } from '@blueprintjs/core';
 import React, { useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import Explorer from '../explorer/Explorer';
 import Settings from '../settings/Settings';
 import { Activity, useActivitiesSelectedActivity } from './hooks';
-import { useI18n } from './i18n';
 import * as Icons from './icons/icons';
 
 /**
@@ -15,7 +15,7 @@ import * as Icons from './icons/icons';
  */
 const Activities: React.FunctionComponent = () => {
     const [selectedActivity, setSelectedActivity] = useActivitiesSelectedActivity();
-    const i18n = useI18n();
+    const { t } = useTranslation('activities');
 
     const handleAction = useCallback(
         (newActivity: Activity) => {
@@ -95,8 +95,8 @@ const Activities: React.FunctionComponent = () => {
             return;
         }
 
-        tablist.setAttribute('aria-label', i18n.translate('title'));
-    }, [i18n]);
+        tablist.setAttribute('aria-label', t('title'));
+    }, [t]);
 
     return (
         <Tabs
@@ -109,7 +109,7 @@ const Activities: React.FunctionComponent = () => {
         >
             <Tab
                 itemID="pb-activities-explorer-tab"
-                aria-label={i18n.translate('explorer')}
+                aria-label={t('explorer')}
                 className="pb-activities-tablist-tab"
                 id={Activity.Explorer}
                 title={<Icons.Documents />}
@@ -119,7 +119,7 @@ const Activities: React.FunctionComponent = () => {
             />
             <Tab
                 itemID="pb-activities-settings-tab"
-                aria-label={i18n.translate('settings')}
+                aria-label={t('settings')}
                 className="pb-activities-tablist-tab"
                 id={Activity.Settings}
                 title={<Icons.Settings />}

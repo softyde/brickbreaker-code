@@ -20,6 +20,7 @@ import {
     Virus,
 } from '@blueprintjs/icons';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useTernaryDarkMode } from 'usehooks-ts';
 import AboutDialog from '../about/AboutDialog';
@@ -36,11 +37,9 @@ import ExternalLinkIcon from '../components/ExternalLinkIcon';
 import HelpButton from '../components/HelpButton';
 import { firmwareInstallPybricks } from '../firmware/actions';
 import { firmwareRestoreOfficialDialogShow } from '../firmware/restoreOfficialDialog/actions';
-import { pseudolocalize } from '../i18n';
 import { useSelector } from '../reducers';
 import { tourStart } from '../tour/actions';
 import { isMacOS } from '../utils/os';
-import { useI18n } from './i18n';
 
 const Settings: React.FunctionComponent = () => {
     const [isAboutDialogOpen, setIsAboutDialogOpen] = useState(false);
@@ -59,20 +58,20 @@ const Settings: React.FunctionComponent = () => {
 
     const dispatch = useDispatch();
 
-    const i18n = useI18n();
+    const { t } = useTranslation('settings');
 
     return (
         <div className="pb-settings">
             <FormGroup
-                label={i18n.translate('appearance.title')}
-                helperText={i18n.translate('appearance.zoom.help', {
+                label={t('appearance.title')}
+                helperText={t('appearance.zoom.help', {
                     in: <span>{isMacOS() ? 'Cmd' : 'Ctrl'}-+</span>,
                     out: <span>{isMacOS() ? 'Cmd' : 'Ctrl'}--</span>,
                 })}
             >
                 <ControlGroup>
                     <Switch
-                        label={i18n.translate('appearance.darkMode.label')}
+                        label={t('appearance.darkMode.label')}
                         checked={isDarkMode}
                         onChange={(e) =>
                             setTernaryDarkMode(
@@ -83,34 +82,34 @@ const Settings: React.FunctionComponent = () => {
                         }
                     />
                     <HelpButton
-                        helpForLabel={i18n.translate('appearance.darkMode.label')}
-                        content={i18n.translate('appearance.darkMode.help')}
+                        helpForLabel={t('appearance.darkMode.label')}
+                        content={t('appearance.darkMode.help')}
                     />
                 </ControlGroup>
             </FormGroup>
-            <FormGroup label={i18n.translate('firmware.title')}>
+            <FormGroup label={t('firmware.title')}>
                 <Button
                     id="pb-settings-flash-pybricks-button"
                     minimal={true}
                     icon={<Download />}
-                    label={i18n.translate('firmware.flashPybricksButton.label')}
+                    label={t('firmware.flashPybricksButton.label')}
                     onPress={() => dispatch(firmwareInstallPybricks())}
                 />
                 <Button
                     id="pb-settings-flash-official-button"
                     minimal={true}
                     icon={<Download />}
-                    label={i18n.translate('firmware.flashLegoButton.label', {
+                    label={t('firmware.flashLegoButton.label', {
                         lego: legoRegisteredTrademark,
                     })}
                     onPress={() => dispatch(firmwareRestoreOfficialDialogShow())}
                 />
             </FormGroup>
-            <FormGroup label={i18n.translate('help.title')}>
+            <FormGroup label={t('help.title')}>
                 <ButtonGroup minimal={true} vertical={true} alignText="left">
                     <Button
                         id="pb-settings-tour-button"
-                        label={i18n.translate('app.tour.label')}
+                        label={t('app.tour.label')}
                         icon={<InfoSign />}
                         onPress={() => {
                             dispatch(tourStart());
@@ -122,7 +121,7 @@ const Settings: React.FunctionComponent = () => {
                         href={pybricksProjectsUrl}
                         target="blank_"
                     >
-                        {i18n.translate('help.projects.label')}
+                        {t('help.projects.label')}
                         <ExternalLinkIcon />
                     </AnchorButton>
                     <AnchorButton
@@ -130,7 +129,7 @@ const Settings: React.FunctionComponent = () => {
                         href={pybricksSupportUrl}
                         target="blank_"
                     >
-                        {i18n.translate('help.support.label')}
+                        {t('help.support.label')}
                         <ExternalLinkIcon />
                     </AnchorButton>
                     <AnchorButton
@@ -138,7 +137,7 @@ const Settings: React.FunctionComponent = () => {
                         href={pybricksGitterUrl}
                         target="blank_"
                     >
-                        {i18n.translate('help.chat.label')}
+                        {t('help.chat.label')}
                         <ExternalLinkIcon />
                     </AnchorButton>
                     <AnchorButton
@@ -146,7 +145,7 @@ const Settings: React.FunctionComponent = () => {
                         href={pybricksBugReportsUrl}
                         target="blank_"
                     >
-                        {i18n.translate('help.bugs.label')}
+                        {t('help.bugs.label')}
                         <ExternalLinkIcon />
                     </AnchorButton>
                     <AboutDialog
@@ -156,13 +155,13 @@ const Settings: React.FunctionComponent = () => {
                 </ButtonGroup>
             </FormGroup>
             <FormGroup
-                label={i18n.translate('app.title')}
-                helperText={readyForOfflineUse && i18n.translate('app.offlineUseHelp')}
+                label={t('app.title')}
+                helperText={readyForOfflineUse && t('app.offlineUseHelp')}
             >
                 <ButtonGroup minimal={true} vertical={true} alignText="left">
                     {hasUnresolvedInstallPrompt && (
                         <Button
-                            label={i18n.translate('app.install.label')}
+                            label={t('app.install.label')}
                             icon={<Add />}
                             onPress={() => dispatch(appShowInstallPrompt())}
                             loading={promptingInstall}
@@ -171,7 +170,7 @@ const Settings: React.FunctionComponent = () => {
                     {(process.env.NODE_ENV === 'development' ||
                         (isServiceWorkerRegistered && !updateAvailable)) && (
                         <Button
-                            label={i18n.translate('app.checkForUpdate.label')}
+                            label={t('app.checkForUpdate.label')}
                             icon={<Refresh />}
                             onPress={() => dispatch(appCheckForUpdate())}
                             loading={checkingForUpdate}
@@ -180,13 +179,13 @@ const Settings: React.FunctionComponent = () => {
                     {(process.env.NODE_ENV === 'development' ||
                         (isServiceWorkerRegistered && updateAvailable)) && (
                         <Button
-                            label={i18n.translate('app.restart.label')}
+                            label={t('app.restart.label')}
                             icon={<Refresh />}
                             onPress={() => dispatch(appReload())}
                         />
                     )}
                     <Button
-                        label={i18n.translate('app.about.label')}
+                        label={t('app.about.label')}
                         icon={<InfoSign />}
                         onPress={() => {
                             setIsAboutDialogOpen(true);
@@ -195,7 +194,7 @@ const Settings: React.FunctionComponent = () => {
                     />
                 </ButtonGroup>
             </FormGroup>
-            {process.env.NODE_ENV === 'development' && (
+            {/* {process.env.NODE_ENV === 'development' && (
                 <FormGroup label="Developer">
                     <Switch
                         checked={i18n.pseudolocalize !== false}
@@ -203,7 +202,7 @@ const Settings: React.FunctionComponent = () => {
                         label="Pseudolocalize"
                     />
                 </FormGroup>
-            )}
+            )} */}
         </div>
     );
 };

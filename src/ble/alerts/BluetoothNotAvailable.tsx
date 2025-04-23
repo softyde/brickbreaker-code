@@ -4,16 +4,16 @@
 import { Intent } from '@blueprintjs/core';
 import { Error } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 const BluetoothNotAvailable: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('bleAlerts');
     return (
         <>
-            <p>{i18n.translate('bluetoothNotAvailable.message')}</p>
-            <p>{i18n.translate('bluetoothNotAvailable.suggestion')}</p>
-            <p>{i18n.translate('bluetoothNotAvailable.browserSupport')}</p>
+            <p>{t('bluetoothNotAvailable.message')}</p>
+            <p>{t('bluetoothNotAvailable.suggestion')}</p>
+            <p>{t('bluetoothNotAvailable.browserSupport')}</p>
         </>
     );
 };

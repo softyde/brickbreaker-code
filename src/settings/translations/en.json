@@ -7,7 +7,7 @@
             "help": "Enable to choose dark mode. Disable to choose light mode."
         },
         "zoom": {
-            "help": "Use {in} and {out} to zoom."
+            "help": "Use {{in}} and {{out}} to zoom."
         }
     },
     "firmware": {
@@ -16,7 +16,7 @@
             "label": "Install Pybricks Firmware"
         },
         "flashLegoButton": {
-            "label": "Restore Official {lego} Firmware"
+            "label": "Restore Official {{lego}} Firmware"
         }
     },
     "help": {

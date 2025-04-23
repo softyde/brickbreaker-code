@@ -3,7 +3,6 @@
 
 import { HotkeysProvider } from '@blueprintjs/core';
 import { ThunkAction, configureStore } from '@reduxjs/toolkit';
-import { I18nContext, I18nManager } from '@shopify/react-i18n';
 import { RenderResult, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React, { ReactElement } from 'react';
@@ -173,13 +172,9 @@ export const testRender = (
     });
     const dispatch = jest.spyOn(store, 'dispatch');
 
-    const i18n = new I18nManager({ locale: 'en' });
-
     const result = render(
         <Provider store={store}>
-            <I18nContext.Provider value={i18n}>
-                <HotkeysProvider>{component}</HotkeysProvider>
-            </I18nContext.Provider>
+            <HotkeysProvider>{component}</HotkeysProvider>
         </Provider>,
     );
 

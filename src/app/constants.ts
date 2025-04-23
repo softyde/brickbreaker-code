@@ -49,7 +49,7 @@ export const pybricksUsbLinuxUdevRulesUrl =
     'https://pybricks.com/projects/tutorials/dev/tools/linux/';
 
 /** Pybricks copyright statement. */
-export const pybricksCopyright = 'Copyright (c) 2020-2023 The Pybricks Authors';
+export const pybricksCopyright = 'Copyright (c) 2025 Philipp Anné';
 
 /** The LEGO name with registered trademark symbol. */
 export const legoRegisteredTrademark = 'LEGO®';

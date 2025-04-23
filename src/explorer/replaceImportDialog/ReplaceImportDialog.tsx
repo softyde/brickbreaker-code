@@ -4,6 +4,7 @@
 import './replaceImportDialog.scss';
 import { Button, Checkbox, Classes, Dialog, Intent } from '@blueprintjs/core';
 import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useSelector } from '../../reducers';
 import {
@@ -11,10 +12,9 @@ import {
     replaceImportDialogDidAccept,
     replaceImportDialogDidCancel,
 } from './actions';
-import { useI18n } from './i18n';
 
 const RenameImportDialog: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('replaceImport');
     const dispatch = useDispatch();
     const isOpen = useSelector((s) => s.explorer.replaceImportDialog.isOpen);
     const fileName = useSelector((s) => s.explorer.replaceImportDialog.fileName);
@@ -41,14 +41,14 @@ const RenameImportDialog: React.FunctionComponent = () => {
     return (
         <Dialog
             className="pb-explorer-replaceImportDialog"
-            title={i18n.translate('title')}
+            title={t('title')}
             isOpen={isOpen}
             onOpening={() => setRemember(false)}
             onClose={handleClose}
         >
             <form onSubmit={handleSubmit} method="dialog">
                 <div className={Classes.DIALOG_BODY}>
-                    <p>{i18n.translate('message', { fileName })}</p>
+                    <p>{t('message', { fileName })}</p>
                 </div>
                 <div className={Classes.DIALOG_FOOTER}>
                     <Checkbox
@@ -57,7 +57,7 @@ const RenameImportDialog: React.FunctionComponent = () => {
                             setRemember((e.target as HTMLInputElement).checked)
                         }
                     >
-                        {i18n.translate('option.remember')}
+                        {t('option.remember')}
                     </Checkbox>
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                         <Button
@@ -65,21 +65,21 @@ const RenameImportDialog: React.FunctionComponent = () => {
                             type="submit"
                             value={ReplaceImportDialogAction.Skip}
                         >
-                            {i18n.translate('action.skip')}
+                            {t('action.skip')}
                         </Button>
                         <Button
                             intent={Intent.DANGER}
                             type="submit"
                             value={ReplaceImportDialogAction.Replace}
                         >
-                            {i18n.translate('action.replace')}
+                            {t('action.replace')}
                         </Button>
                         <Button
                             intent={Intent.PRIMARY}
                             type="submit"
                             value={ReplaceImportDialogAction.Rename}
                         >
-                            {i18n.translate('action.rename')}
+                            {t('action.rename')}
                         </Button>
                     </div>
                 </div>

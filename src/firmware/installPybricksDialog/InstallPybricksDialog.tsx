@@ -26,6 +26,7 @@ import classNames from 'classnames';
 import React, { useCallback, useState } from 'react';
 import { VisuallyHidden } from 'react-aria';
 import { useDropzone } from 'react-dropzone';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useLocalStorage } from 'usehooks-ts';
 import { alertsShowAlert } from '../../alerts/actions';
@@ -47,7 +48,6 @@ import {
     firmwareInstallPybricksDialogCancel,
 } from './actions';
 import { FirmwareData, useCustomFirmware, useFirmware } from './hooks';
-import { useI18n } from './i18n';
 import { validateHubName } from '.';
 
 const dialogBody = classNames(
@@ -95,81 +95,46 @@ function getHubTypeNameFromMetadata(metadata: FirmwareMetadata | undefined): str
 }
 
 const UnsupportedHubs: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('installPyBricks');
 
     return (
         <div className={Classes.RUNNING_TEXT}>
             <h4>
-                {i18n.translate(
-                    'selectHubPanel.notOnListButton.info.mindstorms.title',
-                    { legoMindstormsRegisteredTrademark },
-                )}
+                {t('selectHubPanel.notOnListButton.info.mindstorms.title', {
+                    legoMindstormsRegisteredTrademark,
+                })}
             </h4>
             <p>
-                {i18n.translate(
-                    'selectHubPanel.notOnListButton.info.mindstorms.intro',
-                    {
-                        appName,
-                        legoMindstormsRegisteredTrademark,
-                    },
-                )}
+                {t('selectHubPanel.notOnListButton.info.mindstorms.intro', {
+                    appName,
+                    legoMindstormsRegisteredTrademark,
+                })}
             </p>
             <p>
-                {i18n.translate(
-                    'selectHubPanel.notOnListButton.info.mindstorms.help.message',
-                    {
-                        sponsor: (
-                            <>
-                                <VisuallyHidden elementType="span">
-                                    {i18n.translate(
-                                        'selectHubPanel.notOnListButton.info.mindstorms.help.sponsor',
-                                    )}
-                                </VisuallyHidden>
-                                <Icon icon={<Heart />} />
-                            </>
-                        ),
-                    },
-                )}
+                {t('selectHubPanel.notOnListButton.info.mindstorms.help.message', {
+                    sponsor: (
+                        <>
+                            <VisuallyHidden elementType="span">
+                                {t(
+                                    'selectHubPanel.notOnListButton.info.mindstorms.help.sponsor',
+                                )}
+                            </VisuallyHidden>
+                            <Icon icon={<Heart />} />
+                        </>
+                    ),
+                })}
             </p>
             <ul>
-                <li>
-                    {i18n.translate(
-                        'selectHubPanel.notOnListButton.info.mindstorms.rcx',
-                    )}
-                </li>
-                <li>
-                    {i18n.translate(
-                        'selectHubPanel.notOnListButton.info.mindstorms.nxt',
-                    )}
-                </li>
-                <li>
-                    {i18n.translate(
-                        'selectHubPanel.notOnListButton.info.mindstorms.ev3',
-                    )}
-                </li>
+                <li>{t('selectHubPanel.notOnListButton.info.mindstorms.rcx')}</li>
+                <li>{t('selectHubPanel.notOnListButton.info.mindstorms.nxt')}</li>
+                <li>{t('selectHubPanel.notOnListButton.info.mindstorms.ev3')}</li>
             </ul>
-            <h4>
-                {i18n.translate('selectHubPanel.notOnListButton.info.poweredUp.title')}
-            </h4>
-            <p>
-                {i18n.translate('selectHubPanel.notOnListButton.info.poweredUp.intro')}
-            </p>
+            <h4>{t('selectHubPanel.notOnListButton.info.poweredUp.title')}</h4>
+            <p>{t('selectHubPanel.notOnListButton.info.poweredUp.intro')}</p>
             <ul>
-                <li>
-                    {i18n.translate(
-                        'selectHubPanel.notOnListButton.info.poweredUp.wedo2',
-                    )}
-                </li>
-                <li>
-                    {i18n.translate(
-                        'selectHubPanel.notOnListButton.info.poweredUp.duploTrain',
-                    )}
-                </li>
-                <li>
-                    {i18n.translate(
-                        'selectHubPanel.notOnListButton.info.poweredUp.mario',
-                    )}
-                </li>
+                <li>{t('selectHubPanel.notOnListButton.info.poweredUp.wedo2')}</li>
+                <li>{t('selectHubPanel.notOnListButton.info.poweredUp.duploTrain')}</li>
+                <li>{t('selectHubPanel.notOnListButton.info.poweredUp.mario')}</li>
             </ul>
         </div>
     );
@@ -190,7 +155,7 @@ const SelectHubPanel: React.FunctionComponent<SelectHubPanelProps> = ({
         'installPybricksDialog.isAdvancedOpen',
         false,
     );
-    const i18n = useI18n();
+    const { t } = useTranslation('installPyBricks');
     const dispatch = useDispatch();
 
     const onDrop = useCallback(
@@ -254,34 +219,30 @@ const SelectHubPanel: React.FunctionComponent<SelectHubPanelProps> = ({
         <div className={dialogBody}>
             {isCustomFirmwareRequested ? (
                 <>
-                    <p>{i18n.translate('selectHubPanel.customFirmware.message')}</p>
+                    <p>{t('selectHubPanel.customFirmware.message')}</p>
                     <p>
-                        {i18n.translate('selectHubPanel.customFirmware.hubType', {
+                        {t('selectHubPanel.customFirmware.hubType', {
                             hubTypeName: getHubTypeNameFromMetadata(
                                 customFirmwareData?.metadata,
                             ),
                         })}
                     </p>
                     <p>
-                        {i18n.translate(
-                            'selectHubPanel.customFirmware.firmwareVersion',
-                            {
-                                version:
-                                    customFirmwareData?.metadata['firmware-version'],
-                            },
-                        )}
+                        {t('selectHubPanel.customFirmware.firmwareVersion', {
+                            version: customFirmwareData?.metadata['firmware-version'],
+                        })}
                     </p>
                     <Button
                         onClick={() => {
                             onCustomFirmwareZip(undefined);
                         }}
                     >
-                        {i18n.translate('selectHubPanel.customFirmware.clearButton')}
+                        {t('selectHubPanel.customFirmware.clearButton')}
                     </Button>
                 </>
             ) : (
                 <>
-                    <p>{i18n.translate('selectHubPanel.message')}</p>
+                    <p>{t('selectHubPanel.message')}</p>
                     <HubPicker />
                     <Popover
                         popoverClassName={Classes.POPOVER_CONTENT_SIZING}
@@ -292,7 +253,7 @@ const SelectHubPanel: React.FunctionComponent<SelectHubPanelProps> = ({
                                 ref={ref as React.Ref<HTMLButtonElement>}
                                 {...targetProps}
                             >
-                                {i18n.translate('selectHubPanel.notOnListButton.label')}
+                                {t('selectHubPanel.notOnListButton.label')}
                             </Button>
                         )}
                     />
@@ -305,7 +266,7 @@ const SelectHubPanel: React.FunctionComponent<SelectHubPanelProps> = ({
                     icon={isAdvancedOpen ? <ChevronDown /> : <ChevronRight />}
                     onClick={() => setIsAdvancedOpen((v) => !v)}
                 >
-                    {i18n.translate('selectHubPanel.advanced.label')}
+                    {t('selectHubPanel.advanced.label')}
                 </Button>
                 <Collapse isOpen={isAdvancedOpen}>
                     <div
@@ -316,9 +277,7 @@ const SelectHubPanel: React.FunctionComponent<SelectHubPanelProps> = ({
                         })}
                     >
                         <input {...getInputProps()} />
-                        {i18n.translate(
-                            'selectHubPanel.advanced.customFirmwareDropzone.label',
-                        )}
+                        {t('selectHubPanel.advanced.customFirmwareDropzone.label')}
                     </div>
                 </Collapse>
             </div>
@@ -345,7 +304,7 @@ const AcceptLicensePanel: React.FunctionComponent<AcceptLicensePanelProps> = ({
     customFirmwareError,
     onLicenseAcceptedChanged,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('installPyBricks');
 
     const selectedFirmwareData = isCustomFirmwareRequested
         ? customFirmwareData
@@ -364,7 +323,7 @@ const AcceptLicensePanel: React.FunctionComponent<AcceptLicensePanelProps> = ({
                         icon={selectedFirmwareError ? <Error /> : <Spinner />}
                         description={
                             selectedFirmwareError
-                                ? i18n.translate('licensePanel.licenseText.error')
+                                ? t('licensePanel.licenseText.error')
                                 : undefined
                         }
                     />
@@ -372,7 +331,7 @@ const AcceptLicensePanel: React.FunctionComponent<AcceptLicensePanelProps> = ({
             </div>
             <Checkbox
                 className="pb-firmware-installPybricksDialog-license-checkbox"
-                label={i18n.translate('licensePanel.acceptCheckbox.label')}
+                label={t('licensePanel.acceptCheckbox.label')}
                 checked={licenseAccepted}
                 onChange={(e) => onLicenseAcceptedChanged(e.currentTarget.checked)}
                 disabled={!selectedFirmwareData}
@@ -392,14 +351,14 @@ const ConfigureOptionsPanel: React.FunctionComponent<SelectOptionsPanelProps> = 
     metadata,
     onChangeHubName,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('installPyBricks');
     const isHubNameValid = metadata ? validateHubName(hubName, metadata) : true;
 
     return (
         <div className={dialogBody}>
             <FormGroup
-                label={i18n.translate('optionsPanel.hubName.label')}
-                labelInfo={i18n.translate('optionsPanel.hubName.labelInfo')}
+                label={t('optionsPanel.hubName.label')}
+                labelInfo={t('optionsPanel.hubName.labelInfo')}
             >
                 <ControlGroup>
                     <InputGroup
@@ -420,8 +379,8 @@ const ConfigureOptionsPanel: React.FunctionComponent<SelectOptionsPanelProps> = 
                         }
                     />
                     <HelpButton
-                        helpForLabel={i18n.translate('optionsPanel.hubName.label')}
-                        content={i18n.translate('optionsPanel.hubName.help')}
+                        helpForLabel={t('optionsPanel.hubName.label')}
+                        content={t('optionsPanel.hubName.help')}
                     />
                 </ControlGroup>
             </FormGroup>
@@ -436,13 +395,13 @@ type BootloaderModePanelProps = {
 const BootloaderModePanel: React.FunctionComponent<BootloaderModePanelProps> = ({
     hubType,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('installPyBricks');
 
     return (
         <div className={classNames(Classes.DIALOG_BODY, Classes.RUNNING_TEXT)}>
             <BootloaderInstructions
                 hubType={hubType}
-                flashButtonText={i18n.translate('flashFirmwareButton.label')}
+                flashButtonText={t('flashFirmwareButton.label')}
             />
         </div>
     );
@@ -463,7 +422,7 @@ export const InstallPybricksDialog: React.FunctionComponent = () => {
     const [customFirmwareZip, setCustomFirmwareZip] = useState<File>();
     const { isCustomFirmwareRequested, customFirmwareData, customFirmwareError } =
         useCustomFirmware(customFirmwareZip);
-    const i18n = useI18n();
+    const { t } = useTranslation('installPyBricks');
 
     const selectedFirmwareData = isCustomFirmwareRequested
         ? customFirmwareData
@@ -474,13 +433,13 @@ export const InstallPybricksDialog: React.FunctionComponent = () => {
 
     return (
         <MultistepDialog
-            title={i18n.translate('title')}
+            title={t('title')}
             isOpen={isOpen}
             onClose={() => dispatch(firmwareInstallPybricksDialogCancel())}
-            backButtonProps={{ text: i18n.translate('backButton.label') }}
-            nextButtonProps={{ text: i18n.translate('nextButton.label') }}
+            backButtonProps={{ text: t('backButton.label') }}
+            nextButtonProps={{ text: t('nextButton.label') }}
             finalButtonProps={{
-                text: i18n.translate('flashFirmwareButton.label'),
+                text: t('flashFirmwareButton.label'),
                 disabled: inProgress,
                 onClick: () =>
                     dispatch(
@@ -494,7 +453,7 @@ export const InstallPybricksDialog: React.FunctionComponent = () => {
         >
             <DialogStep
                 id="hub"
-                title={i18n.translate('selectHubPanel.title')}
+                title={t('selectHubPanel.title')}
                 panel={
                     <SelectHubPanel
                         isCustomFirmwareRequested={isCustomFirmwareRequested}
@@ -505,7 +464,7 @@ export const InstallPybricksDialog: React.FunctionComponent = () => {
             />
             <DialogStep
                 id="license"
-                title={i18n.translate('licensePanel.title')}
+                title={t('licensePanel.title')}
                 panel={
                     <AcceptLicensePanel
                         licenseAccepted={licenseAccepted}
@@ -519,12 +478,12 @@ export const InstallPybricksDialog: React.FunctionComponent = () => {
                 }
                 nextButtonProps={{
                     disabled: !licenseAccepted,
-                    text: i18n.translate('nextButton.label'),
+                    text: t('nextButton.label'),
                 }}
             />
             <DialogStep
                 id="options"
-                title={i18n.translate('optionsPanel.title')}
+                title={t('optionsPanel.title')}
                 panel={
                     <ConfigureOptionsPanel
                         hubName={hubName}
@@ -539,7 +498,7 @@ export const InstallPybricksDialog: React.FunctionComponent = () => {
             />
             <DialogStep
                 id="bootloader"
-                title={i18n.translate('bootloaderPanel.title')}
+                title={t('bootloaderPanel.title')}
                 panel={<BootloaderModePanel hubType={selectedHubType} />}
             />
         </MultistepDialog>

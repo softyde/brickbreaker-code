@@ -13,6 +13,7 @@ import {
 import { Plus } from '@blueprintjs/icons';
 import React, { useCallback, useRef, useState } from 'react';
 import { useId } from 'react-aria';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useLocalStorage } from 'usehooks-ts';
 import { HubPicker } from '../../components/hubPicker/HubPicker';
@@ -31,10 +32,9 @@ import {
     newFileWizardDidAccept,
     newFileWizardDidCancel,
 } from './actions';
-import { useI18n } from './i18n';
 
 const NewFileWizard: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('newFileWizard');
     const dispatch = useDispatch();
 
     const [useTemplate, setUseTemplate] = useLocalStorage(
@@ -79,7 +79,7 @@ const NewFileWizard: React.FunctionComponent = () => {
     return (
         <Dialog
             icon={<Plus />}
-            title={i18n.translate('title')}
+            title={t('title')}
             isOpen={isOpen}
             onOpening={() => {
                 setFileName('');
@@ -100,7 +100,7 @@ const NewFileWizard: React.FunctionComponent = () => {
                             )
                         }
                     >
-                        {i18n.translate('type.label')}
+                        {t('type.label')}
                     </Switch>
 
                     <FileNameFormGroup
@@ -110,7 +110,7 @@ const NewFileWizard: React.FunctionComponent = () => {
                         inputRef={fileNameInputRef}
                         onChange={setFileName}
                     />
-                    <FormGroup label={i18n.translate('template.label')}>
+                    <FormGroup label={t('template.label')}>
                         <ControlGroup vertical>
                             <Switch
                                 checked={useTemplate}
@@ -120,14 +120,12 @@ const NewFileWizard: React.FunctionComponent = () => {
                                     )
                                 }
                             >
-                                {i18n.translate('useTemplate.label')}
+                                {t('useTemplate.label')}
                             </Switch>
                             <Text className={Classes.TEXT_MUTED}>
                                 {useTemplate
-                                    ? i18n.translate('useTemplate.description.checked')
-                                    : i18n.translate(
-                                          'useTemplate.description.unchecked',
-                                      )}
+                                    ? t('useTemplate.description.checked')
+                                    : t('useTemplate.description.unchecked')}
                             </Text>
                         </ControlGroup>
                         <div className="pb-spacer" />
@@ -144,9 +142,7 @@ const NewFileWizard: React.FunctionComponent = () => {
                             }
                             type="submit"
                         >
-                            <span id={acceptButtonLabelId}>
-                                {i18n.translate('action.create')}
-                            </span>
+                            <span id={acceptButtonLabelId}>{t('action.create')}</span>
                         </Button>
                     </div>
                 </div>

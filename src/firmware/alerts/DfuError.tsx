@@ -4,22 +4,20 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Error } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 type DfuErrorProps = {
     onTryAgain: () => void;
 };
 
 const DfuError: React.FunctionComponent<DfuErrorProps> = ({ onTryAgain }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('firmwareAlerts');
     return (
         <>
-            <p>{i18n.translate('dfuError.message')}</p>
-            <p>{i18n.translate('dfuError.suggestion')}</p>
-            <Button onClick={onTryAgain}>
-                {i18n.translate('dfuError.tryAgainButton')}
-            </Button>
+            <p>{t('dfuError.message')}</p>
+            <p>{t('dfuError.suggestion')}</p>
+            <Button onClick={onTryAgain}>{t('dfuError.tryAgainButton')}</Button>
         </>
     );
 };

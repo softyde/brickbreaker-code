@@ -4,9 +4,9 @@
 import { Intent } from '@blueprintjs/core';
 import { WarningSign } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { appName } from '../../app/constants';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 type NewPybricksProfileProps = {
     /** The Pybricks Profile version reported by the hub. */
@@ -19,19 +19,19 @@ const NewPybricksProfile: React.FunctionComponent<NewPybricksProfileProps> = ({
     hubVersion,
     supportedVersion,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('bleAlerts');
     return (
         <>
-            <p>{i18n.translate('newPybricksProfile.message')}</p>
+            <p>{t('newPybricksProfile.message')}</p>
             <p>
-                {i18n.translate('newPybricksProfile.versions', {
+                {t('newPybricksProfile.versions', {
                     hubVersion: `v${hubVersion}`,
                     app: appName,
                     appVersion: `v${supportedVersion}`,
                 })}
             </p>
             <p>
-                {i18n.translate('newPybricksProfile.suggestion', {
+                {t('newPybricksProfile.suggestion', {
                     app: appName,
                 })}
             </p>

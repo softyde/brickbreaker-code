@@ -10,6 +10,7 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import {
     legoEducationSpikeRegisteredTrademark,
@@ -23,17 +24,16 @@ import { useSelector } from '../../reducers';
 import { firmwareRestoreOfficialDfu } from '../actions';
 import BootloaderInstructions from '../bootloaderInstructions/BootloaderInstructions';
 import { firmwareRestoreOfficialDialogHide } from './actions';
-import { useI18n } from './i18n';
 
 const SelectHubPanel: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('restoreOfficial');
 
     return (
         <div className={classNames(Classes.DIALOG_BODY, Classes.RUNNING_TEXT)}>
             <p>
-                {i18n.translate('selectHubPanel.message', {
+                {t('selectHubPanel.message', {
                     lego: legoRegisteredTrademark,
-                    next: <strong>{i18n.translate('nextButton.label')}</strong>,
+                    next: <strong>{t('nextButton.label')}</strong>,
                 })}
             </p>
             <div className="pb-spacer" />
@@ -45,7 +45,7 @@ const SelectHubPanel: React.FunctionComponent = () => {
 const RestoreFirmwarePanel: React.FunctionComponent = () => {
     const [hubType] = useHubPickerSelectedHub();
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('restoreOfficial');
     const inProgress = useSelector(
         (s) =>
             s.firmware.isFirmwareFlashUsbDfuInProgress ||
@@ -61,21 +61,19 @@ const RestoreFirmwarePanel: React.FunctionComponent = () => {
             <BootloaderInstructions
                 hubType={hubType}
                 recovery
-                flashButtonText={i18n.translate('restoreFirmwarePanel.flashButton')}
+                flashButtonText={t('restoreFirmwarePanel.flashButton')}
             />
             {hubHasUSB(hubType) ? (
                 <>
                     <p>
-                        {i18n.translate('restoreFirmwarePanel.instruction2.updateApp', {
+                        {t('restoreFirmwarePanel.instruction2.updateApp', {
                             app:
                                 hubType === Hub.Inventor
                                     ? legoMindstormsRegisteredTrademark
                                     : legoEducationSpikeRegisteredTrademark,
                         })}{' '}
                         {hubType !== Hub.Inventor
-                            ? i18n.translate(
-                                  'restoreFirmwarePanel.instruction2.updateAppVersion',
-                              )
+                            ? t('restoreFirmwarePanel.instruction2.updateAppVersion')
                             : ''}
                     </p>
                     <div className="pb-spacer" />
@@ -84,11 +82,11 @@ const RestoreFirmwarePanel: React.FunctionComponent = () => {
                         disabled={inProgress}
                         onClick={handleRestoreButtonClick}
                     >
-                        {i18n.translate('restoreFirmwarePanel.flashButton')}
+                        {t('restoreFirmwarePanel.flashButton')}
                     </Button>
                 </>
             ) : (
-                <p>{i18n.translate('restoreFirmwarePanel.instruction2.ble.message')}</p>
+                <p>{t('restoreFirmwarePanel.instruction2.ble.message')}</p>
             )}
         </div>
     );
@@ -97,28 +95,28 @@ const RestoreFirmwarePanel: React.FunctionComponent = () => {
 const RestoreOfficialDialog: React.FunctionComponent = () => {
     const { isOpen } = useSelector((s) => s.firmware.restoreOfficialDialog);
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('restoreOfficial');
 
     return (
         <MultistepDialog
             isOpen={isOpen}
-            title={i18n.translate('title', { lego: legoRegisteredTrademark })}
+            title={t('title', { lego: legoRegisteredTrademark })}
             onClose={() => dispatch(firmwareRestoreOfficialDialogHide())}
-            backButtonProps={{ text: i18n.translate('backButton.label') }}
-            nextButtonProps={{ text: i18n.translate('nextButton.label') }}
+            backButtonProps={{ text: t('backButton.label') }}
+            nextButtonProps={{ text: t('nextButton.label') }}
             finalButtonProps={{
-                text: i18n.translate('doneButton.label'),
+                text: t('doneButton.label'),
                 onClick: () => dispatch(firmwareRestoreOfficialDialogHide()),
             }}
         >
             <DialogStep
                 id="hub"
-                title={i18n.translate('selectHubPanel.title')}
+                title={t('selectHubPanel.title')}
                 panel={<SelectHubPanel />}
             />
             <DialogStep
                 id="restore"
-                title={i18n.translate('restoreFirmwarePanel.title')}
+                title={t('restoreFirmwarePanel.title')}
                 panel={<RestoreFirmwarePanel />}
             />
         </MultistepDialog>

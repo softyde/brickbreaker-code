@@ -4,16 +4,16 @@
 import { Intent } from '@blueprintjs/core';
 import { Error } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 type FileInUseAlertProps = {
     fileName: string;
 };
 
 const FileInUseAlert: React.FunctionComponent<FileInUseAlertProps> = ({ fileName }) => {
-    const i18n = useI18n();
-    return <>{i18n.translate('fileInUse.message', { fileName })}</>;
+    const { t } = useTranslation('explorerAlerts');
+    return <>{t('fileInUse.message', { fileName })}</>;
 };
 
 export const fileInUse: CreateToast<{ fileName: string }> = (

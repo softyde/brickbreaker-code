@@ -4,7 +4,6 @@
 import './index.scss';
 import { HotkeysProvider, OverlayToaster } from '@blueprintjs/core';
 import { configureStore } from '@reduxjs/toolkit';
-import { I18nContext } from '@shopify/react-i18n';
 import React from 'react';
 import { OverlayProvider } from 'react-aria';
 import { createRoot } from 'react-dom/client';
@@ -14,7 +13,6 @@ import createSagaMiddleware from 'redux-saga';
 import App from './app/App';
 import { appVersion } from './app/constants';
 import { db } from './fileStorage/context';
-import { i18nManager } from './i18n';
 import { rootReducer } from './reducers';
 import { serializableCheck } from './redux';
 import reportWebVitals from './reportWebVitals';
@@ -22,6 +20,7 @@ import rootSaga, { RootSagaContext } from './sagas';
 import { defaultTerminalContext } from './terminal/TerminalContext';
 import { defined } from './utils';
 import { createCountFunc } from './utils/iter';
+import './i18next';
 
 const toasterRef = React.createRef<OverlayToaster>();
 
@@ -79,14 +78,12 @@ const root = createRoot(container);
 
 root.render(
     <Provider store={store}>
-        <I18nContext.Provider value={i18nManager}>
-            <OverlayProvider>
-                <HotkeysProvider>
-                    <App />
-                </HotkeysProvider>
-            </OverlayProvider>
-            <OverlayToaster ref={toasterRef} />
-        </I18nContext.Provider>
+        <OverlayProvider>
+            <HotkeysProvider>
+                <App />
+            </HotkeysProvider>
+        </OverlayProvider>
+        <OverlayToaster ref={toasterRef} />
     </Provider>,
 );
 

@@ -7,7 +7,7 @@
             "help": "Aktivieren Sie den Dunkelmodus. Deaktivieren Sie ihn für den hellen Modus."
         },
         "zoom": {
-            "help": "Verwenden Sie {in} und {out} zum Zoomen."
+            "help": "Verwenden Sie {{in}} und {{out}} zum Zoomen."
         }
     },
     "firmware": {
@@ -16,7 +16,7 @@
             "label": "Pybricks-Firmware installieren"
         },
         "flashLegoButton": {
-            "label": "Offizielle {lego}-Firmware wiederherstellen"
+            "label": "Offizielle {{lego}}-Firmware wiederherstellen"
         }
     },
     "help": {

@@ -16,10 +16,10 @@ import {
 import { Disable, Error, TickCircle } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BleConnectionState } from '../ble/reducers';
 import { CompletionEngineStatus } from '../editor/redux/codeCompletion';
 import { useSelector } from '../reducers';
-import { useI18n } from './i18n';
 
 const commonPopoverProps: Partial<PopoverProps> = {
     popoverClassName: Classes.POPOVER_CONTENT_SIZING,
@@ -28,7 +28,7 @@ const commonPopoverProps: Partial<PopoverProps> = {
 
 const CompletionEngineIndicator: React.FunctionComponent = () => {
     const { status } = useSelector((s) => s.editor.codeCompletion);
-    const i18n = useI18n();
+    const { t } = useTranslation('statusBar');
 
     const icon = useMemo(() => {
         switch (status) {
@@ -46,20 +46,20 @@ const CompletionEngineIndicator: React.FunctionComponent = () => {
     const message = useMemo(() => {
         switch (status) {
             case CompletionEngineStatus.Loading:
-                return i18n.translate('completionEngineStatus.message.loading');
+                return t('completionEngineStatus.message.loading');
             case CompletionEngineStatus.Ready:
-                return i18n.translate('completionEngineStatus.message.ready');
+                return t('completionEngineStatus.message.ready');
             case CompletionEngineStatus.Failed:
-                return i18n.translate('completionEngineStatus.message.failed');
+                return t('completionEngineStatus.message.failed');
             default:
-                return i18n.translate('completionEngineStatus.message.unknown');
+                return t('completionEngineStatus.message.unknown');
         }
-    }, [status, i18n]);
+    }, [status, t]);
 
     return (
         <Popover {...commonPopoverProps} content={message}>
             <div
-                aria-label={i18n.translate('completionEngineStatus.label')}
+                aria-label={t('completionEngineStatus.label')}
                 role="button"
                 aria-haspopup="dialog"
                 style={{ cursor: 'pointer' }}
@@ -71,7 +71,7 @@ const CompletionEngineIndicator: React.FunctionComponent = () => {
 };
 
 const HubInfoButton: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('statusBar');
     const deviceName = useSelector((s) => s.ble.deviceName);
     const deviceType = useSelector((s) => s.ble.deviceType);
     const deviceFirmwareVersion = useSelector((s) => s.ble.deviceFirmwareVersion);
@@ -84,19 +84,19 @@ const HubInfoButton: React.FunctionComponent = () => {
                     <tbody>
                         <tr>
                             <td>
-                                <strong>{i18n.translate('hubInfo.connectedTo')}</strong>
+                                <strong>{t('hubInfo.connectedTo')}</strong>
                             </td>
                             <td>{deviceName}</td>
                         </tr>
                         <tr>
                             <td>
-                                <strong>{i18n.translate('hubInfo.hubType')}</strong>
+                                <strong>{t('hubInfo.hubType')}</strong>
                             </td>
                             <td>{deviceType}</td>
                         </tr>
                         <tr>
                             <td>
-                                <strong>{i18n.translate('hubInfo.firmware')}</strong>
+                                <strong>{t('hubInfo.firmware')}</strong>
                             </td>
                             <td>v{deviceFirmwareVersion}</td>
                         </tr>
@@ -104,7 +104,7 @@ const HubInfoButton: React.FunctionComponent = () => {
                 </table>
             }
         >
-            <Button title={i18n.translate('hubInfo.title')} minimal={true}>
+            <Button title={t('hubInfo.title')} minimal={true}>
                 {deviceName}
             </Button>
         </Popover>
@@ -112,7 +112,7 @@ const HubInfoButton: React.FunctionComponent = () => {
 };
 
 const BatteryIndicator: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('statusBar');
     const charging = useSelector((s) => s.ble.deviceBatteryCharging);
     const lowBatteryWarning = useSelector((s) => s.ble.deviceLowBatteryWarning);
 
@@ -121,12 +121,12 @@ const BatteryIndicator: React.FunctionComponent = () => {
             {...commonPopoverProps}
             content={
                 <span className="no-wrap">
-                    {i18n.translate(lowBatteryWarning ? 'battery.low' : 'battery.ok')}
+                    {t(lowBatteryWarning ? 'battery.low' : 'battery.ok')}
                 </span>
             }
         >
             <div
-                title={i18n.translate('battery.title')}
+                title={t('battery.title')}
                 className="pb-battery-indicator"
                 style={{ cursor: 'pointer' }}
             >

@@ -4,8 +4,8 @@
 import { Intent } from '@blueprintjs/core';
 import { Error } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 type MissingServiceProps = {
     serviceName: string;
@@ -16,12 +16,12 @@ const MissingService: React.FunctionComponent<MissingServiceProps> = ({
     serviceName,
     hubName,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('bleAlerts');
     return (
         <>
-            <p>{i18n.translate('missingService.message', { serviceName })}</p>
-            <p>{i18n.translate('missingService.suggestion1')}</p>
-            <p>{i18n.translate('missingService.suggestion2', { hubName })}</p>
+            <p>{t('missingService.message', { serviceName })}</p>
+            <p>{t('missingService.suggestion1')}</p>
+            <p>{t('missingService.suggestion2', { hubName })}</p>
         </>
     );
 };

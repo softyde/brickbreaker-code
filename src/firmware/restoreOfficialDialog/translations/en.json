@@ -1,5 +1,5 @@
 {
-    "title": "Restore official {lego} Firmware",
+    "title": "Restore official {{lego}} Firmware",
     "backButton": {
         "label": "Back"
     },
@@ -11,7 +11,7 @@
     },
     "selectHubPanel": {
         "title": "Select hub",
-        "message": "Select the hub to restore the official {lego} firmware on, then click {next}."
+        "message": "Select the hub to restore the official {{lego}} firmware on, then click {{next}}."
     },
     "restoreFirmwarePanel": {
         "title": "Restore firmware",
@@ -19,7 +19,7 @@
             "ble": {
                 "message": "When the progress bar is done, the hub will reboot and the app will connect. The official firmware has been restored."
             },
-            "updateApp": "Once the recovery is complete, use the {app} app to get the latest official firmware.",
+            "updateApp": "Once the recovery is complete, use the {{app}} app to get the latest official firmware.",
             "updateAppVersion": "You can use version 2 (legacy) or version 3 to do so."
         },
         "flashButton": "Restore"

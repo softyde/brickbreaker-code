@@ -4,12 +4,12 @@
 import { Intent } from '@blueprintjs/core';
 import { InfoSign } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 const ReleaseButton: React.FunctionComponent = () => {
-    const i18n = useI18n();
-    return <p>{i18n.translate('releaseButton.message')}</p>;
+    const { t } = useTranslation('firmwareAlerts');
+    return <p>{t('releaseButton.message')}</p>;
 };
 
 export const releaseButton: CreateToast = (onAction) => ({

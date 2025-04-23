@@ -10,12 +10,12 @@ import {
     MultistepDialog,
 } from '@blueprintjs/core';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Hub } from '../../components/hubPicker';
 import { useHubPickerSelectedHub } from '../../components/hubPicker/hooks';
 import { useSelector } from '../../reducers';
 import { firmwareDfuWindowsDriverInstallDialogDialogHide } from './actions';
-import { useI18n } from './i18n';
 
 const dfuWindows1OpenDeviceManagerUrl = new URL(
     '@pybricks/images/dfu_windows_1_open_device_manager.png',
@@ -103,7 +103,7 @@ type HubTypeProps = {
 };
 
 const Step1: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <div className={Classes.DIALOG_BODY}>
@@ -111,11 +111,9 @@ const Step1: React.FunctionComponent = () => {
             <div className="pb-spacer" />
             <div className={Classes.RUNNING_TEXT}>
                 <p>
-                    {i18n.translate('step.1.message', {
-                        startMenu: <em>{i18n.translate('step.1.startMenu')}</em>,
-                        deviceManager: (
-                            <em>{i18n.translate('step.1.deviceManager')}</em>
-                        ),
+                    {t('step.1.message', {
+                        startMenu: <em>{t('step.1.startMenu')}</em>,
+                        deviceManager: <em>{t('step.1.deviceManager')}</em>,
                     })}
                 </p>
             </div>
@@ -124,7 +122,7 @@ const Step1: React.FunctionComponent = () => {
 };
 
 const Step2: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <div className={Classes.DIALOG_BODY}>
@@ -138,7 +136,7 @@ const Step2: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
             <div className="pb-spacer" />
             <div className={Classes.RUNNING_TEXT}>
                 <p>
-                    {i18n.translate('step.2.message', {
+                    {t('step.2.message', {
                         dfuUsbHubName: (
                             <em>
                                 {hub === Hub.Essential
@@ -146,18 +144,18 @@ const Step2: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
                                     : dfuLargeHubUsbName}
                             </em>
                         ),
-                        otherDevices: <em>{i18n.translate('step.2.otherDevices')}</em>,
-                        properties: <em>{i18n.translate('step.2.properties')}</em>,
+                        otherDevices: <em>{t('step.2.otherDevices')}</em>,
+                        properties: <em>{t('step.2.properties')}</em>,
                     })}
                 </p>
                 <ul>
                     <li>
-                        {i18n.translate('step.2.listedWithWarning', {
-                            properties: <em>{i18n.translate('step.2.properties')}</em>,
+                        {t('step.2.listedWithWarning', {
+                            properties: <em>{t('step.2.properties')}</em>,
                         })}
                     </li>
-                    <li>{i18n.translate('step.2.listedWithoutWarning')}</li>
-                    <li>{i18n.translate('step.2.notListed')}</li>
+                    <li>{t('step.2.listedWithoutWarning')}</li>
+                    <li>{t('step.2.notListed')}</li>
                 </ul>
             </div>
         </div>
@@ -165,7 +163,7 @@ const Step2: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
 };
 
 const Step3: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <div className={Classes.DIALOG_BODY}>
@@ -179,10 +177,10 @@ const Step3: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
             <div className="pb-spacer" />
             <div className={Classes.RUNNING_TEXT}>
                 <p>
-                    {i18n.translate('step.3.message', {
+                    {t('step.3.message', {
                         properties: (
                             <em>
-                                {i18n.translate('step.3.properties', {
+                                {t('step.3.properties', {
                                     dfuUsbHubName: (
                                         <em>
                                             {hub === Hub.Essential
@@ -193,7 +191,7 @@ const Step3: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
                                 })}
                             </em>
                         ),
-                        updateDriver: <em>{i18n.translate('step.3.updateDriver')}</em>,
+                        updateDriver: <em>{t('step.3.updateDriver')}</em>,
                     })}
                 </p>
             </div>
@@ -202,7 +200,7 @@ const Step3: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
 };
 
 const Step4: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <div className={Classes.DIALOG_BODY}>
@@ -216,11 +214,9 @@ const Step4: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
             <div className="pb-spacer" />
             <div className={Classes.RUNNING_TEXT}>
                 <p>
-                    {i18n.translate('step.4.message', {
-                        updateDrivers: (
-                            <em>{i18n.translate('step.4.updateDrivers')}</em>
-                        ),
-                        browse: <em>{i18n.translate('step.4.browse')}</em>,
+                    {t('step.4.message', {
+                        updateDrivers: <em>{t('step.4.updateDrivers')}</em>,
+                        browse: <em>{t('step.4.browse')}</em>,
                     })}
                 </p>
             </div>
@@ -229,7 +225,7 @@ const Step4: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
 };
 
 const Step5: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <div className={Classes.DIALOG_BODY}>
@@ -243,8 +239,8 @@ const Step5: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
             <div className="pb-spacer" />
             <div className={Classes.RUNNING_TEXT}>
                 <p>
-                    {i18n.translate('step.5.message', {
-                        letMePick: <em>{i18n.translate('step.5.letMePick')}</em>,
+                    {t('step.5.message', {
+                        letMePick: <em>{t('step.5.letMePick')}</em>,
                     })}
                 </p>
             </div>
@@ -253,7 +249,7 @@ const Step5: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
 };
 
 const Step6: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <div className={Classes.DIALOG_BODY}>
@@ -267,9 +263,9 @@ const Step6: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
             <div className="pb-spacer" />
             <div className={Classes.RUNNING_TEXT}>
                 <p>
-                    {i18n.translate('step.6.message', {
-                        usbDevices: <em>{i18n.translate('step.6.usbDevices')}</em>,
-                        next: <em>{i18n.translate('step.6.next')}</em>,
+                    {t('step.6.message', {
+                        usbDevices: <em>{t('step.6.usbDevices')}</em>,
+                        next: <em>{t('step.6.next')}</em>,
                     })}
                 </p>
             </div>
@@ -278,7 +274,7 @@ const Step6: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
 };
 
 const Step7: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <div className={Classes.DIALOG_BODY}>
@@ -292,11 +288,11 @@ const Step7: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
             <div className="pb-spacer" />
             <div className={Classes.RUNNING_TEXT}>
                 <p>
-                    {i18n.translate('step.7.message', {
-                        manufacturer: <em>{i18n.translate('step.7.manufacturer')}</em>,
-                        winUsbDevice: <em>{i18n.translate('step.7.winUsbDevice')}</em>,
-                        model: <em>{i18n.translate('step.7.model')}</em>,
-                        next: <em>{i18n.translate('step.7.next')}</em>,
+                    {t('step.7.message', {
+                        manufacturer: <em>{t('step.7.manufacturer')}</em>,
+                        winUsbDevice: <em>{t('step.7.winUsbDevice')}</em>,
+                        model: <em>{t('step.7.model')}</em>,
+                        next: <em>{t('step.7.next')}</em>,
                     })}
                 </p>
             </div>
@@ -305,7 +301,7 @@ const Step7: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
 };
 
 const Step8: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <div className={Classes.DIALOG_BODY}>
@@ -313,8 +309,8 @@ const Step8: React.FunctionComponent = () => {
             <div className="pb-spacer" />
             <div className={Classes.RUNNING_TEXT}>
                 <p>
-                    {i18n.translate('step.8.message', {
-                        yes: <em>{i18n.translate('step.8.yes')}</em>,
+                    {t('step.8.message', {
+                        yes: <em>{t('step.8.yes')}</em>,
                     })}
                 </p>
             </div>
@@ -323,7 +319,7 @@ const Step8: React.FunctionComponent = () => {
 };
 
 const Step9: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <div className={Classes.DIALOG_BODY}>
@@ -337,8 +333,8 @@ const Step9: React.FunctionComponent<HubTypeProps> = ({ hub }) => {
             <div className="pb-spacer" />
             <div className={Classes.RUNNING_TEXT}>
                 <p>
-                    {i18n.translate('step.9.message', {
-                        close: <em>{i18n.translate('step.9.close')}</em>,
+                    {t('step.9.message', {
+                        close: <em>{t('step.9.close')}</em>,
                     })}
                 </p>
             </div>
@@ -350,18 +346,18 @@ const DfuWindowsDriverInstallDialog: React.FunctionComponent = () => {
     const [hub] = useHubPickerSelectedHub();
     const { isOpen } = useSelector((s) => s.firmware.dfuWindowsDriverInstallDialog);
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('dfuWindowsDriver');
 
     return (
         <MultistepDialog
-            title={i18n.translate('title')}
+            title={t('title')}
             className="pb-dfu-windows-driver-install-dialog"
             isOpen={isOpen}
             onClose={() => dispatch(firmwareDfuWindowsDriverInstallDialogDialogHide())}
-            backButtonProps={{ text: i18n.translate('backButton.label') }}
-            nextButtonProps={{ text: i18n.translate('nextButton.label') }}
+            backButtonProps={{ text: t('backButton.label') }}
+            nextButtonProps={{ text: t('nextButton.label') }}
             finalButtonProps={{
-                text: i18n.translate('doneButton.label'),
+                text: t('doneButton.label'),
                 onClick: () =>
                     dispatch(firmwareDfuWindowsDriverInstallDialogDialogHide()),
             }}

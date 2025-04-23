@@ -4,14 +4,14 @@
 import { Icon, Intent } from '@blueprintjs/core';
 import { InfoSign, Plus } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 const NoFilesToBackup: React.FunctionComponent = () => {
-    const i18n = useI18n();
+    const { t } = useTranslation('explorerAlerts');
     return (
         <>
-            {i18n.translate('noFilesToBackup.message', {
+            {t('noFilesToBackup.message', {
                 icon: <Icon icon={<Plus />} />,
             })}
         </>

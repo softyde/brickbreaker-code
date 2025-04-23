@@ -12,6 +12,7 @@ import {
 } from '@blueprintjs/core';
 import { Blank, Clipboard, Duplicate, Trash } from '@blueprintjs/icons';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useTernaryDarkMode } from 'usehooks-ts';
 import { Terminal as XTerm } from 'xterm';
@@ -19,7 +20,6 @@ import { FitAddon } from 'xterm-addon-fit';
 import { isMacOS } from '../utils/os';
 import { TerminalContext } from './TerminalContext';
 import { receiveData } from './actions';
-import { useI18n } from './i18n';
 
 // Source: https://freesound.org/people/altemark/sounds/45759/
 // This sound is released under the Creative Commons Attribution 3.0 Unported
@@ -67,7 +67,7 @@ type ContextMenuContentProps = { xterm: XTerm };
 const ContextMenuContent: React.FunctionComponent<ContextMenuContentProps> = ({
     xterm,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('terminal');
     const [hasSelection, setHasSelection] = useState(xterm.hasSelection());
 
     useEffect(() => {
@@ -87,7 +87,7 @@ const ContextMenuContent: React.FunctionComponent<ContextMenuContentProps> = ({
                         navigator.clipboard.writeText(selected);
                     }
                 }}
-                text={i18n.translate('copy')}
+                text={t('copy')}
                 icon={<Duplicate />}
                 label={isMacOS() ? 'Cmd-C' : 'Ctrl-Shift-C'}
                 disabled={!hasSelection}
@@ -96,19 +96,19 @@ const ContextMenuContent: React.FunctionComponent<ContextMenuContentProps> = ({
                 onClick={async (): Promise<void> => {
                     xterm.paste(await navigator.clipboard.readText());
                 }}
-                text={i18n.translate('paste')}
+                text={t('paste')}
                 icon={<Clipboard />}
                 label={isMacOS() ? 'Cmd-V' : 'Ctrl-V'}
             />
             <MenuItem
                 onClick={() => xterm.selectAll()}
-                text={i18n.translate('selectAll')}
+                text={t('selectAll')}
                 icon={<Blank />}
             />
             <MenuDivider />
             <MenuItem
                 onClick={(): void => xterm.clear()}
-                text={i18n.translate('clear')}
+                text={t('clear')}
                 icon={<Trash />}
             />
         </Menu>

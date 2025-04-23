@@ -40,6 +40,7 @@ import {
     useTree,
     useTreeEnvironment,
 } from 'react-complex-tree';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Toolbar } from '../components/toolbar/Toolbar';
 import { useToolbarItemFocus } from '../components/toolbar/aria';
@@ -64,7 +65,6 @@ import {
 } from './actions';
 import DeleteFileAlert from './deleteFileAlert/DeleteFileAlert';
 import DuplicateFileDialog from './duplicateFileDialog/DuplicateFileDialog';
-import { useI18n } from './i18n';
 import NewFileWizard from './newFileWizard/NewFileWizard';
 import RenameFileDialog from './renameFileDialog/RenameFileDialog';
 import RenameImportDialog from './renameImportDialog/RenameImportDialog';
@@ -122,7 +122,7 @@ type ActionButtonGroupProps = {
 const FileActionButtonGroup: React.FunctionComponent<ActionButtonGroupProps> = ({
     item,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('explorer');
     const dispatch = useDispatch();
     const environment = useTreeEnvironment();
 
@@ -145,13 +145,13 @@ const FileActionButtonGroup: React.FunctionComponent<ActionButtonGroupProps> = (
                 <ActionButton
                     id={renameButtonId}
                     icon={<Edit />}
-                    tooltip={i18n.translate('treeItem.renameTooltip', { fileName })}
+                    tooltip={t('treeItem.renameTooltip', { fileName })}
                     onClick={() => dispatch(explorerRenameFile(fileName))}
                 />
                 <ActionButton
                     id={duplicateButtonId}
                     icon={<Duplicate />}
-                    tooltip={i18n.translate('treeItem.duplicateTooltip', {
+                    tooltip={t('treeItem.duplicateTooltip', {
                         fileName,
                     })}
                     onClick={() => dispatch(explorerDuplicateFile(fileName))}
@@ -164,13 +164,13 @@ const FileActionButtonGroup: React.FunctionComponent<ActionButtonGroupProps> = (
                     // archive icon which is also used to indicate an export/
                     // download operation
                     icon={<Import />}
-                    tooltip={i18n.translate('treeItem.exportTooltip', { fileName })}
+                    tooltip={t('treeItem.exportTooltip', { fileName })}
                     onClick={() => dispatch(explorerExportFile(fileName))}
                 />
                 <ActionButton
                     id={deleteButtonId}
                     icon={<Trash />}
-                    tooltip={i18n.translate('treeItem.deleteTooltip', { fileName })}
+                    tooltip={t('treeItem.deleteTooltip', { fileName })}
                     onClick={() =>
                         dispatch(explorerDeleteFile(fileName, item.index as UUID))
                     }
@@ -187,19 +187,19 @@ const newButtonId = 'pb-explorer-add-button';
 const Header: React.FunctionComponent = () => {
     const exportButtonId = useId();
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('explorer');
 
     return (
         <Toolbar
             className="pb-explorer-header-toolbar"
-            aria-label={i18n.translate('header.toolbar.title')}
+            aria-label={t('header.toolbar.title')}
             firstFocusableItemId={archiveButtonId}
         >
             <ButtonGroup minimal={true}>
                 <ActionButton
                     id={archiveButtonId}
                     icon={<Archive />}
-                    tooltip={i18n.translate('header.toolbar.exportAll')}
+                    tooltip={t('header.toolbar.exportAll')}
                     onClick={() => dispatch(explorerArchiveAllFiles())}
                 />
                 <ActionButton
@@ -208,13 +208,13 @@ const Header: React.FunctionComponent = () => {
                     // what we want here since import is analogous to upload
                     // even though this is the "import" action
                     icon={<Export />}
-                    tooltip={i18n.translate('header.toolbar.import')}
+                    tooltip={t('header.toolbar.import')}
                     onClick={() => dispatch(explorerImportFiles())}
                 />
                 <ActionButton
                     id={newButtonId}
                     icon={<Plus />}
-                    tooltip={i18n.translate('header.toolbar.addNew')}
+                    tooltip={t('header.toolbar.addNew')}
                     onClick={() => dispatch(explorerCreateNewFile())}
                 />
             </ButtonGroup>
@@ -226,44 +226,39 @@ const Header: React.FunctionComponent = () => {
  * Accessibility live descriptors.
  */
 function useLiveDescriptors(): LiveDescriptors {
-    const i18n = useI18n();
+    const { t } = useTranslation('explorer');
 
     return useMemo(
         () => ({
             introduction: `
-                <p>${i18n.translate('tree.liveDescriptor.intro.accessibilityGuide', {
+                <p>${t('tree.liveDescriptor.intro.accessibilityGuide', {
                     treeLabel: '{treeLabel}',
                 })}</p>
-                <p>${i18n.translate('tree.liveDescriptor.intro.navigation')}</p>
+                <p>${t('tree.liveDescriptor.intro.navigation')}</p>
                 <ul>
-                    <li>${i18n.translate(
-                        'tree.liveDescriptor.intro.keybindings.primaryAction',
-                        { key: '{keybinding:primaryAction}' },
-                    )}</li>
-                    <li>${i18n.translate(
-                        'tree.liveDescriptor.intro.keybindings.rename',
-                        { key: 'f2' },
-                    )}</li>
-                    <li>${i18n.translate(
-                        'tree.liveDescriptor.intro.keybindings.duplicate',
-                        { key: `${isMacOS() ? 'cmd' : 'ctrl'}+d` },
-                    )}</li>
-                    <li>${i18n.translate(
-                        'tree.liveDescriptor.intro.keybindings.export',
-                        { key: `${isMacOS() ? 'cmd' : 'ctrl'}+e` },
-                    )}</li>
-                    <li>${i18n.translate(
-                        'tree.liveDescriptor.intro.keybindings.delete',
-                        { key: 'delete' },
-                    )}</li>
+                    <li>${t('tree.liveDescriptor.intro.keybindings.primaryAction', {
+                        key: '{keybinding:primaryAction}',
+                    })}</li>
+                    <li>${t('tree.liveDescriptor.intro.keybindings.rename', {
+                        key: 'f2',
+                    })}</li>
+                    <li>${t('tree.liveDescriptor.intro.keybindings.duplicate', {
+                        key: `${isMacOS() ? 'cmd' : 'ctrl'}+d`,
+                    })}</li>
+                    <li>${t('tree.liveDescriptor.intro.keybindings.export', {
+                        key: `${isMacOS() ? 'cmd' : 'ctrl'}+e`,
+                    })}</li>
+                    <li>${t('tree.liveDescriptor.intro.keybindings.delete', {
+                        key: 'delete',
+                    })}</li>
                 </ul>
             `,
             renamingItem: 'not used',
-            searching: `<p>${i18n.translate('tree.liveDescriptor.searching')}</p>`,
+            searching: `<p>${t('tree.liveDescriptor.searching')}</p>`,
             programmaticallyDragging: 'not used',
             programmaticallyDraggingTarget: 'not used',
         }),
-        [i18n],
+        [t],
     );
 }
 
@@ -414,7 +409,7 @@ const FileTree: React.FunctionComponent = () => {
     );
 
     const dispatch = useDispatch();
-    const i18n = useI18n();
+    const { t } = useTranslation('explorer');
 
     const treeRef = useRef<TreeRef>(null);
 
@@ -449,7 +444,7 @@ const FileTree: React.FunctionComponent = () => {
                 <Tree
                     treeId={treeId}
                     rootItem={rootItemIndex}
-                    treeLabel={i18n.translate('tree.label')}
+                    treeLabel={t('tree.label')}
                     ref={treeRef}
                 />
             </div>

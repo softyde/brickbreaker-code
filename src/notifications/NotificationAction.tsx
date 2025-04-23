@@ -3,22 +3,25 @@
 
 // provides translation for notification text
 
-import { Replacements } from '@shopify/react-i18n';
 import React from 'react';
-import { I18nId, useI18n } from './i18n';
+import { useTranslation } from 'react-i18next';
+
+import { I18nId } from './i18n';
+
+export type $Dictionary<T = unknown> = { [key: string]: T };
 
 type NotificationActionProps = {
     messageId: I18nId;
-    replacements?: Replacements;
+    replacements?: $Dictionary | undefined;
 };
 
 const NotificationAction: React.FunctionComponent<NotificationActionProps> = ({
     messageId,
     replacements,
 }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation<'notifications'>();
 
-    return <>{i18n.translate(messageId, replacements)}</>;
+    return <>{t(messageId, replacements)}</>;
 };
 
 export default NotificationAction;

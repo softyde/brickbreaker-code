@@ -2,12 +2,12 @@
 // Copyright (c) 2020-2024 The Pybricks Authors
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { downloadAndRun } from '../../../hub/actions';
 import { HubRuntimeState } from '../../../hub/reducers';
 import { useSelector } from '../../../reducers';
 import ActionButton, { ActionButtonProps } from '../../ActionButton';
-import { useI18n } from './i18n';
 import icon from './icon.svg';
 
 type RunButtonProps = Pick<ActionButtonProps, 'id'>;
@@ -23,20 +23,20 @@ const RunButton: React.FunctionComponent<RunButtonProps> = ({ id }) => {
     const activeFile = useSelector((s) => s.editor.activeFileUuid);
     const keyboardShortcut = 'F5';
 
-    const i18n = useI18n();
+    const { t } = useTranslation('runButton');
     const dispatch = useDispatch();
 
     return (
         <ActionButton
             id={id}
-            label={i18n.translate('label')}
+            label={t('label')}
             keyboardShortcut={keyboardShortcut}
             tooltip={
                 downloadProgress
-                    ? i18n.translate('tooltip.progress', {
+                    ? t('tooltip.progress', {
                           percent: i18n.formatPercentage(downloadProgress),
                       })
-                    : i18n.translate('tooltip.action', { key: keyboardShortcut })
+                    : t('tooltip.action', { key: keyboardShortcut })
             }
             icon={icon}
             enabled={activeFile !== null && runtime === HubRuntimeState.Idle}

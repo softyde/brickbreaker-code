@@ -5,25 +5,25 @@ import './index.scss';
 import { AnchorButton, Button, Intent } from '@blueprintjs/core';
 import { Download, Help, InfoSign } from '@blueprintjs/icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { pybricksBluetoothTroubleshootingUrl } from '../../app/constants';
 import ExternalLinkIcon from '../../components/ExternalLinkIcon';
 import type { CreateToast } from '../../toasterTypes';
-import { useI18n } from './i18n';
 
 type NoHubProps = {
     onFlashFirmware: () => void;
 };
 
 const NoHub: React.FunctionComponent<NoHubProps> = ({ onFlashFirmware }) => {
-    const i18n = useI18n();
+    const { t } = useTranslation('bleAlerts');
 
     return (
         <>
-            <p>{i18n.translate('noHub.message')}</p>
-            <p>{i18n.translate('noHub.suggestion')}</p>
+            <p>{t('noHub.message')}</p>
+            <p>{t('noHub.suggestion')}</p>
             <div className="pb-ble-alerts-buttons">
                 <Button icon={<Download />} onClick={onFlashFirmware}>
-                    {i18n.translate('noHub.flashFirmwareButton')}
+                    {t('noHub.flashFirmwareButton')}
                 </Button>
                 <AnchorButton
                     icon={<Help />}
@@ -31,7 +31,7 @@ const NoHub: React.FunctionComponent<NoHubProps> = ({ onFlashFirmware }) => {
                     target="_blank"
                     rel="noopener"
                 >
-                    {i18n.translate('noHub.troubleshootButton')}
+                    {t('noHub.troubleshootButton')}
                     <ExternalLinkIcon />
                 </AnchorButton>
             </div>
