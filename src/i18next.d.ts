@@ -51,9 +51,12 @@ import toolbar from './toolbar/translations/en.json';
 
 import tour from './tour/translations/en.json';
 
+//import { resources } from './i18next';
+
 declare module 'i18next' {
     interface CustomTypeOptions {
         defaultNS: 'translations';
+        //  resources: typeof resources.en;
         resources: {
             translations: typeof translations;
             appAlerts: typeof appAlerts;

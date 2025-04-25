@@ -11,6 +11,7 @@ import * as De from 'blockly/msg/de';
 import React, { useEffect, useRef } from 'react';
 
 import { useEffectOnce, useTernaryDarkMode } from 'usehooks-ts';
+import Repository from '../blocks/repository';
 import defaultBlocks from './blockly/blocks';
 import { RendererName, initRenderer } from './blockly/custom_renderer';
 import * as blocklyShadow from './blockly/extension_shadow';
@@ -45,7 +46,10 @@ const BlocklyEditor: React.FunctionComponent = () => {
         BlocklyVars.initCustomVariableHandling();
 
         registerExtensions();
-        Blockly.defineBlocksWithJsonArray(defaultBlocks);
+
+        const blocks = [...defaultBlocks, ...Repository.getBlocks()];
+
+        Blockly.defineBlocksWithJsonArray(blocks);
 
         /*
         const theme = Blockly.Theme.defineTheme('themeName', {

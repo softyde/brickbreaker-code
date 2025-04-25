@@ -1,0 +1,18 @@
+{
+    "event": {
+        "setup": {
+            "message": "%1 Set up robot"
+        },
+        "start": {
+            "message": "%1 Start program"
+        }
+    },
+    "movement": {
+        "motor": {
+            "message": "%1 %2 an %3 dreht sich %4"
+        },
+        "hub": {
+            "message": "%1 %2 mit ⌀ %3mm und ↕ %4mm mit %5 und %6"
+        }
+    }
+}

@@ -7,6 +7,7 @@ import unexpectedError from '../alerts/translations/de.json';
 import appAlerts from '../app/alerts/translations/de.json';
 import translations from '../app/translations/de.json';
 import bleAlerts from '../ble/alerts/translations/de.json';
+import blocks from '../blocks/translations/de.json';
 import components from '../components/translations/de.json';
 import editor from '../editor/translations/de.json';
 import explorerAlerts from '../explorer/alerts/translations/de.json';
@@ -52,6 +53,7 @@ import toolbar from '../toolbar/translations/de.json';
 import tour from '../tour/translations/de.json';
 
 const resources = {
+    blocks,
     unexpectedError,
     appAlerts,
     bleAlerts,

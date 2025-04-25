@@ -3,7 +3,7 @@
 
 import * as Blockly from 'blockly';
 
-export const defaultTheme = Blockly.Theme.defineTheme('themeName', {
+const defaultThemeDefinition = {
     name: 'themeName',
     base: Blockly.Themes.Classic,
     blockStyles: {
@@ -91,7 +91,15 @@ export const defaultTheme = Blockly.Theme.defineTheme('themeName', {
         size: 14,
     },
     //startHats: true,
-});
+} as const;
+
+export const defaultTheme = Blockly.Theme.defineTheme(
+    'themeName',
+    defaultThemeDefinition,
+);
+
+export type BlockStyles = keyof typeof defaultThemeDefinition.blockStyles;
+
 export const darkTheme = Blockly.Theme.defineTheme('themeDarkName', {
     name: 'themeDarkName',
     base: defaultTheme,

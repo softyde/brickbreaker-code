@@ -3,12 +3,11 @@
 
 import * as Blockly from 'blockly';
 import { Order, PythonGenerator } from 'blockly/python';
+import Repository from '../../blocks/repository';
 import {
     Direction,
     StraightDirection,
-    VAR_AXLE_TRACK,
     VAR_DEGREES,
-    VAR_DIAMETER,
     VAR_DIRECTION,
     VAR_DISTANCE,
     VAR_HUB_FRONT_AXIS,
@@ -117,46 +116,12 @@ class BlocklyPythonGenerator extends PythonGenerator {
 
 const pythonGenerator = new BlocklyPythonGenerator('python');
 
-pythonGenerator.forBlock['start_program'] = (_block, _generator) => {
-    return '# START';
-};
-
-pythonGenerator.forBlock['setup_program'] = (_block, _generator) => {
-    return `# SETUP`;
-};
+Repository.addAll(pythonGenerator as unknown as PythonGenerator);
 
 pythonGenerator.forBlock['shadow_number'] = (block, _generator) => {
     const value = block.getFieldValue(VAR_NUMBER);
 
     return `${value}`;
-};
-
-pythonGenerator.forBlock['move_motor_block'] = (block, generator) => {
-    const motor = block.getFieldValue('VAR.MOTOR');
-    const port = block.getFieldValue(VAR_MOTOR_PORT);
-    const direction = block.getFieldValue(VAR_MOTOR_DIRECTION);
-
-    const motorVar = generator.getVariableName(motor);
-
-    return `${motorVar} = Motor(${port}, ${direction})`;
-};
-
-pythonGenerator.forBlock['move_hub_block'] = (block, generator) => {
-    const hub = block.getFieldValue('VAR.DRIVE');
-    const hubVar = generator.getVariableName(hub);
-
-    const diameter = generator.statementToCode(block, VAR_DIAMETER).trim();
-    const axleTrack = generator.statementToCode(block, VAR_AXLE_TRACK).trim();
-
-    const motor1 = block.getFieldValue('VALUE.MOTOR.1');
-    const motor1Var = generator.getVariableName(motor1);
-    const motor2 = block.getFieldValue('VALUE.MOTOR.2');
-    const motor2Var = generator.getVariableName(motor2);
-
-    return `${hubVar} = DriveBase(${motor1Var}, ${motor2Var}, ${diameter}, ${axleTrack})
-${hubVar}.use_gyro(True)
-${hubVar}.settings(straight_speed=200, straight_acceleration=100, turn_rate=30, turn_acceleration=100)
-`;
 };
 
 pythonGenerator.forBlock['hub_block'] = (block, _generator) => {

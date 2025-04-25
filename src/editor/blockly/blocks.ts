@@ -71,35 +71,6 @@ export enum Direction {
 
 const blocks = [
     {
-        type: 'start_program',
-        message0: '%1 Programm starten',
-        tooltip: 'Programm starten',
-        nextStatement: STATEMENT_DEFAULT,
-        style: 'event_category',
-        extensions: ['add_my_custom_icon'],
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-        ],
-    },
-    {
-        type: 'setup_program',
-        message0: '%1 Roboter initialisieren',
-        tooltip: 'tbd',
-        nextStatement: STATEMENT_INIT,
-        style: 'event_category',
-        extensions: ['add_my_custom_icon'],
-
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-        ],
-    },
-    {
         type: 'hub_block',
         message0: '%1 Roboter mit Oberseite %2 und Vorderseite %3',
         nextStatement: null,
@@ -131,93 +102,7 @@ const blocks = [
             },
         ],
     },
-    {
-        type: 'move_motor_block',
-        message0: '%1 %2 an %3 dreht sich %4',
-        previousStatement: STATEMENT_INIT,
-        nextStatement: STATEMENT_INIT,
-        style: 'movement_category',
-        extensions: ['add_my_custom_icon'],
 
-        args0: [
-            {
-                type: 'field_vertical_separator',
-            },
-            {
-                type: 'field_input',
-                name: 'VAR.MOTOR',
-                text: 'Motor 1',
-                spellcheck: false,
-            },
-            {
-                type: 'field_dropdown',
-                name: VAR_MOTOR_PORT,
-                options: [
-                    ['Anschluss A', Port.A],
-                    ['Anschluss B', Port.B],
-                    ['Anschluss C', Port.C],
-                    ['Anschluss D', Port.D],
-                    ['Anschluss E', Port.E],
-                    ['Anschluss F', Port.F],
-                ],
-            },
-            {
-                type: 'field_dropdown',
-                name: VAR_MOTOR_DIRECTION,
-                options: [
-                    ['rechts ↻', Direction.Clockwise],
-                    ['links ↺', Direction.Counterclockwise],
-                ],
-            },
-        ],
-    },
-    {
-        type: 'move_hub_block',
-        message0: '%1 %2 mit ⌀ %3mm und ↕ %4mm mit %5 und %6',
-        inputsInline: true,
-
-        args0: [
-            {
-                type: 'field_vertical_separator',
-            },
-            {
-                type: 'field_input',
-                name: 'VAR.DRIVE',
-                text: 'Fahrwerk',
-                spellcheck: false,
-            },
-            {
-                type: 'input_value',
-                name: VAR_DIAMETER,
-                check: ['Number', shadowNumber(56, 8, 120, 1)],
-            },
-            {
-                type: 'input_value',
-                name: VAR_AXLE_TRACK,
-                check: ['Number', shadowNumber(112, 16, 240, 1)],
-            },
-            {
-                type: 'input_dummy',
-                name: 'LIST.MOTOR.1',
-            },
-            {
-                type: 'input_dummy',
-                name: 'LIST.MOTOR.2',
-            },
-        ],
-        /*message1: 'mit %1',
-        args1: [
-
-        ],
-        message2: 'und %1',
-        args2: [
-
-        ], */
-        previousStatement: STATEMENT_INIT,
-        nextStatement: STATEMENT_INIT,
-        style: 'movement_category',
-        extensions: ['add_my_custom_icon', add_shadow_fields, 'dynamic_var_list'],
-    },
     {
         type: 'move_straight_block',
         message0: '%1 %2 fahre %3cm %4',

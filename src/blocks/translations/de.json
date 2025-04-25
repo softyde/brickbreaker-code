@@ -1,0 +1,10 @@
+{
+    "event": {
+        "setup": {
+            "message": "%1 Roboter initialisieren"
+        },
+        "start": {
+            "message": "%1 Programm starten"
+        }
+    }
+}

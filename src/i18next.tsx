@@ -5,13 +5,14 @@ import i18next from 'i18next';
 //import Backend from 'i18next-http-backend';
 //import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
+
 import './i18next.d.ts';
 
 import de from './i18n/de';
 import en from './i18n/en';
 
 // the translations
-const resources = {
+export const resources = {
     en,
     de,
 };
