@@ -8,9 +8,12 @@ import { BlockStyles } from '../editor/blockly/themes';
 import i18next from '../i18next';
 
 import eventBlocks from './event/index';
+import flowBlocks from './flow/index';
+import motorBlocks from './motor/index';
 import movementBlocks from './movement/index';
-
+import shadowBlocks from './shadow/index';
 import res from './translations/en.json';
+import valueBlocks from './values/index';
 
 export type BlockFunction = (
     block: Blockly.Block,
@@ -47,7 +50,13 @@ export type FieldDropdown = {
 export type InputValue = {
     type: 'input_value';
     name: string;
-    check: ['Number', string];
+    check: ('Number' | string)[];
+};
+
+export type InputStatement = {
+    type: 'input_statement';
+    name: string;
+    check?: BlockTypeStatements;
 };
 
 export type InputDummy = {
@@ -55,20 +64,76 @@ export type InputDummy = {
     name: string;
 };
 
+export type ShadowNumber = {
+    type: 'shadow-number-type';
+    name: string;
+    value: number;
+    min: number;
+    max: number;
+    precision: number;
+};
+
 export type BlockType = {
     type: string;
     //tooltip: string;
     inputsInline?: boolean;
     message0?: Path<typeof res>;
+    message1?: Path<typeof res>;
+    message2?: Path<typeof res>;
+    message3?: Path<typeof res>;
+
     previousStatement?: BlockTypeStatements;
     nextStatement?: BlockTypeStatements;
     style: BlockStyles;
     extensions?: ('add_shadow_fields' | 'dynamic_var_list')[];
-    args0: (FieldSeparator | FieldInput | FieldDropdown | InputValue | InputDummy)[];
+    args0: (
+        | FieldSeparator
+        | FieldInput
+        | FieldDropdown
+        | InputValue
+        | InputDummy
+        | ShadowNumber
+        | InputStatement
+    )[];
+    args1?: (
+        | FieldSeparator
+        | FieldInput
+        | FieldDropdown
+        | InputValue
+        | InputDummy
+        | ShadowNumber
+        | InputStatement
+    )[];
+    args2?: (
+        | FieldSeparator
+        | FieldInput
+        | FieldDropdown
+        | InputValue
+        | InputDummy
+        | ShadowNumber
+        | InputStatement
+    )[];
+    args3?: (
+        | FieldSeparator
+        | FieldInput
+        | FieldDropdown
+        | InputValue
+        | InputDummy
+        | ShadowNumber
+        | InputStatement
+    )[];
+
+    output?: 'Number' | 'Speed';
 };
 
-export type BType = Omit<BlockType, 'message0' | 'extensions'> & {
+export type BType = Omit<
+    BlockType,
+    'message0' | 'message1' | 'message2' | 'message3' | 'extensions'
+> & {
     message0: string;
+    message1?: string;
+    message2?: string;
+    message3?: string;
     extensions?: string[];
 };
 
@@ -78,7 +143,14 @@ class Repository {
     _repo = new Map<string, BlockDefinition>();
 
     constructor() {
-        [...eventBlocks, ...movementBlocks].forEach((a) => this.define(a));
+        [
+            ...shadowBlocks,
+            ...eventBlocks,
+            ...movementBlocks,
+            ...motorBlocks,
+            ...valueBlocks,
+            ...flowBlocks,
+        ].forEach((a) => this.define(a));
     }
 
     define(block: BlockDefinition): void {
@@ -87,6 +159,18 @@ class Repository {
 
     _i18n(block: BlockType): BType {
         (block as BType).message0 = i18next.t(`blocks:${block.message0}`);
+
+        if ((block as BType).message1 !== undefined) {
+            (block as BType).message1 = i18next.t(`blocks:${block.message1}`);
+        }
+
+        if ((block as BType).message2 !== undefined) {
+            (block as BType).message2 = i18next.t(`blocks:${block.message2}`);
+        }
+
+        if ((block as BType).message3 !== undefined) {
+            (block as BType).message3 = i18next.t(`blocks:${block.message3}`);
+        }
 
         return block as BType;
     }

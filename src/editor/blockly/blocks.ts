@@ -38,12 +38,13 @@ export const add_shadow_fields = 'add_shadow_fields';
 export const shadow_number_type = 'shadow-number-type';
 
 function shadowNumber(
+    type: 'number' | 'degree',
     value: number,
     min: number,
     max: number,
     precision: number,
 ): string {
-    return `${shadow_number}/${value}/${min}/${max}/${precision}`;
+    return `${shadow}${type}/${value}/${min}/${max}/${precision}`;
 }
 
 export enum Axis {
@@ -104,145 +105,6 @@ const blocks = [
     },
 
     {
-        type: 'move_straight_block',
-        message0: '%1 %2 fahre %3cm %4',
-        style: 'movement_category',
-        extensions: ['add_my_custom_icon', 'dynamic_var_list', add_shadow_fields],
-        inputsInline: true,
-
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-            {
-                type: 'input_dummy',
-                name: 'LIST.DRIVE',
-            },
-            {
-                type: 'input_value',
-                name: VAR_DISTANCE,
-                check: ['Number', shadowNumber(10, 0.1, 200, 0.1)],
-            },
-            {
-                type: 'field_dropdown',
-                name: VAR_DIRECTION,
-                options: [
-                    ['vorwärts ↑', StraightDirection.Forward],
-                    ['rückwärts ↓', StraightDirection.Backward],
-                ],
-            },
-        ],
-        nextStatement: STATEMENT_DEFAULT,
-        previousStatement: STATEMENT_DEFAULT,
-    },
-    {
-        type: 'start_move_block',
-        message0: '%1 %2 fahre %3',
-        style: 'movement_category',
-        extensions: ['add_my_custom_icon', 'dynamic_var_list'],
-        inputsInline: true,
-
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-            {
-                type: 'input_dummy',
-                name: 'LIST.DRIVE',
-            },
-            {
-                type: 'field_dropdown',
-                name: VAR_DIRECTION,
-                options: [
-                    ['vorwärts ↑', StraightDirection.Forward],
-                    ['rückwärts ↓', StraightDirection.Backward],
-                ],
-            },
-        ],
-        nextStatement: STATEMENT_DEFAULT,
-        previousStatement: STATEMENT_DEFAULT,
-    },
-    {
-        type: 'stop_move_block',
-        message0: '%1 %2 halte an',
-        style: 'movement_category',
-        extensions: ['add_my_custom_icon', 'dynamic_var_list'],
-        inputsInline: true,
-
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-            {
-                type: 'input_dummy',
-                name: 'LIST.DRIVE',
-            },
-        ],
-        nextStatement: STATEMENT_DEFAULT,
-        previousStatement: STATEMENT_DEFAULT,
-    },
-    {
-        type: 'move_curve_block',
-        message0: '%1 %2 drehe %3° nach %4',
-        style: 'movement_category',
-        extensions: ['add_my_custom_icon', 'dynamic_var_list', add_shadow_fields],
-
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-            {
-                type: 'input_dummy',
-                name: 'LIST.DRIVE',
-            },
-            {
-                type: 'input_value',
-                name: VAR_DEGREES,
-                check: ['Number', shadowNumber(90, 0.1, 360, 0.1)],
-            },
-            {
-                type: 'field_dropdown',
-                name: VAR_DIRECTION,
-                options: [
-                    ['rechts ↻', Direction.Clockwise],
-                    ['links ↺', Direction.Counterclockwise],
-                ],
-            },
-        ],
-        nextStatement: STATEMENT_DEFAULT,
-        previousStatement: STATEMENT_DEFAULT,
-    },
-    {
-        type: 'repeat_xtimes_block',
-        message0: '%1 Wiederhole %2 Mal',
-        style: 'flow_category',
-        extensions: ['add_my_custom_icon', add_shadow_fields],
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-            {
-                type: 'input_value',
-                name: VAR_TIMES,
-                check: ['Number', shadowNumber(2, 1, 1000, 1)],
-            },
-        ],
-        message1: '%1',
-        args1: [
-            {
-                type: 'input_statement',
-                name: VAR_STATEMENTS,
-            },
-        ],
-        nextStatement: STATEMENT_DEFAULT,
-        previousStatement: STATEMENT_DEFAULT,
-    },
-    {
         type: 'number_condition',
         message0: '%1 %2 %3',
         style: 'flow_category',
@@ -252,7 +114,7 @@ const blocks = [
             {
                 type: 'input_value',
                 name: 'var_a',
-                check: ['Number', shadowNumber(1, -10000, 10000, 0.1)],
+                check: ['Number', shadowNumber('number', 1, -10000, 10000, 0.1)],
             },
             {
                 type: 'field_dropdown',
@@ -268,53 +130,12 @@ const blocks = [
             {
                 type: 'input_value',
                 name: 'var_b',
-                check: ['Number', shadowNumber(2, -10000, 10000, 0.1)],
+                check: ['Number', shadowNumber('number', 2, -10000, 10000, 0.1)],
             },
         ],
         output: 'Boolean',
     },
-    {
-        type: 'if_block',
-        message0: '%1 Wenn %2, dann',
-        style: 'flow_category',
-        extensions: ['add_my_custom_icon'],
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-            {
-                type: 'input_value',
-                name: 'condition',
-                check: ['Boolean'],
-            },
-        ],
-        message1: '%1',
-        args1: [
-            {
-                type: 'input_statement',
-                name: VAR_STATEMENTS,
-            },
-        ],
-        nextStatement: STATEMENT_DEFAULT,
-        previousStatement: STATEMENT_DEFAULT,
-    },
-    {
-        type: shadow_number,
-        message0: '%1',
-        style: 'flow_category',
-        args0: [
-            {
-                type: shadow_number_type,
-                name: VAR_NUMBER,
-                value: 1,
-                min: -1000,
-                max: 1000,
-                precision: 1,
-            },
-        ],
-        output: 'Number',
-    },
+
     {
         type: 'distance_sensor_input',
         message0: '%1 Entfernung in cm',
@@ -416,27 +237,6 @@ Blockly.Extensions.register('dynamic_menu_extension',
     */
     /* ---------------------------------------------------------------------------------------------------- */
 
-    {
-        type: 'move_follow_line',
-        message0: '%2 Folge der Linie für höchstens %1cm',
-        style: 'movement_category',
-        tooltip: 'Na was wohl: der Linie hinterherfahren.',
-        extensions: ['add_my_custom_icon'],
-
-        args0: [
-            {
-                type: 'field_variable',
-                name: 'VAR1',
-                variable: '10',
-            },
-            {
-                type: 'field_vertical_separator',
-                name: 'VAR2',
-            },
-        ],
-        nextStatement: null,
-        previousStatement: null,
-    },
     {
         type: 'hub_beep',
         message0: '%1 Einen Ton abspielen',

@@ -7,6 +7,12 @@ const defaultThemeDefinition = {
     name: 'themeName',
     base: Blockly.Themes.Classic,
     blockStyles: {
+        shadow_blocks: {
+            colourPrimary: '#c0c0d0',
+        },
+        value_blocks: {
+            colourPrimary: '#309BC0',
+        },
         logic_blocks: {
             colourPrimary: '#4a148c',
         },
@@ -23,6 +29,9 @@ const defaultThemeDefinition = {
         },
         movement_category: {
             colourPrimary: '#bc0cf2',
+        },
+        motor_category: {
+            colourPrimary: '#0CB8F2',
         },
         movement_category$light: {
             colourPrimary: '#D56BF8',
@@ -54,6 +63,9 @@ const defaultThemeDefinition = {
         },
         movement_category: {
             colour: '#bc0cf2',
+        },
+        motor_category: {
+            colour: '#0CB8F2',
         },
         flow_category: {
             colour: '#F2640C',

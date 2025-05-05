@@ -59,9 +59,76 @@ export const Toolbox = {
                     kind: 'block',
                     type: 'stop_move_block',
                 },
+            ],
+        },
+        {
+            kind: 'category',
+            name: 'Motoren',
+            categorystyle: 'motor_category',
+            contents: [
+                {
+                    kind: 'label',
+                    text: 'Motoren drehen',
+                    //                    'web-class': 'myLabelStyle',
+                },
                 {
                     kind: 'block',
-                    type: 'move_follow_line',
+                    type: 'move_motor_block',
+                },
+                {
+                    kind: 'block',
+                    type: 'reset_relative_position',
+                },
+                {
+                    kind: 'block',
+                    type: 'move_to_position',
+                },
+                {
+                    kind: 'block',
+                    type: 'motor_move_stop',
+                },
+                {
+                    kind: 'block',
+                    type: 'motor_move_rotate',
+                },
+                {
+                    kind: 'block',
+                    type: 'value.speed',
+                },
+            ],
+        },
+        {
+            kind: 'category',
+            name: 'Ablauf',
+            categorystyle: 'flow_category',
+            contents: [
+                {
+                    kind: 'block',
+                    type: 'flow_wait',
+                },
+                {
+                    kind: 'block',
+                    type: 'flow-if',
+                },
+                {
+                    kind: 'block',
+                    type: 'flow-if-else',
+                },
+                {
+                    kind: 'block',
+                    type: 'flow-for',
+                },
+                {
+                    kind: 'block',
+                    type: 'flow-while',
+                },
+                {
+                    kind: 'block',
+                    type: 'flow-do-while',
+                },
+                {
+                    kind: 'block',
+                    type: 'number_condition',
                 },
             ],
         },
@@ -97,25 +164,6 @@ export const Toolbox = {
             ],
         },
 
-        {
-            kind: 'category',
-            name: 'Ablauf',
-            categorystyle: 'flow_category',
-            contents: [
-                {
-                    kind: 'block',
-                    type: 'number_condition',
-                },
-                {
-                    kind: 'block',
-                    type: 'if_block',
-                },
-                {
-                    kind: 'block',
-                    type: 'repeat_xtimes_block',
-                },
-            ],
-        },
         {
             kind: 'category',
             name: 'Sensoren',

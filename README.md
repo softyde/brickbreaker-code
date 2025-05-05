@@ -11,6 +11,9 @@ Die Blöcke sollen dabei (nach heutiger Idee) nicht (nur) 1:1 die pybricks Pytho
 
 Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 
+#### Milestones
+- [ ] Mai 2025 - eine erste Beta-Version bei der WRO 2025 zum Einsatz bringen 🤖
+
 ---
 
 **Try it at <https://alpha.brickbreaker.de>.**
@@ -37,8 +40,8 @@ If it does: don't use it for anything serious.**
 - [x] support user-defined methods
 - [x] custom rendering for connection types
 - [x] dark mode support
-- [x] __⇉ CURRENT__ language selection (de/en)
-- [ ] develop some even more useful blocks (vars, parameters, etc.)
+- [x] language selection (de/en)
+- [x] __⇉ CURRENT__ 📌  develop some even more useful blocks (vars, parameters, etc.) (wip)
 - [ ] cleanup code
 - [ ] fix dependencies
 - [ ] fix broken tests

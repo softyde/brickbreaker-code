@@ -135,12 +135,16 @@ class CustomCategory extends Blockly.ToolboxCategory {
 class CustomIcon extends Blockly.icons.Icon {
     styleName: string;
 
+    isValid = false;
+
     // The constructor should always take in the source block so that svg elements
     // can be properly created.
     constructor(sourceBlock: Blockly.Block) {
         super(sourceBlock);
 
         this.styleName = sourceBlock.getStyleName();
+
+        this.isValid = isCategoryStyle(this.styleName);
     }
 
     getType(): Blockly.icons.IconType<CustomIcon> {
@@ -237,7 +241,9 @@ export const registerExtensions = function () {
 
         const icon = new CustomIcon(this as Blockly.BlockSvg);
 
-        block.addIcon(icon);
+        if (icon.isValid) {
+            block.addIcon(icon);
+        }
     });
 
     Blockly.registry.register(

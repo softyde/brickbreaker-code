@@ -2,7 +2,14 @@
 // Copyright (c) 2025 Philipp Anné
 
 export const shadow = 'shadow_';
-export const shadow_number = `${shadow}number`;
+
+export enum Speed {
+    VerySlow = 'very-slow',
+    Slow = 'slow',
+    Medium = 'medium',
+    Fast = 'fast',
+    VeryFast = 'very-fast',
+}
 
 export enum Port {
     A = 'Port.A',
@@ -16,6 +23,11 @@ export enum Port {
 export enum Direction {
     Clockwise = 'Direction.CLOCKWISE',
     Counterclockwise = 'Direction.COUNTERCLOCKWISE',
+}
+
+export enum StraightDirection {
+    Forward = 'Forward',
+    Backward = 'Backward',
 }
 
 export function defaultPorts(): [string, string][] {
@@ -36,11 +48,29 @@ export function defaultDirections(): [string, string][] {
     ];
 }
 
+export function defaultSpeeds(): [string, Speed][] {
+    return [
+        ['sehr langsame', Speed.VerySlow],
+        ['langsame', Speed.Slow],
+        ['mittlere', Speed.Medium],
+        ['schnelle', Speed.Fast],
+        ['sehr schnelle', Speed.VeryFast],
+    ];
+}
+
+export function straightDirections(): [string, StraightDirection][] {
+    return [
+        ['vorwärts ↑', StraightDirection.Forward],
+        ['rückwärts ↓', StraightDirection.Backward],
+    ];
+}
+
 export function shadowNumber(
+    type: 'number' | 'degree' | 'mm' | 'cm' | 'rotation-speed' | 'sec',
     value: number,
     min: number,
     max: number,
     precision: number,
 ): string {
-    return `${shadow_number}/${value}/${min}/${max}/${precision}`;
+    return `${shadow}${type}/${value}/${min}/${max}/${precision}`;
 }

@@ -377,6 +377,13 @@ function handleBlocklyDidCreateBlock(
         throw `block with id ${action.blockId} not found`;
     }
 
+    if (block.type.startsWith('shadow_')) {
+        const b = block as Blockly.BlockSvg;
+        const c = b.getSvgRoot();
+
+        c.classList.add('blockly-shadow-20');
+    }
+
     console.debug(`created ${action.blockId} = ${block.type}, ${block.isShadow()}`);
 
     block.inputList

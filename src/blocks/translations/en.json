@@ -12,7 +12,81 @@
             "message": "%1 %2 an %3 dreht sich %4"
         },
         "hub": {
-            "message": "%1 %2 mit ⌀ %3mm und ↕ %4mm mit %5 und %6"
+            "message": "%1 %2 mit ⌀ %3 und ↕ %4 mit %5 und %6"
+        },
+        "straight": {
+            "message": "%1 %2 fahre %3 %4"
+        },
+        "turn": {
+            "message": "%1 %2 drehe %3° nach %4"
+        },
+        "start": {
+            "message": "%1 %2 fahre %3"
+        },
+        "stop": {
+            "message": "%1 %2 halte an"
+        }
+    },
+    "motor": {
+        "reset-relative-position": {
+            "message": "%1 %2 setze relative Position auf %3"
+        },
+        "move-to-position": {
+            "message": "%1 %2 bewege zu Position %3 mit %4"
+        },
+        "move-stop": {
+            "message": "%1 %2 halte an"
+        },
+        "rotate": {
+            "message": "%1 %2 drehe %3 mit %4"
+        }
+    },
+    "shadow": {
+        "degree": {
+            "message": "%1 °"
+        },
+        "cm": {
+            "message": "%1 cm"
+        },
+        "mm": {
+            "message": "%1 mm"
+        },
+        "rotation-speed": {
+            "message": "%1 °/s"
+        },
+        "number": {
+            "message": "%1"
+        },
+        "sec": {
+            "message": "%1 s"
+        }
+    },
+    "value": {
+        "speed": {
+            "message": "%1 Geschwindigkeit"
+        }
+    },
+    "flow": {
+        "wait": {
+            "message": "%1 Warte %2"
+        },
+        "if": {
+            "message": "%1 Wenn %2 dann",
+            "statements": "%1",
+            "else": "sonst"
+        },
+        "while": {
+            "message": "%1 Wiederhole solange %2",
+            "statements": "%1"
+        },
+        "for": {
+            "message": "%1 Wiederhole %2 Mal",
+            "statements": "%1"
+        },
+        "do-while": {
+            "message": "%1 Wiederhole",
+            "statements": "%1",
+            "while": "solange %1"
         }
     }
 }

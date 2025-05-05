@@ -45,6 +45,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
 
         BlocklyVars.initCustomVariableHandling();
 
+        blocklyShadow.registerExtension();
+
         registerExtensions();
 
         const blocks = [...defaultBlocks, ...Repository.getBlocks()];
@@ -103,7 +105,6 @@ const BlocklyEditor: React.FunctionComponent = () => {
             },
         });
 
-        blocklyShadow.registerExtension();
         // Erstelle einen ResizeObserver, um auf Größenänderungen zu reagieren
         resizeObserverRef.current = new ResizeObserver(() => {
             // Debounce die Resize-Funktion

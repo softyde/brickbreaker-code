@@ -27,12 +27,12 @@ const block: BlockDefinition = {
             {
                 type: 'input_value',
                 name: 'diameter',
-                check: ['Number', shadowNumber(56, 8, 120, 1)],
+                check: ['Number', shadowNumber('mm', 56, 8, 120, 1)],
             },
             {
                 type: 'input_value',
                 name: 'axle-track',
-                check: ['Number', shadowNumber(112, 16, 240, 1)],
+                check: ['Number', shadowNumber('mm', 112, 16, 240, 1)],
             },
             {
                 type: 'input_dummy',

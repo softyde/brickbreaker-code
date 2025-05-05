@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Philipp Anné
 
 import * as Blockly from 'blockly';
-import { add_shadow_fields, shadow, shadow_number, shadow_number_type } from './blocks';
+import { add_shadow_fields, shadow, shadow_number_type } from './blocks';
 
 type ShadowFieldNumberState = {
     value: string | number | null;
@@ -99,15 +99,11 @@ export const registerExtension = function () {
                 throw 'das sollte nicht so sein';
             }
 
-            switch (shadowType) {
-                case shadow_number: {
-                    const field = shadowBlock.inputList[0]
-                        .fieldRow[0] as Blockly.FieldNumber;
-                    field.setConstraints(parameters[1], parameters[2], parameters[3]);
-                    field.setValue(parameters[0]);
-
-                    break;
-                }
+            if (shadowType.startsWith('shadow_')) {
+                const field = shadowBlock.inputList[0]
+                    .fieldRow[0] as Blockly.FieldNumber;
+                field.setConstraints(parameters[1], parameters[2], parameters[3]);
+                field.setValue(parameters[0]);
             }
         });
     });
