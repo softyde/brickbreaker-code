@@ -22,8 +22,8 @@
         "message": "This is very unusual. The USB device did not contain the expected interface."
     },
     "flashProgress": {
-        "erasing": "Erasing the old firmware: {percent}",
-        "flashing": "Installing the new firmware: {percent}"
+        "erasing": "Erasing the old firmware: {{percent, number}}",
+        "flashing": "Installing the new firmware: {{percent, number}}"
     },
     "releaseButton": {
         "message": "You may release the power button on the hub now."

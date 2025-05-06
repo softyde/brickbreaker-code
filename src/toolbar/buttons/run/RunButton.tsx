@@ -34,7 +34,7 @@ const RunButton: React.FunctionComponent<RunButtonProps> = ({ id }) => {
             tooltip={
                 downloadProgress
                     ? t('tooltip.progress', {
-                          percent: i18n.formatPercentage(downloadProgress),
+                          percent: downloadProgress,
                       })
                     : t('tooltip.action', { key: keyboardShortcut })
             }

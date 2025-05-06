@@ -23,8 +23,8 @@ const UserProgramSize: React.FunctionComponent<UserProgramSizeProps> = ({
         <>
             <p>
                 {t('userProgramSize.message', {
-                    actual: i18n.formatNumber(actual),
-                    max: i18n.formatNumber(max),
+                    actual,
+                    max,
                 })}
             </p>
             <p>{t('userProgramSize.suggestion')}</p>

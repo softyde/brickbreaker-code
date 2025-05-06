@@ -23,7 +23,7 @@ const FlashProgress: React.FunctionComponent<FlashProgressProps> = ({
             {action === 'erase' && (
                 <p>
                     {t('flashProgress.erasing', {
-                        percent: progress ? i18n.formatPercentage(progress) : '',
+                        percent: progress ?? '',
                     })}
                 </p>
             )}
@@ -31,7 +31,7 @@ const FlashProgress: React.FunctionComponent<FlashProgressProps> = ({
             {action === 'flash' && (
                 <p>
                     {t('flashProgress.flashing', {
-                        percent: progress ? i18n.formatPercentage(progress) : '',
+                        percent: progress ?? '',
                     })}
                 </p>
             )}

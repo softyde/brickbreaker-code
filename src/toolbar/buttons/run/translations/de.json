@@ -2,6 +2,6 @@
     "label": "Ausführen",
     "tooltip": {
         "action": "Dieses Programm ausführen ({{key}})",
-        "progress": "Wird heruntergeladen... {{percent}}"
+        "progress": "Wird heruntergeladen... {{percent, number}}"
     }
 }

@@ -22,8 +22,8 @@
         "message": "Das ist sehr ungewöhnlich. Das USB-Gerät enthielt nicht die erwartete Schnittstelle."
     },
     "flashProgress": {
-        "erasing": "Alte Firmware wird gelöscht: {percent}",
-        "flashing": "Neue Firmware wird installiert: {percent}"
+        "erasing": "Alte Firmware wird gelöscht: {{percent, number}}",
+        "flashing": "Neue Firmware wird installiert: {{percent, number}}"
     },
     "releaseButton": {
         "message": "Sie können jetzt den Ein/Aus-Schalter am Hub loslassen."

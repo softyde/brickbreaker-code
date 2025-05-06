@@ -1,6 +1,6 @@
 {
     "userProgramSize": {
-        "message": "This program is too big. Compiled size is {actual} bytes but the hub can only fit {max} bytes.",
+        "message": "This program is too big. Compiled size is {{actual, number}} bytes but the hub can only fit {{max, number}} bytes.",
         "suggestion": "Try removing unused code or making names and strings smaller."
     }
 }
