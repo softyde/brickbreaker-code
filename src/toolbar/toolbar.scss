@@ -10,6 +10,7 @@
     padding: bp.$pt-grid-size bp.$pt-grid-size * 1.5;
     z-index: bp.$pt-z-index-content;
     display: flex;
+    flex-direction: row;
     flex-wrap: nowrap;
 
     //background: linear-gradient(180deg, #efd5ff 0%, #515ada 100%);
@@ -35,14 +36,13 @@
         box-shadow: unset !important;
     }
 
-    &-group {
-        &.pb-align-left {
-            margin-right: bp.$pt-grid-size * 2;
-        }
+    .pb-toolbar-group {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
 
-        &.pb-align-right {
-            margin-left: auto;
-        }
+    .spacing {
+        flex-grow: 1;
     }
 
     &-action-button:focus-visible:not(.pb-focus-managed) {

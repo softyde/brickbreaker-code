@@ -29,15 +29,17 @@ const Toolbar: React.FunctionComponent = () => {
             className="pb-toolbar"
             firstFocusableItemId={bluetoothButtonId}
         >
-            <ButtonGroup className="pb-toolbar-group pb-align-left">
+            <div className="spacing"></div>
+            <ButtonGroup className="pb-toolbar-group">
                 <BluetoothButton id={bluetoothButtonId} />
             </ButtonGroup>
-            <ButtonGroup className="pb-toolbar-group pb-align-left">
+            <ButtonGroup className="pb-toolbar-group">
                 <RunButton id={runButtonId} />
                 <StopButton id={stopButtonId} />
                 <ReplButton id={replButtonId} />
             </ButtonGroup>
-            <ButtonGroup className="pb-toolbar-group pb-align-right">
+            <div className="spacing"></div>
+            <ButtonGroup className="pb-toolbar-group">
                 <LanguageSelect></LanguageSelect>
                 {/* <SponsorButton id={sponsorButtonId} /> */}
             </ButtonGroup>
