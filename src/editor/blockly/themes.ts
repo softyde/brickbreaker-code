@@ -39,6 +39,9 @@ const defaultThemeDefinition = {
         flow_category: {
             colourPrimary: '#F2640C',
         },
+        flow_value_category: {
+            colourPrimary: '#F29A0D',
+        },
         distance_sensor_category: {
             colourPrimary: '#6B9DF8',
         },

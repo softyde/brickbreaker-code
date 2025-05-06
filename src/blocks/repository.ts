@@ -86,7 +86,7 @@ export type BlockType = {
     nextStatement?: BlockTypeStatements;
     style: BlockStyles;
     extensions?: ('add_shadow_fields' | 'dynamic_var_list')[];
-    args0: (
+    args0?: (
         | FieldSeparator
         | FieldInput
         | FieldDropdown
@@ -123,7 +123,7 @@ export type BlockType = {
         | InputStatement
     )[];
 
-    output?: 'Number' | 'Speed';
+    output?: 'Number' | 'Speed' | 'Boolean';
 };
 
 export type BType = Omit<

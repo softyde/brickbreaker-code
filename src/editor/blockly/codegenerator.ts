@@ -135,15 +135,6 @@ pythonGenerator.forBlock['distance_sensor_block'] = (block, generator) => {
     return `${sensorVar} = UltrasonicSensor(${port})`;
 };
 
-pythonGenerator.forBlock['number_condition'] = (block, generator) => {
-    const varA = generator.statementToCode(block, 'var_a').trim();
-    const varB = generator.statementToCode(block, 'var_b').trim();
-
-    const condition = block.getFieldValue('var_condition');
-
-    return `(${varA}) ${condition} (${varB})`;
-};
-
 pythonGenerator.forBlock['distance_sensor_input'] = (block, generator) => {
     const sensor = block.getFieldValue('VALUE.DIST_SENSOR');
     const sensorVar = generator.getVariableName(sensor);

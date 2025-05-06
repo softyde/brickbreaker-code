@@ -130,6 +130,22 @@ export const Toolbox = {
                     kind: 'block',
                     type: 'number_condition',
                 },
+                {
+                    kind: 'block',
+                    type: 'boolean_condition',
+                },
+                {
+                    kind: 'block',
+                    type: 'not_condition',
+                },
+                {
+                    kind: 'block',
+                    type: 'true_condition',
+                },
+                {
+                    kind: 'block',
+                    type: 'false_condition',
+                },
             ],
         },
         {

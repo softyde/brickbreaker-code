@@ -37,16 +37,6 @@ export const add_shadow_fields = 'add_shadow_fields';
 
 export const shadow_number_type = 'shadow-number-type';
 
-function shadowNumber(
-    type: 'number' | 'degree',
-    value: number,
-    min: number,
-    max: number,
-    precision: number,
-): string {
-    return `${shadow}${type}/${value}/${min}/${max}/${precision}`;
-}
-
 export enum Axis {
     X = 'Axis.X',
     Y = 'Axis.Y',
@@ -102,38 +92,6 @@ const blocks = [
                 ],
             },
         ],
-    },
-
-    {
-        type: 'number_condition',
-        message0: '%1 %2 %3',
-        style: 'flow_category',
-        inputsInline: true,
-        extensions: [add_shadow_fields],
-        args0: [
-            {
-                type: 'input_value',
-                name: 'var_a',
-                check: ['Number', shadowNumber('number', 1, -10000, 10000, 0.1)],
-            },
-            {
-                type: 'field_dropdown',
-                name: 'var_condition',
-                options: [
-                    ['<', '<'],
-                    ['≤', '<='],
-                    ['=', '=='],
-                    ['≥', '>='],
-                    ['>', '>'],
-                ],
-            },
-            {
-                type: 'input_value',
-                name: 'var_b',
-                check: ['Number', shadowNumber('number', 2, -10000, 10000, 0.1)],
-            },
-        ],
-        output: 'Boolean',
     },
 
     {

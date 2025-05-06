@@ -87,6 +87,21 @@
             "message": "%1 Wiederhole",
             "statements": "%1",
             "while": "solange %1"
+        },
+        "number-condition": {
+            "message": "%1 %2 %3"
+        },
+        "boolean-condition": {
+            "message": "%1 %2 %3"
+        },
+        "not-condition": {
+            "message": "nicht %1"
+        },
+        "true-condition": {
+            "message": "Wahr"
+        },
+        "false-condition": {
+            "message": "Falsch"
         }
     }
 }
