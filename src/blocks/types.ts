@@ -66,7 +66,16 @@ export function straightDirections(): [string, StraightDirection][] {
 }
 
 export function shadowNumber(
-    type: 'number' | 'degree' | 'mm' | 'cm' | 'rotation-speed' | 'sec',
+    type:
+        | 'number'
+        | 'degree'
+        | 'mm'
+        | 'cm'
+        | 'rotation-speed'
+        | 'sec'
+        | 'speed'
+        | 'acc'
+        | 'rotation-acc',
     value: number,
     min: number,
     max: number,

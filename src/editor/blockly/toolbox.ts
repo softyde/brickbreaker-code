@@ -59,6 +59,27 @@ export const Toolbox = {
                     kind: 'block',
                     type: 'stop_move_block',
                 },
+                {
+                    kind: 'label',
+                    text: 'Einstellungen',
+                    //                    'web-class': 'myLabelStyle',
+                },
+                {
+                    kind: 'block',
+                    type: 'move_set_speed',
+                },
+                {
+                    kind: 'block',
+                    type: 'move_set_acc',
+                },
+                {
+                    kind: 'block',
+                    type: 'move_set_turn_speed',
+                },
+                {
+                    kind: 'block',
+                    type: 'move_set_turn_acc',
+                },
             ],
         },
         {
@@ -68,12 +89,16 @@ export const Toolbox = {
             contents: [
                 {
                     kind: 'label',
-                    text: 'Motoren drehen',
+                    text: 'Motor initialisieren',
                     //                    'web-class': 'myLabelStyle',
                 },
                 {
                     kind: 'block',
                     type: 'move_motor_block',
+                },
+                {
+                    kind: 'label',
+                    text: 'Motor bewegen',
                 },
                 {
                     kind: 'block',
@@ -166,6 +191,8 @@ export const Toolbox = {
             kind: 'category',
             name: 'Variablen',
             //custom: 'VARIABLE_DYNAMIC',
+            categorystyle: 'var_category',
+
             custom: 'VARIABLE',
         },
         {
@@ -176,14 +203,6 @@ export const Toolbox = {
                 {
                     kind: 'block',
                     type: 'hub_block',
-                },
-                {
-                    kind: 'block',
-                    type: 'line_follow_block',
-                },
-                {
-                    kind: 'block',
-                    type: 'hub_beep',
                 },
             ],
         },
@@ -203,11 +222,11 @@ export const Toolbox = {
                 },
                 {
                     kind: 'block',
-                    type: 'distance_sensor_block',
+                    type: 'sensor_distance_sensor',
                 },
                 {
                     kind: 'block',
-                    type: 'distance_sensor_input',
+                    type: 'distance',
                 },
             ],
         },

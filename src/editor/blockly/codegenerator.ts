@@ -2,15 +2,9 @@
 // Copyright (c) 2025 Philipp Anné
 
 import * as Blockly from 'blockly';
-import { Order, PythonGenerator } from 'blockly/python';
+import { PythonGenerator } from 'blockly/python';
 import Repository from '../../blocks/repository';
-import {
-    VAR_HUB_FRONT_AXIS,
-    VAR_HUB_TOP_AXIS,
-    VAR_MOTOR_DIRECTION,
-    VAR_MOTOR_PORT,
-    var_port,
-} from './blocks';
+import { VAR_HUB_FRONT_AXIS, VAR_HUB_TOP_AXIS } from './blocks';
 //import { VAR_HUB_NAME } from './blocks';
 
 const robotHubName = 'my_robot';
@@ -119,43 +113,21 @@ pythonGenerator.forBlock['hub_block'] = (block, _generator) => {
     return `${robotHubName} = PrimeHub(top_side=${topAxis}, front_side=${frontAxis})`;
 };
 
-pythonGenerator.forBlock['drive_motor_block'] = (block, _generator) => {
-    const port = block.getFieldValue(VAR_MOTOR_PORT);
-    const direction = block.getFieldValue(VAR_MOTOR_DIRECTION);
+// pythonGenerator.forBlock['drive_motor_block'] = (block, _generator) => {
+//     const port = block.getFieldValue(VAR_MOTOR_PORT);
+//     const direction = block.getFieldValue(VAR_MOTOR_DIRECTION);
 
-    return [`Motor(${port}, ${direction})`, Order.ATOMIC];
-};
-
-pythonGenerator.forBlock['distance_sensor_block'] = (block, generator) => {
-    const sensor = block.getFieldValue('VAR.DIST_SENSOR');
-    const sensorVar = generator.getVariableName(sensor);
-
-    const port = block.getFieldValue(var_port);
-
-    return `${sensorVar} = UltrasonicSensor(${port})`;
-};
-
-pythonGenerator.forBlock['distance_sensor_input'] = (block, generator) => {
-    const sensor = block.getFieldValue('VALUE.DIST_SENSOR');
-    const sensorVar = generator.getVariableName(sensor);
-
-    return `(${sensorVar}.distance() / 10)`;
-};
+//     return [`Motor(${port}, ${direction})`, Order.ATOMIC];
+// };
 
 /* ---- */
 
-pythonGenerator.forBlock['hub_beep'] = (_block, _generator) => {
-    //const nextCode = generator.blockToCode(block.getNextBlock());
+// pythonGenerator.forBlock['drive_init'] = (_block, _generator) => {
+//     return `left_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)
+// right_motor = Motor(Port.B)
 
-    return `hub.speaker.beep(440, 75)`;
-};
-
-pythonGenerator.forBlock['drive_init'] = (_block, _generator) => {
-    return `left_motor = Motor(Port.A, Direction.COUNTERCLOCKWISE)
-right_motor = Motor(Port.B)
-
-drive_base = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=112)
-drive_base.use_gyro(True)`;
-};
+// drive_base = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=112)
+// drive_base.use_gyro(True)`;
+// };
 
 export default pythonGenerator;

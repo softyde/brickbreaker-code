@@ -11,7 +11,7 @@ const block: BlockDefinition = {
         inputsInline: true,
         previousStatement: 'init',
         nextStatement: 'init',
-        style: 'movement_category',
+        style: 'movement_category$light',
         extensions: ['add_shadow_fields', 'dynamic_var_list'],
 
         args0: [

@@ -10,7 +10,7 @@ const block: BlockDefinition = {
         message0: 'movement.motor.message',
         previousStatement: 'init',
         nextStatement: 'init',
-        style: 'motor_category',
+        style: 'motor_category$light',
 
         args0: [
             {

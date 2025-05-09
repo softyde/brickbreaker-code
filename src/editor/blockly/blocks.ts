@@ -93,54 +93,6 @@ const blocks = [
             },
         ],
     },
-
-    {
-        type: 'distance_sensor_input',
-        message0: '%1 Entfernung in cm',
-        output: 'Number',
-        inputsInline: true,
-        style: 'distance_sensor_category',
-        extensions: ['add_my_custom_icon', 'dynamic_var_list'],
-
-        args0: [
-            {
-                type: 'input_dummy',
-                name: 'LIST.DIST_SENSOR',
-            },
-        ],
-    },
-    {
-        type: 'distance_sensor_block',
-        message0: '%1 %2 an %3',
-        style: 'distance_sensor_category',
-        extensions: ['add_my_custom_icon'],
-        previousStatement: STATEMENT_INIT,
-        nextStatement: STATEMENT_INIT,
-        args0: [
-            {
-                type: 'field_vertical_separator',
-            },
-            {
-                type: 'field_input',
-                name: 'VAR.DIST_SENSOR',
-                text: 'Entfernungssensor',
-                spellcheck: false,
-            },
-            {
-                type: 'field_dropdown',
-                name: var_port,
-                options: [
-                    ['Anschluss A', Port.A],
-                    ['Anschluss B', Port.B],
-                    ['Anschluss C', Port.C],
-                    ['Anschluss D', Port.D],
-                    ['Anschluss E', Port.E],
-                    ['Anschluss F', Port.F],
-                ],
-            },
-        ],
-    },
-
     // Block for variable setter.
     {
         type: 'variables_set',
@@ -195,52 +147,6 @@ Blockly.Extensions.register('dynamic_menu_extension',
     */
     /* ---------------------------------------------------------------------------------------------------- */
 
-    {
-        type: 'hub_beep',
-        message0: '%1 Einen Ton abspielen',
-        nextStatement: null,
-        previousStatement: null,
-        style: 'hub_category',
-        extensions: ['add_my_custom_icon'],
-        args0: [
-            {
-                type: 'field_vertical_separator',
-                name: 'separator',
-            },
-        ],
-    },
-
-    {
-        type: 'line_follow_block',
-        message0: '%3 Sensoren zur Linienverfolgung an %1 und %2',
-        nextStatement: null,
-        previousStatement: null,
-        style: 'hub_category',
-        extensions: ['add_my_custom_icon'],
-
-        args0: [
-            {
-                type: 'field_dropdown',
-                name: 'PORT_1',
-                options: [
-                    ['Port A', 'PORTA'],
-                    ['Port B', 'PORTB'],
-                ],
-            },
-            {
-                type: 'field_dropdown',
-                name: 'PORT_2',
-                options: [
-                    ['Port A', 'PORTA'],
-                    ['Port B', 'PORTB'],
-                ],
-            },
-            {
-                type: 'field_vertical_separator',
-                name: 'VAR4',
-            },
-        ],
-    },
     {
         type: 'drive_init',
         message0:

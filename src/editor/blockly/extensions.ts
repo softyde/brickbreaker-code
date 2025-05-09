@@ -144,6 +144,12 @@ class CustomIcon extends Blockly.icons.Icon {
 
         this.styleName = sourceBlock.getStyleName();
 
+        const separator = this.styleName.indexOf('$');
+
+        if (separator >= 0) {
+            this.styleName = this.styleName.substring(0, separator);
+        }
+
         this.isValid = isCategoryStyle(this.styleName);
     }
 

@@ -33,8 +33,11 @@ const defaultThemeDefinition = {
         motor_category: {
             colourPrimary: '#0CB8F2',
         },
+        motor_category$light: {
+            colourPrimary: '#2D9AEE',
+        },
         movement_category$light: {
-            colourPrimary: '#D56BF8',
+            colourPrimary: '#9445DA', //D56BF8', // B445DA
         },
         flow_category: {
             colourPrimary: '#F2640C',
@@ -78,6 +81,9 @@ const defaultThemeDefinition = {
         },
         sensor_category: {
             colour: '#6B9DF8',
+        },
+        var_category: {
+            colour: '#0ABD8D',
         },
     },
     componentStyles: {

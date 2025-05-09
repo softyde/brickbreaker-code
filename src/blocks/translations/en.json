@@ -25,6 +25,18 @@
         },
         "stop": {
             "message": "%1 %2 halte an"
+        },
+        "set-speed": {
+            "message": "%1 %2 setze Geschwindigkeit auf %3"
+        },
+        "set-acc": {
+            "message": "%1 %2 setze Beschleunigung auf %3"
+        },
+        "set-turn-speed": {
+            "message": "%1 %2 setze Drehgeschwindigkeit auf %3"
+        },
+        "set-turn-acc": {
+            "message": "%1 %2 setze Drehbeschleunigung auf %3"
         }
     },
     "motor": {
@@ -62,6 +74,15 @@
         },
         "sec": {
             "message": "%1 s"
+        },
+        "speed": {
+            "message": "%1 mm/s"
+        },
+        "acc": {
+            "message": "%1 mm/s²"
+        },
+        "rotation-acc": {
+            "message": "%1 °/s²"
         }
     },
     "value": {
@@ -116,7 +137,15 @@
                 "message": "%1 %2 an %3"
             },
             "reflection": {
-                "message": "Helligkeit an %1"
+                "message": "Helligkeit von %1"
+            }
+        },
+        "distance": {
+            "distance-sensor": {
+                "message": "%1 %2 an %3"
+            },
+            "distance": {
+                "message": "Entfernung von %1 in cm"
             }
         }
     }
