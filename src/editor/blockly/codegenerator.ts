@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { isProcedureBlock } from '@blockly/block-shareable-procedures';
 import * as Blockly from 'blockly';
 import { PythonGenerator } from 'blockly/python';
 import Repository from '../../blocks/repository';
@@ -111,6 +112,86 @@ pythonGenerator.forBlock['hub_block'] = (block, _generator) => {
     const frontAxis = block.getFieldValue(VAR_HUB_FRONT_AXIS);
 
     return `${robotHubName} = PrimeHub(top_side=${topAxis}, front_side=${frontAxis})`;
+};
+
+pythonGenerator.forBlock['procedures_defnoreturn'] = (block, generator) => {
+    if (isProcedureBlock(block)) {
+        const model = block.getProcedureModel();
+
+        block.getProcedureModel().getParameters;
+
+        const funcName = model.getName();
+        const funcVar = generator.getVariableName(funcName);
+
+        const parameters = model.getParameters();
+        const parString = parameters
+            .map((p) => generator.getVariableName(p.getName()))
+            .join(', ');
+
+        const statements = generator.statementToCode(block, 'STACK');
+
+        return `def ${funcVar}(${parString}):
+${statements}`;
+    }
+
+    return `# invalid function`;
+};
+
+// pythonGenerator.forBlock['procedures_callnoreturn'] = (block, generator) => {
+//     if (isProcedureBlock(block)) {
+//         const model = block.getProcedureModel();
+
+//         block.getProcedureModel().getParameters;
+
+//         const funcName = model.getName();
+//         const funcVar = generator.getVariableName(funcName);
+
+//         const args = [];
+//         for (let i = 0; i < block.inputList.length; i++) {
+//             const input = block.inputList[i];
+
+//             console.log(input);
+//             if (input && input.connection && input.connection.isConnected()) {
+//                 const argCode = generator.valueToCode(block, input.name, 1) || 'null';
+//                 args.push(argCode);
+//             }
+//         }
+
+//         const parameters = model.getParameters();
+//         const parString = parameters
+//             .map((p) => generator.getVariableName(p.getName()))
+//             .join(', ');
+
+//         return `${funcVar}(${parString}) # ${args.join(';')}`;
+//     }
+
+//     return `# invalid function`;
+// };
+
+pythonGenerator.forBlock['procedures_defreturn'] = (block, generator) => {
+    if (isProcedureBlock(block)) {
+        const model = block.getProcedureModel();
+
+        block.getProcedureModel().getParameters;
+
+        const funcName = model.getName();
+        const funcVar = generator.getVariableName(funcName);
+
+        const parameters = model.getParameters();
+        const parString = parameters
+            .map((p) => generator.getVariableName(p.getName()))
+            .join(', ');
+
+        const statements = generator.statementToCode(block, 'STACK');
+
+        const returnValue = generator.statementToCode(block, 'RETURN').trim();
+
+        return `def ${funcVar}(${parString}):
+${statements}
+  return ${returnValue}`;
+    }
+
+    return `# invalid function`;
 };
 
 // pythonGenerator.forBlock['drive_motor_block'] = (block, _generator) => {

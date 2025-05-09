@@ -42,6 +42,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
         // registerFirstContextMenuOptions();
         BlocklyProcedures.unregisterProcedureBlocks();
         Blockly.common.defineBlocks(BlocklyProcedures.blocks);
+        BlocklyProcedures.registerProcedureSerializer();
 
         BlocklyVars.initCustomVariableHandling();
 

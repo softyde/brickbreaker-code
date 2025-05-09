@@ -156,9 +156,15 @@ function* handleBlocklyGenerateSource(
 
     try {
         const setupBlocks = workspace.getBlocksByType('setup_program');
+
+        const functionBlocks = [
+            ...workspace.getBlocksByType('procedures_defnoreturn'),
+            ...workspace.getBlocksByType('procedures_defreturn'),
+        ];
+
         const startBlocks = workspace.getBlocksByType('start_program');
 
-        const blocks = [...setupBlocks, ...startBlocks];
+        const blocks = [...setupBlocks, ...functionBlocks, ...startBlocks];
 
         pythonGenerator.init(workspace);
 
