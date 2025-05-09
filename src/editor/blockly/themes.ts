@@ -53,6 +53,9 @@ const defaultThemeDefinition = {
 
             colourPrimary: '#0AB50A',
         },
+        lightsensor_category: {
+            colourPrimary: '#2DABBD',
+        },
     },
     categoryStyles: {
         event_category: {

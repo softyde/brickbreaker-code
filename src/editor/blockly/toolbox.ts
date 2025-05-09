@@ -85,6 +85,10 @@ export const Toolbox = {
                 },
                 {
                     kind: 'block',
+                    type: 'move_by',
+                },
+                {
+                    kind: 'block',
                     type: 'motor_move_stop',
                 },
                 {
@@ -117,6 +121,10 @@ export const Toolbox = {
                 {
                     kind: 'block',
                     type: 'flow-for',
+                },
+                {
+                    kind: 'block',
+                    type: 'flow-wait-until',
                 },
                 {
                     kind: 'block',
@@ -185,6 +193,14 @@ export const Toolbox = {
             name: 'Sensoren',
             categorystyle: 'sensor_category',
             contents: [
+                {
+                    kind: 'block',
+                    type: 'sensor_light_sensor',
+                },
+                {
+                    kind: 'block',
+                    type: 'light_reflection',
+                },
                 {
                     kind: 'block',
                     type: 'distance_sensor_block',

@@ -18,7 +18,7 @@ const NotificationMessage: React.FunctionComponent<NotificationMessageProps> = (
     messageId,
     replacements,
 }) => {
-    const { t } = useTranslation<'notifications'>();
+    const { t } = useTranslation('notifications');
 
     let message = t(messageId, replacements) as React.ReactElement | string;
 

@@ -34,6 +34,9 @@
         "move-to-position": {
             "message": "%1 %2 bewege zu Position %3 mit %4"
         },
+        "move-by": {
+            "message": "%1 %2 bewege um %3 mit %4"
+        },
         "move-stop": {
             "message": "%1 %2 halte an"
         },
@@ -102,6 +105,19 @@
         },
         "false-condition": {
             "message": "Falsch"
+        },
+        "wait-until": {
+            "message": "%1 Warte bis %2"
+        }
+    },
+    "sensor": {
+        "light": {
+            "light-sensor": {
+                "message": "%1 %2 an %3"
+            },
+            "reflection": {
+                "message": "Helligkeit an %1"
+            }
         }
     }
 }

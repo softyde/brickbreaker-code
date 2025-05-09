@@ -37,7 +37,7 @@ const block: BlockDefinition = {
 
         return `${driveVar}.drive(${
             direction === StraightDirection.Forward ? '' : '-'
-        }200, 0)`;
+        }${driveVar}.settings()[0], 0)`;
     },
 };
 

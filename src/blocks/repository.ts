@@ -11,6 +11,7 @@ import eventBlocks from './event/index';
 import flowBlocks from './flow/index';
 import motorBlocks from './motor/index';
 import movementBlocks from './movement/index';
+import sensorBlocks from './sensor/index';
 import shadowBlocks from './shadow/index';
 import res from './translations/en.json';
 import valueBlocks from './values/index';
@@ -150,6 +151,7 @@ class Repository {
             ...motorBlocks,
             ...valueBlocks,
             ...flowBlocks,
+            ...sensorBlocks,
         ].forEach((a) => this.define(a));
     }
 

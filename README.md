@@ -21,7 +21,7 @@ Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 **This is an alpha. And nothing will work.  
 If it does: don't use it for anything serious.**
 
-(0.1.0-alpha4 / 06.05.2025)
+(0.1.0-alpha5 / 08.05.2025)
 
 ---
 

@@ -5,24 +5,13 @@ import { BlockDefinition } from '../repository';
 
 const block: BlockDefinition = {
     def: {
-        type: 'flow-do-while',
-        message0: 'flow.do-while.message',
+        type: 'flow-wait-until',
+        message0: 'flow.wait-until.message',
         style: 'flow_category',
         args0: [
             {
                 type: 'field_vertical_separator',
             },
-        ],
-        message1: 'flow.do-while.statements',
-        args1: [
-            {
-                type: 'input_statement',
-                name: 'VAR_STATEMENTS',
-                check: 'default',
-            },
-        ],
-        message2: 'flow.do-while.while',
-        args2: [
             {
                 type: 'input_value',
                 name: 'condition',
@@ -35,12 +24,8 @@ const block: BlockDefinition = {
     func: (block, generator) => {
         const condition = generator.statementToCode(block, 'condition').trim();
 
-        const statements = generator.statementToCode(block, 'VAR_STATEMENTS');
-
-        return `while True:
-${statements}
-  if not (${condition}):
-    break`;
+        return `while not (${condition}):
+  wait(5)`;
     },
 };
 

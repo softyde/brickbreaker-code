@@ -11,6 +11,7 @@ import notCondition from './not-condition';
 import numberCondition from './number-condition';
 import trueCondition from './true-condition';
 import wait from './wait';
+import waitUntil from './wait-until';
 import flowWhile from './while';
 
 export default [
@@ -25,4 +26,5 @@ export default [
     notCondition,
     trueCondition,
     falseCondition,
+    waitUntil,
 ];

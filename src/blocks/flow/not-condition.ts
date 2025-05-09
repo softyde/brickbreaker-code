@@ -22,7 +22,7 @@ const block: BlockDefinition = {
     func: (block, generator) => {
         const varA = generator.statementToCode(block, 'var_a').trim();
 
-        return `!(${varA})`;
+        return `not (${varA})`;
     },
 };
 

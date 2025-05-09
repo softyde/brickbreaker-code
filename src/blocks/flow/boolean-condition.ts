@@ -20,8 +20,8 @@ const block: BlockDefinition = {
                 type: 'field_dropdown',
                 name: 'var_condition',
                 options: [
-                    ['und', '&&'],
-                    ['oder', '||'],
+                    ['und', 'and'],
+                    ['oder', 'or'],
                     ['xor', '^'],
                 ],
             },

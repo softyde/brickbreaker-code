@@ -27,7 +27,7 @@ const block: BlockDefinition = {
         const drive = block.getFieldValue('VALUE.DRIVE');
         const driveVar = generator.getVariableName(drive);
 
-        return `${driveVar}.break()`;
+        return `${driveVar}.brake()`;
     },
 };
 
