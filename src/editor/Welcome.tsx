@@ -32,7 +32,19 @@ const Welcome: React.FunctionComponent<WelcomeProps> = (/*{ _isVisible }*/) => {
                 e.preventDefault();
             }}
         >
-            <LogoSvg width={300} height={300} color="rgba(100,100,100,1)" />
+            <div className="spacing"></div>
+            <div className="content">
+                <div className="logo-svg">
+                    <LogoSvg width={300} height={300} color="rgba(100,100,100,1)" />
+                </div>
+                <div className="welcome-text">
+                    <div className="welcome-appname">Brickbreaker Code</div>
+                    <div>Grundschule Am Egelpfuhl</div>
+                    <div>Templin</div>
+                    <div>Copyright © 2025 Philipp Anné</div>
+                </div>
+            </div>
+            <div className="spacing"></div>
         </div>
     );
 };
