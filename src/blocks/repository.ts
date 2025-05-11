@@ -37,7 +37,7 @@ export type FieldSeparator = {
 };
 
 export type FieldInput = {
-    type: 'field_input';
+    type: 'field_input' | 'field_multilinetext';
     name: string;
     text: string;
     spellcheck?: boolean;

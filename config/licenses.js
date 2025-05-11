@@ -681,6 +681,7 @@ const licenseTextOverrides = {
     'upper-case': changeCaseLicense,
     'blockly': apache2License,
     '@blockly/block-shareable-procedures': apache2License,
+    '@blockly/field-multilineinput': apache2License,
     'html-parse-stringify': `MIT License,
 
 Copyright (c)

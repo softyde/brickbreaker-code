@@ -19,17 +19,20 @@ const block: BlockDefinition = {
                 type: 'field_vertical_separator',
             },
             {
-                type: 'field_input',
+                type: 'field_multilinetext',
                 name: 'VAR_TEXT',
-                text: 'default text',
+                text: 'Kommentar',
                 spellcheck: false,
             },
         ],
     },
     func: (block, _generator) => {
-        const text = block.getFieldValue('VAR_TEXT').trim();
+        const text = (block.getFieldValue('VAR_TEXT').trim() as string)
+            .split('\n')
+            .map((a) => `# ${a}`)
+            .join('\n');
 
-        return `# ${text}`;
+        return `${text}`;
     },
 };
 

@@ -4,6 +4,7 @@
 import './editorBlockly.scss';
 
 import * as BlocklyProcedures from '@blockly/block-shareable-procedures';
+import { registerFieldMultilineInput } from '@blockly/field-multilineinput';
 import * as Blockly from 'blockly/core';
 
 import * as De from 'blockly/msg/de';
@@ -18,6 +19,7 @@ import * as blocklyShadow from './blockly/extension_shadow';
 import { registerExtensions } from './blockly/extensions';
 
 import * as notify from './blockly/lib';
+
 import * as Themes from './blockly/themes';
 import { Toolbox } from './blockly/toolbox';
 import * as BlocklyVars from './blockly/variables';
@@ -49,6 +51,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
         blocklyShadow.registerExtension();
 
         registerExtensions();
+
+        registerFieldMultilineInput();
 
         const blocks = [...defaultBlocks, ...Repository.getBlocks()];
 
