@@ -3,7 +3,7 @@
 
 import './editor.scss';
 import { Button, Tab, TabId, Tabs, Text } from '@blueprintjs/core';
-import { Cross, Manual } from '@blueprintjs/icons';
+import { Cross } from '@blueprintjs/icons';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useId } from 'react-aria';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,6 @@ import { UUID } from '../fileStorage';
 import { useFileStoragePath } from '../fileStorage/hooks';
 import { blocklyFileExtension } from '../pybricksMicropython/lib';
 import { useSelector } from '../reducers';
-import { useSettingIsShowDocsEnabled } from '../settings/hooks';
 import BlocklyEditor from './EditorBlockly';
 import EditorText from './EditorText';
 import { editorActivateFile, editorCloseFile } from './actions';
@@ -173,10 +172,6 @@ const EditorTabs: React.FunctionComponent<EditorTabsProps> = ({ onChange }) => {
 };
 
 const Editor: React.FunctionComponent = () => {
-    const { isSettingShowDocsEnabled, toggleIsSettingShowDocsEnabled } =
-        useSettingIsShowDocsEnabled();
-
-    const { t } = useTranslation('editor');
     const isEmpty = useSelector((s) => s.editor.openFileUuids.length === 0);
     const { activeFileUuid } = useSelector((s) => s.editor);
     const fileName = useFileStoragePath(activeFileUuid ?? ('' as UUID));
@@ -201,14 +196,6 @@ const Editor: React.FunctionComponent = () => {
 
                 <EditorText></EditorText>
             </SplitterLayout>
-            <Button
-                className="pb-editor-doc-button"
-                minimal
-                large
-                icon={<Manual />}
-                title={isSettingShowDocsEnabled ? t('docs.hide') : t('docs.show')}
-                onClick={toggleIsSettingShowDocsEnabled}
-            />
         </div>
     );
 };

@@ -42,6 +42,7 @@ import statusBar from './status-bar/translations/en.json';
 import terminal from './terminal/translations/en.json';
 
 import bluetoothButton from './toolbar/buttons/bluetooth/translations/en.json';
+import docButton from './toolbar/buttons/doc/translations/en.json';
 import replButton from './toolbar/buttons/repl/translations/en.json';
 import runButton from './toolbar/buttons/run/translations/en.json';
 
@@ -99,6 +100,7 @@ declare module 'i18next' {
             bluetoothButton: typeof bluetoothButton;
             replButton: typeof replButton;
             runButton: typeof runButton;
+            docButton: typeof docButton;
 
             sponsorButton: typeof sponsorButton;
             stopButton: typeof stopButton;

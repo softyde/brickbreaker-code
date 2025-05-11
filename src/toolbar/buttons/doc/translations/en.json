@@ -1,0 +1,7 @@
+{
+    "label": "Documentation",
+    "tooltip": {
+        "open": "Show Documentation",
+        "close": "Hide Documentation"
+    }
+}

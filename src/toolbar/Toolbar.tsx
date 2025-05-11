@@ -6,6 +6,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Toolbar as UtilsToolbar } from '../components/toolbar/Toolbar';
 import BluetoothButton from './buttons/bluetooth/BluetoothButton';
+import DocButton from './buttons/doc/DocButton';
 import LanguageSelect from './buttons/language/LanguageSelect';
 import ReplButton from './buttons/repl/ReplButton';
 import RunButton from './buttons/run/RunButton';
@@ -22,6 +23,7 @@ const Toolbar: React.FunctionComponent = () => {
     const { t } = useTranslation('toolbar');
     const stopButtonId = 'pb-toolbar-stop-button';
     const replButtonId = 'pb-toolbar-repl-button';
+    const docButtonId = 'pb-toolbar-doc-button';
 
     return (
         <UtilsToolbar
@@ -39,6 +41,9 @@ const Toolbar: React.FunctionComponent = () => {
                 <ReplButton id={replButtonId} />
             </ButtonGroup>
             <div className="spacing"></div>
+            <ButtonGroup className="pb-toolbar-group">
+                <DocButton id={docButtonId} />
+            </ButtonGroup>
             <ButtonGroup className="pb-toolbar-group">
                 <LanguageSelect></LanguageSelect>
                 {/* <SponsorButton id={sponsorButtonId} /> */}

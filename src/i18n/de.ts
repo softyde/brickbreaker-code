@@ -43,6 +43,7 @@ import statusBar from '../status-bar/translations/de.json';
 import terminal from '../terminal/translations/de.json';
 
 import bluetoothButton from '../toolbar/buttons/bluetooth/translations/de.json';
+import docButton from '../toolbar/buttons/doc/translations/de.json';
 import replButton from '../toolbar/buttons/repl/translations/de.json';
 import runButton from '../toolbar/buttons/run/translations/de.json';
 
@@ -85,6 +86,7 @@ const resources = {
     bluetoothButton,
     replButton,
     runButton,
+    docButton,
     sponsorButton,
     stopButton,
     toolbar,
