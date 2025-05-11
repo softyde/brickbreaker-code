@@ -20,7 +20,7 @@ import {
     Virus,
 } from '@blueprintjs/icons';
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useTernaryDarkMode } from 'usehooks-ts';
 import AboutDialog from '../about/AboutDialog';
@@ -64,10 +64,16 @@ const Settings: React.FunctionComponent = () => {
         <div className="pb-settings">
             <FormGroup
                 label={t('appearance.title')}
-                helperText={t('appearance.zoom.help', {
-                    in: <span>{isMacOS() ? 'Cmd' : 'Ctrl'}-+</span>,
-                    out: <span>{isMacOS() ? 'Cmd' : 'Ctrl'}--</span>,
-                })}
+                helperText={
+                    <Trans
+                        i18nKey="appearance.zoom.help"
+                        t={t}
+                        components={{
+                            in: <span>{isMacOS() ? 'Cmd' : 'Ctrl'}-+</span>,
+                            out: <span>{isMacOS() ? 'Cmd' : 'Ctrl'}--</span>,
+                        }}
+                    />
+                }
             >
                 <ControlGroup>
                     <Switch
