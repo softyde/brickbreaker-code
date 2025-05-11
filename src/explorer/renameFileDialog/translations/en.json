@@ -1,5 +1,5 @@
 {
-    "title": "Rename '{fileName}'",
+    "title": "Rename '{{fileName}}'",
     "action": {
         "rename": "Rename"
     }

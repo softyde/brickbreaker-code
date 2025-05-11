@@ -5,7 +5,7 @@ import { Classes, Code, FormGroup, InputGroup, Intent, Tag } from '@blueprintjs/
 import type { AriaButtonProps } from '@react-types/button';
 import React, { useCallback, useRef } from 'react';
 import { useButton } from 'react-aria';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { FileNameValidationResult } from '../../pybricksMicropython/lib';
 
 /**
@@ -106,20 +106,28 @@ const FileNameHelpText: React.FunctionComponent<FileNameHelpTextProps> = ({
         case FileNameValidationResult.HasInvalidFirstCharacter:
             return (
                 <>
-                    {t('helpText.hasInvalidFirstCharacter', {
-                        letters: <Code className={Classes.CODE}>a…z</Code>,
-                        underscore: <Code className={Classes.CODE}>_</Code>,
-                    })}
+                    <Trans
+                        i18nKey="helpText.hasInvalidCharacters"
+                        t={t}
+                        components={{
+                            letters: <Code className={Classes.CODE}>a…z</Code>,
+                            underscore: <Code className={Classes.CODE}>_</Code>,
+                        }}
+                    />
                 </>
             );
         case FileNameValidationResult.HasInvalidCharacters:
             return (
                 <>
-                    {t('helpText.hasInvalidCharacters', {
-                        letters: <Code className={Classes.CODE}>a…z</Code>,
-                        numbers: <Code className={Classes.CODE}>0…9</Code>,
-                        underscore: <Code className={Classes.CODE}>_</Code>,
-                    })}{' '}
+                    <Trans
+                        i18nKey="helpText.hasInvalidCharacters"
+                        t={t}
+                        components={{
+                            letters: <Code className={Classes.CODE}>a…z</Code>,
+                            numbers: <Code className={Classes.CODE}>0…9</Code>,
+                            underscore: <Code className={Classes.CODE}>_</Code>,
+                        }}
+                    />{' '}
                     <FixItButton onPress={handleHasInvalidCharacters} />
                 </>
             );
