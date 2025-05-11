@@ -4,7 +4,7 @@
 import { Colors, Icon } from '@blueprintjs/core';
 import { Archive, Play, Plus } from '@blueprintjs/icons';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import Joyride, {
     ACTIONS,
     CallBackProps,
@@ -28,9 +28,13 @@ const WelcomeStep = React.memo(function WelcomeStep() {
         <>
             <p>{t('steps.welcome.message', { appName })}</p>
             <p>
-                {t('steps.welcome.action', {
-                    next: <strong>{t('next')}</strong>,
-                })}
+                <Trans
+                    i18nKey="steps.welcome.action"
+                    t={t}
+                    components={{
+                        next: <strong>{t('next')}</strong>,
+                    }}
+                />
             </p>
         </>
     );
@@ -41,9 +45,15 @@ const AddFileStep = React.memo(function AddFileStep() {
 
     return (
         <p>
-            {t('steps.newFile.message', {
-                icon: <Icon icon={<Plus />} style={{ verticalAlign: 'text-top' }} />,
-            })}
+            <Trans
+                i18nKey="steps.newFile.message"
+                t={t}
+                components={{
+                    icon: (
+                        <Icon icon={<Plus />} style={{ verticalAlign: 'text-top' }} />
+                    ),
+                }}
+            />
         </p>
     );
 });
@@ -55,14 +65,18 @@ const BackupFilesStep = React.memo(function BackupFilesStep() {
         <>
             <p>{t('steps.backupFiles.message')}</p>
             <p>
-                {t('steps.backupFiles.action', {
-                    icon: (
-                        <Icon
-                            icon={<Archive />}
-                            style={{ verticalAlign: 'text-top' }}
-                        />
-                    ),
-                })}
+                <Trans
+                    i18nKey="steps.backupFiles.action"
+                    t={t}
+                    components={{
+                        icon: (
+                            <Icon
+                                icon={<Archive />}
+                                style={{ verticalAlign: 'text-top' }}
+                            />
+                        ),
+                    }}
+                />
             </p>
         </>
     );
@@ -104,11 +118,18 @@ const DownloadAndRunStep = React.memo(function DownloadAndRunStep() {
     return (
         <>
             <p>
-                {t('steps.downloadAndRun.message', {
-                    icon: (
-                        <Icon icon={<Play />} style={{ verticalAlign: 'text-top' }} />
-                    ),
-                })}
+                <Trans
+                    i18nKey="steps.downloadAndRun.message"
+                    t={t}
+                    components={{
+                        icon: (
+                            <Icon
+                                icon={<Play />}
+                                style={{ verticalAlign: 'text-top' }}
+                            />
+                        ),
+                    }}
+                />
             </p>
             <p>{t('steps.downloadAndRun.runAgain')}</p>
         </>

@@ -8,14 +8,14 @@
     "steps": {
         "welcome": {
             "message": "Welcome to {{appName}}.",
-            "action": "Click {{next}} to discover key features."
+            "action": "Click <next /> to discover key features."
         },
         "newFile": {
-            "message": "Click the {{icon}} button to create a new program."
+            "message": "Click the <icon /> button to create a new program."
         },
         "backupFiles": {
             "message": "Don't lose your work.",
-            "action": "Click {{icon}} to back up your programs."
+            "action": "Click <icon /> to back up your programs."
         },
         "flashPybricksFirmware": {
             "message": "To use {{appName}}, you have to install the Pybricks firmware."
@@ -27,7 +27,7 @@
             "message": "Click the Bluetooth button to connect."
         },
         "downloadAndRun": {
-            "message": "Once connected, click the {{icon}} button to run your program.",
+            "message": "Once connected, click the <icon /> button to run your program.",
             "runAgain": "The program is now saved on the hub. Press the button on the hub to run it again."
         }
     }
