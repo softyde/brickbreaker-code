@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 import { shadowNumber } from '../types';
 
@@ -33,7 +34,9 @@ const block: BlockDefinition = {
         const motor = block.getFieldValue('VALUE.MOTOR');
         const motorVar = generator.getVariableName(motor);
 
-        const position = generator.statementToCode(block, 'VAR_POSITION').trim();
+        const position = generator
+            .valueToCode(block, 'VAR_POSITION', Order.ATOMIC)
+            .trim();
 
         return `${motorVar}.reset_angle(angle=${position})`;
     },

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../../repository';
 
 const block: BlockDefinition = {
@@ -23,7 +24,7 @@ const block: BlockDefinition = {
         const sensor = block.getFieldValue('VALUE.DISTANCESENSOR');
         const sensorVar = generator.getVariableName(sensor);
 
-        return `(${sensorVar}.distance() / 10)`;
+        return [`(${sensorVar}.distance() / 10)`, Order.ATOMIC];
     },
 };
 

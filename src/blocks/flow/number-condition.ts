@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 import { shadowNumber } from '../types';
 
@@ -38,12 +39,12 @@ const block: BlockDefinition = {
         output: 'Boolean',
     },
     func: (block, generator) => {
-        const varA = generator.statementToCode(block, 'var_a').trim();
-        const varB = generator.statementToCode(block, 'var_b').trim();
+        const varA = generator.valueToCode(block, 'var_a', Order.ATOMIC).trim();
+        const varB = generator.valueToCode(block, 'var_b', Order.ATOMIC).trim();
 
         const condition = block.getFieldValue('var_condition');
 
-        return `(${varA}) ${condition} (${varB})`;
+        return [`(${varA}) ${condition} (${varB})`, Order.RELATIONAL];
     },
 };
 

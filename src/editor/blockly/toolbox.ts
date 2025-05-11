@@ -206,6 +206,25 @@ export const Toolbox = {
                 },
             ],
         },
+        {
+            kind: 'category',
+            name: 'Robotik',
+            categorystyle: 'robotic_category',
+            contents: [
+                {
+                    kind: 'label',
+                    text: 'Bewegungen',
+                },
+                {
+                    kind: 'block',
+                    type: 'contest_move_and_lift',
+                },
+                {
+                    kind: 'block',
+                    type: 'comment',
+                },
+            ],
+        },
 
         {
             kind: 'category',

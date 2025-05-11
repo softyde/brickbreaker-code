@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 import { shadowNumber } from '../types';
 
@@ -48,8 +49,10 @@ const block: BlockDefinition = {
         const hub = block.getFieldValue('VAR.DRIVE');
         const hubVar = generator.getVariableName(hub);
 
-        const diameter = generator.statementToCode(block, 'diameter').trim();
-        const axleTrack = generator.statementToCode(block, 'axle-track').trim();
+        const diameter = generator.valueToCode(block, 'diameter', Order.ATOMIC).trim();
+        const axleTrack = generator
+            .valueToCode(block, 'axle-track', Order.ATOMIC)
+            .trim();
 
         const motor1 = block.getFieldValue('VALUE.MOTOR.1');
         const motor1Var = generator.getVariableName(motor1);

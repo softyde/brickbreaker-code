@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 
 const block: BlockDefinition = {
@@ -33,7 +34,9 @@ const block: BlockDefinition = {
         previousStatement: 'default',
     },
     func: (block, generator) => {
-        const condition = generator.statementToCode(block, 'condition').trim();
+        const condition = generator
+            .valueToCode(block, 'condition', Order.ATOMIC)
+            .trim();
 
         const statements = generator.statementToCode(block, 'VAR_STATEMENTS');
 

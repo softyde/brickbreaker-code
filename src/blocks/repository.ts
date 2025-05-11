@@ -7,6 +7,7 @@ import { PythonGenerator } from 'blockly/python';
 import { BlockStyles } from '../editor/blockly/themes';
 import i18next from '../i18next';
 
+import contestBlocks from './contest/index';
 import eventBlocks from './event/index';
 import flowBlocks from './flow/index';
 import motorBlocks from './motor/index';
@@ -152,6 +153,7 @@ class Repository {
             ...valueBlocks,
             ...flowBlocks,
             ...sensorBlocks,
+            ...contestBlocks,
         ].forEach((a) => this.define(a));
     }
 

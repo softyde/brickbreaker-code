@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 import { shadowNumber } from '../types';
 
@@ -32,7 +33,7 @@ const block: BlockDefinition = {
         previousStatement: 'default',
     },
     func: (block, generator) => {
-        const times = generator.statementToCode(block, 'VAR_TIMES').trim();
+        const times = generator.valueToCode(block, 'VAR_TIMES', Order.ATOMIC).trim();
 
         const statements = generator.statementToCode(block, 'VAR_STATEMENTS');
 

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 import { StraightDirection, shadowNumber, straightDirections } from '../types';
 
@@ -38,14 +39,14 @@ const block: BlockDefinition = {
         const driveVar = generator.getVariableName(drive);
 
         let distance =
-            generator.statementToCode(block, 'VAR_DISTANCE').trim() + ' * 10';
+            generator.valueToCode(block, 'VAR_DISTANCE', Order.ATOMIC).trim() + ' * 10';
         const direction = block.getFieldValue('VAR_DIRECTION');
 
         if (direction === StraightDirection.Backward) {
             distance = `-${distance}`;
         }
 
-        return `${driveVar}.straight(${distance}, then=Stop.HOLD, wait=True)`;
+        return `await ${driveVar}.straight(${distance}, then=Stop.HOLD)`;
     },
 };
 

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../../repository';
 
 const block: BlockDefinition = {
@@ -23,7 +24,7 @@ const block: BlockDefinition = {
         const sensor = block.getFieldValue('VALUE.LIGHTSENSOR');
         const sensorVar = generator.getVariableName(sensor);
 
-        return `${sensorVar}.reflection()`;
+        return [`${sensorVar}.reflection()`, Order.ATOMIC];
     },
 };
 

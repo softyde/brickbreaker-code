@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 import { shadowNumber } from '../types';
 
@@ -42,10 +43,12 @@ const block: BlockDefinition = {
         const motor = block.getFieldValue('VALUE.MOTOR');
         const motorVar = generator.getVariableName(motor);
 
-        const position = generator.statementToCode(block, 'VAR_POSITION').trim();
-        const speed = generator.statementToCode(block, 'VAR_SPEED').trim();
+        const position = generator
+            .valueToCode(block, 'VAR_POSITION', Order.ATOMIC)
+            .trim();
+        const speed = generator.valueToCode(block, 'VAR_SPEED', Order.ATOMIC).trim();
 
-        return `${motorVar}.run_target(speed=${speed}, target_angle=${position}, then=Stop.HOLD, wait=True)`;
+        return `await ${motorVar}.run_target(speed=${speed}, target_angle=${position}, then=Stop.HOLD)`;
     },
 };
 

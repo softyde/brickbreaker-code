@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 
 const block: BlockDefinition = {
@@ -20,9 +21,9 @@ const block: BlockDefinition = {
         output: 'Boolean',
     },
     func: (block, generator) => {
-        const varA = generator.statementToCode(block, 'var_a').trim();
+        const varA = generator.valueToCode(block, 'var_a', Order.ATOMIC).trim();
 
-        return `not (${varA})`;
+        return [`not (${varA})`, Order.LOGICAL_NOT];
     },
 };
 

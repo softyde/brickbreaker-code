@@ -3,7 +3,7 @@
 
 import { isProcedureBlock } from '@blockly/block-shareable-procedures';
 import * as Blockly from 'blockly';
-import { PythonGenerator } from 'blockly/python';
+import { Order, PythonGenerator } from 'blockly/python';
 import Repository from '../../blocks/repository';
 import { VAR_HUB_FRONT_AXIS, VAR_HUB_TOP_AXIS } from './blocks';
 //import { VAR_HUB_NAME } from './blocks';
@@ -130,43 +130,64 @@ pythonGenerator.forBlock['procedures_defnoreturn'] = (block, generator) => {
 
         const statements = generator.statementToCode(block, 'STACK');
 
-        return `def ${funcVar}(${parString}):
+        return `async def ${funcVar}(${parString}):
 ${statements}`;
     }
 
     return `# invalid function`;
 };
 
-// pythonGenerator.forBlock['procedures_callnoreturn'] = (block, generator) => {
-//     if (isProcedureBlock(block)) {
-//         const model = block.getProcedureModel();
+pythonGenerator.forBlock['procedures_callreturn'] = (block, generator) => {
+    if (isProcedureBlock(block)) {
+        const model = block.getProcedureModel();
 
-//         block.getProcedureModel().getParameters;
+        block.getProcedureModel().getParameters;
 
-//         const funcName = model.getName();
-//         const funcVar = generator.getVariableName(funcName);
+        const funcName = model.getName();
+        const funcVar = generator.getVariableName(funcName);
 
-//         const args = [];
-//         for (let i = 0; i < block.inputList.length; i++) {
-//             const input = block.inputList[i];
+        const args = [];
+        const variables = block.getVars();
+        for (let i = 0; i < variables.length; i++) {
+            args[i] = generator.valueToCode(block, 'ARG' + i, Order.NONE) || 'None';
+            //args[i] = generator.statementToCode(block, 'ARG' + i) || 'None';
+        }
+        // const parameters = model.getParameters();
+        // const parString = parameters
+        //     .map((p) => generator.getVariableName(p.getName()))
+        //     .join(', ');
 
-//             console.log(input);
-//             if (input && input.connection && input.connection.isConnected()) {
-//                 const argCode = generator.valueToCode(block, input.name, 1) || 'null';
-//                 args.push(argCode);
-//             }
-//         }
+        return [`await ${funcVar}(${args.join(', ')})`, Order.FUNCTION_CALL];
+    }
 
-//         const parameters = model.getParameters();
-//         const parString = parameters
-//             .map((p) => generator.getVariableName(p.getName()))
-//             .join(', ');
+    return [`invalid function`, Order.FUNCTION_CALL];
+};
 
-//         return `${funcVar}(${parString}) # ${args.join(';')}`;
-//     }
+pythonGenerator.forBlock['procedures_callnoreturn'] = (block, generator) => {
+    if (isProcedureBlock(block)) {
+        const model = block.getProcedureModel();
 
-//     return `# invalid function`;
-// };
+        block.getProcedureModel().getParameters;
+
+        const funcName = model.getName();
+        const funcVar = generator.getVariableName(funcName);
+
+        const args = [];
+        const variables = block.getVars();
+        for (let i = 0; i < variables.length; i++) {
+            args[i] = generator.valueToCode(block, 'ARG' + i, Order.NONE) || 'None';
+            //args[i] = generator.statementToCode(block, 'ARG' + i) || 'None';
+        }
+        // const parameters = model.getParameters();
+        // const parString = parameters
+        //     .map((p) => generator.getVariableName(p.getName()))
+        //     .join(', ');
+
+        return `await ${funcVar}(${args.join(', ')})`;
+    }
+
+    return `# invalid function`;
+};
 
 pythonGenerator.forBlock['procedures_defreturn'] = (block, generator) => {
     if (isProcedureBlock(block)) {
@@ -186,7 +207,7 @@ pythonGenerator.forBlock['procedures_defreturn'] = (block, generator) => {
 
         const returnValue = generator.statementToCode(block, 'RETURN').trim();
 
-        return `def ${funcVar}(${parString}):
+        return `async def ${funcVar}(${parString}):
 ${statements}
   return ${returnValue}`;
     }

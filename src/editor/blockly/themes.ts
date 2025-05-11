@@ -59,6 +59,12 @@ const defaultThemeDefinition = {
         lightsensor_category: {
             colourPrimary: '#2DABBD',
         },
+        robotic_category: {
+            colourPrimary: '#337413',
+        },
+        comment_category: {
+            colourPrimary: '#f2bd0c',
+        },
     },
     categoryStyles: {
         event_category: {
@@ -84,6 +90,9 @@ const defaultThemeDefinition = {
         },
         var_category: {
             colour: '#0ABD8D',
+        },
+        robotic_category: {
+            colour: '#337413',
         },
     },
     componentStyles: {

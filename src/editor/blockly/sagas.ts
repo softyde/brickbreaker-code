@@ -148,6 +148,16 @@ function* handleBlocklyDidChangeModel(
     // failures are ignored
 }
 
+function wrapInMainFunction(code: string): string {
+    // Jede Zeile einrücken
+    const indentedCode = code
+        .split('\n')
+        .map((line) => '  ' + line)
+        .join('\n');
+
+    return `async def main()\n${indentedCode}\n\nrun_task(main())`;
+}
+
 function* handleBlocklyGenerateSource(
     workspace: Blockly.Workspace,
     action: ReturnType<typeof blocklyGenerateSource>,
@@ -164,13 +174,17 @@ function* handleBlocklyGenerateSource(
 
         const startBlocks = workspace.getBlocksByType('start_program');
 
-        const blocks = [...setupBlocks, ...functionBlocks, ...startBlocks];
+        const blocks = [...setupBlocks, ...functionBlocks];
 
         pythonGenerator.init(workspace);
 
         let source = '';
         blocks.forEach((block) => {
             source += pythonGenerator.blockToCode(block);
+        });
+
+        startBlocks.forEach((block) => {
+            source += wrapInMainFunction(pythonGenerator.blockToCode(block) as string);
         });
 
         if (source.length > 0) {

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 
 const block: BlockDefinition = {
@@ -24,7 +25,7 @@ const block: BlockDefinition = {
     func: (block, _generator) => {
         const value = block.getFieldValue('NUMBER');
 
-        return `${value}`;
+        return [`${value}`, Order.ATOMIC];
     },
 };
 

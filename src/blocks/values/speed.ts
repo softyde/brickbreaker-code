@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 import { Speed, defaultSpeeds } from '../types';
 
@@ -42,7 +43,7 @@ const block: BlockDefinition = {
                 break;
         }
 
-        return `${value}`;
+        return [`${value}`, Order.ATOMIC];
     },
 };
 

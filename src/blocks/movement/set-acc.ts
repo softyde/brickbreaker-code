@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 import { shadowNumber } from '../types';
 
@@ -33,7 +34,7 @@ const block: BlockDefinition = {
         const drive = block.getFieldValue('VALUE.DRIVE');
         const driveVar = generator.getVariableName(drive);
 
-        const distance = generator.statementToCode(block, 'VAR_ACC').trim();
+        const distance = generator.valueToCode(block, 'VAR_ACC', Order.ATOMIC).trim();
 
         return `${driveVar}.settings(straight_acceleration=${distance})`;
     },

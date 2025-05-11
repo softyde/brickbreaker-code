@@ -1,5 +1,9 @@
 # In loser Reihenfolge
 
+- [ ] Kopieren / Import / Export fixen
+- [ ] Fenster mit generiertem Code ausblenden
+
+
 - [x] maxInstances für Startblöcke setzen
 - [ ] Undo Resetten beim Laden von Blocklys
 - [x] Verknüpfung zwischen Quellcode und Blöcken

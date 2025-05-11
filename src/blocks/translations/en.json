@@ -148,5 +148,14 @@
                 "message": "Entfernung von %1 in cm"
             }
         }
+    },
+    "contest": {
+        "move-and-lift": {
+            "message": "%1 %2 fährt %3 %4 mit %5",
+            "message1": "und\n"
+        },
+        "comment": {
+            "message": "%1 %2"
+        }
     }
 }

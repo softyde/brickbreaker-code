@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Order } from 'blockly/python';
 import { BlockDefinition } from '../repository';
 import { Direction, defaultDirections, shadowNumber } from '../types';
 
@@ -37,7 +38,9 @@ const block: BlockDefinition = {
         const drive = block.getFieldValue('VALUE.DRIVE');
         const driveVar = generator.getVariableName(drive);
 
-        let angle = parseFloat(generator.statementToCode(block, 'VAR_DEGREES').trim());
+        let angle = parseFloat(
+            generator.valueToCode(block, 'VAR_DEGREES', Order.ATOMIC).trim(),
+        );
 
         const direction = block.getFieldValue('VAR_DIRECTION');
 
@@ -45,7 +48,7 @@ const block: BlockDefinition = {
             angle *= -1;
         }
 
-        return `${driveVar}.turn(${angle}, then=Stop.HOLD, wait=True)`;
+        return `await ${driveVar}.turn(${angle}, then=Stop.HOLD)`;
     },
 };
 
