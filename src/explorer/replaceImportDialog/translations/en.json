@@ -1,6 +1,6 @@
 {
     "title": "Replace existing file?",
-    "message": "A file already exists with the same name as the imported file '{fileName}'.",
+    "message": "A file already exists with the same name as the imported file '{{fileName}}'.",
     "option": {
         "remember": "Remember this answer when resolving additional conflicts."
     },

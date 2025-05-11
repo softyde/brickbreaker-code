@@ -21,7 +21,9 @@ const RenameImportDialog: React.FunctionComponent = () => {
     const isOpen = useSelector((s) => s.explorer.renameImportDialog.isOpen);
     const oldName = useSelector((s) => s.explorer.renameImportDialog.fileName);
 
-    const [baseName, extension] = oldName.split(/(\.\w+)$/);
+    const indexDot = oldName.indexOf('.');
+    const baseName = oldName.substring(0, indexDot);
+    const extension = oldName.slice(indexDot);
 
     const [newName, setNewName] = useState(baseName);
     const files = useFileStorageMetadata() ?? [];

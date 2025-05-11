@@ -1,6 +1,6 @@
 {
     "title": "Bestehende Datei ersetzen?",
-    "message": "Es existiert bereits eine Datei mit dem gleichen Namen wie die importierte Datei '{fileName}'.",
+    "message": "Es existiert bereits eine Datei mit dem gleichen Namen wie die importierte Datei '{{fileName}}'.",
     "option": {
         "remember": "Diese Antwort für weitere Konflikte merken."
     },
