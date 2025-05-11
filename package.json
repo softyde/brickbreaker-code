@@ -11,6 +11,8 @@
         "@babel/core": "^7.23.9",
         "@blockly/block-shareable-procedures": "^5.0.12",
         "@blockly/field-multilineinput": "^5.0.13",
+        "@blockly/workspace-minimap": "^0.2.12",
+        "@blockly/zoom-to-fit": "^6.0.12",
         "@blueprintjs/core": "^5.8.2",
         "@blueprintjs/select": "^5.3.19",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",

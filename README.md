@@ -21,7 +21,7 @@ Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 **This is an alpha. And nothing will work.  
 If it does: don't use it for anything serious.**
 
-(0.1.0-alpha5 / 08.05.2025)
+(0.1.0-alpha10 / 11.05.2025)
 
 ---
 
@@ -41,7 +41,8 @@ If it does: don't use it for anything serious.**
 - [x] custom rendering for connection types
 - [x] dark mode support
 - [x] language selection (de/en)
-- [x] __⇉ CURRENT__ 📌  develop some even more useful blocks (vars, parameters, etc.) (wip)
+- [x] develop some even more useful blocks (vars, parameters, etc.) (wip)
+- [x] __⇉ CURRENT__ 📌 included some plugins: minimap / zoom-to-fit
 - [ ] cleanup code
 - [ ] fix dependencies
 - [ ] fix broken tests
@@ -50,13 +51,8 @@ If it does: don't use it for anything serious.**
 
 ### Screenshot (more or less up to date)
 
-![screenshot](.README/screenshot.png)
-
-# Contributing
-
-If you'd like to contribute, please fork the repository and use a feature branch. Pull requests are warmly welcome.
-
-For more details, see the file [CONTRIBUTING.md](./CONTRIBUTING.md).
+![Screenshot_1](.README/screenshot1.png)
+![Screenshot_2](.README/screenshot2.png)
 
 ---
 

@@ -5,6 +5,9 @@ import './editorBlockly.scss';
 
 import * as BlocklyProcedures from '@blockly/block-shareable-procedures';
 import { registerFieldMultilineInput } from '@blockly/field-multilineinput';
+import { PositionedMinimap } from '@blockly/workspace-minimap';
+import { ZoomToFitControl } from '@blockly/zoom-to-fit';
+
 import * as Blockly from 'blockly/core';
 
 import * as De from 'blockly/msg/de';
@@ -125,8 +128,21 @@ const BlocklyEditor: React.FunctionComponent = () => {
         // Beobachte den Container für Größenänderungen
         resizeObserverRef.current.observe(blocklyEditorRef.current);
 
+        // Initialize plugin.
+        const minimap = new PositionedMinimap(workspaceRef.current);
+        minimap.init();
+
+        // Initialize plugin.
+        const zoomToFit = new ZoomToFitControl(workspaceRef.current);
+        zoomToFit.init();
+
         // Führe initiales Resize durch
         resizeBlockly();
+
+        /*window.setTimeout(function () {
+            console.log('sadfsdfasdf');
+            resizeBlockly();
+        }, 5000);*/
 
         notify.didCreateBlocklyEditor(workspaceRef.current);
 
@@ -147,7 +163,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
             const metrics = workspaceRef.current!.getMetrics();
 
             // Resize nur durchführen, wenn Metrics verfügbar sind
-            if (metrics) {
+            if (metrics && metrics.contentHeight > 0) {
                 Blockly.svgResize(workspaceRef.current!);
                 workspaceRef.current!.render();
             }

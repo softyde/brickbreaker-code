@@ -1570,6 +1570,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@blockly/workspace-minimap@npm:^0.2.12":
+  version: 0.2.12
+  resolution: "@blockly/workspace-minimap@npm:0.2.12"
+  peerDependencies:
+    blockly: ^11.0.0
+  checksum: 264bd076901634fc78607a42f0067791bae17ea41ac4dc7e4e871e1114c73955aabddffbd514f925e36105a810acbfa1696269ffae26feded897f3b50025374f
+  languageName: node
+  linkType: hard
+
+"@blockly/zoom-to-fit@npm:^6.0.12":
+  version: 6.0.12
+  resolution: "@blockly/zoom-to-fit@npm:6.0.12"
+  peerDependencies:
+    blockly: ^11.0.0
+  checksum: 0ec974fa62fa9e170011ef7ec9cc9c2d96bed892bd56bfb5dbb46198d0b135312b6be1395b7aeafd19f2c8f094f70beaeaaa311f6f67baeb3d39e5a947d60db9
+  languageName: node
+  linkType: hard
+
 "@blueprintjs/colors@npm:^5.0.9":
   version: 5.0.9
   resolution: "@blueprintjs/colors@npm:5.0.9"
@@ -1704,6 +1722,8 @@ __metadata:
     "@babel/core": ^7.23.9
     "@blockly/block-shareable-procedures": ^5.0.12
     "@blockly/field-multilineinput": ^5.0.13
+    "@blockly/workspace-minimap": ^0.2.12
+    "@blockly/zoom-to-fit": ^6.0.12
     "@blueprintjs/core": ^5.8.2
     "@blueprintjs/select": ^5.3.19
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.11

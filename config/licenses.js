@@ -682,6 +682,8 @@ const licenseTextOverrides = {
     'blockly': apache2License,
     '@blockly/block-shareable-procedures': apache2License,
     '@blockly/field-multilineinput': apache2License,
+    '@blockly/workspace-minimap': apache2License,
+    '@blockly/zoom-to-fit': apache2License,
     'html-parse-stringify': `MIT License,
 
 Copyright (c)

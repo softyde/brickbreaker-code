@@ -1,6 +1,16 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+// .blockly-minimap {
+// }
+
+// .blockly-focus-region {
+// }
+
+.blocklySvg {
+    background-color: #ffffff !important;
+}
+
 .blocklyToolboxContents {
     .blocklyToolboxCategory {
         &[aria-selected='true'] {
