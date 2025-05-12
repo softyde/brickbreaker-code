@@ -8,8 +8,19 @@ import {
     editorDidCloseFile,
     editorDidCreate,
     editorDidOpenFile,
+    editorToggleSource,
 } from './actions';
 import codeCompletion from './redux/codeCompletion';
+
+/** Indicated that the code editor is shown for blockly sources. */
+const isSourceVisible: Reducer<boolean> = (state = false, action) => {
+    if (editorToggleSource.matches(action)) {
+        console.log('triggered by editorToggleSource');
+        return !state;
+    }
+
+    return state;
+};
 
 /** Indicates that the code editor is ready for use. */
 const isReady: Reducer<boolean> = (state = false, action) => {
@@ -48,6 +59,7 @@ const openFileUuids: Reducer<readonly UUID[]> = (state = [], action) => {
 
 export default combineReducers({
     codeCompletion,
+    isSourceVisible,
     isReady,
     activeFileUuid,
     openFileUuids,

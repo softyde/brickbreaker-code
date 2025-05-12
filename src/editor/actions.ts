@@ -15,6 +15,11 @@ export const editorDidCreate = createAction(() => ({
     type: 'editor.action.didCreate',
 }));
 
+/** Action that toggles source code visibility. */
+export const editorToggleSource = createAction(() => ({
+    type: 'editor.action.toggleSource',
+}));
+
 /**
  * Action that requests getting the current contents of the editor.
  * @param id A unique identifier for this request.

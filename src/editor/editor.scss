@@ -133,6 +133,10 @@
         right: bp.$pt-grid-size;
         z-index: bp.$pt-z-index-overlay;
     }
+
+    .pb-show-blockly.pb-hide-source > :not(.layout-pane-primary) {
+        display: none;
+    }
 }
 
 .monaco-editor {

@@ -174,6 +174,7 @@ const EditorTabs: React.FunctionComponent<EditorTabsProps> = ({ onChange }) => {
 const Editor: React.FunctionComponent = () => {
     const isEmpty = useSelector((s) => s.editor.openFileUuids.length === 0);
     const { activeFileUuid } = useSelector((s) => s.editor);
+    const isVisible = useSelector((s) => s.editor.isSourceVisible);
     const fileName = useFileStoragePath(activeFileUuid ?? ('' as UUID));
     const isBlockly = fileName?.endsWith(blocklyFileExtension);
 
@@ -185,7 +186,9 @@ const Editor: React.FunctionComponent = () => {
 
             <SplitterLayout
                 customClassName={
-                    isBlockly && !isEmpty ? 'pb-show-blockly' : 'pb-hide-blockly'
+                    (isBlockly && !isEmpty ? 'pb-show-blockly' : 'pb-hide-blockly') +
+                    ' ' +
+                    (isVisible ? 'pb-show-source' : 'pb-hide-source')
                 }
                 vertical={false}
                 percentage={true}

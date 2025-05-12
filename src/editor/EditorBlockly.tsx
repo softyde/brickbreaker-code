@@ -14,8 +14,10 @@ import * as De from 'blockly/msg/de';
 
 import React, { useEffect, useRef } from 'react';
 
+import { useDispatch } from 'react-redux';
 import { useEffectOnce, useTernaryDarkMode } from 'usehooks-ts';
 import Repository from '../blocks/repository';
+import { editorToggleSource } from './actions';
 import defaultBlocks from './blockly/blocks';
 import { RendererName, initRenderer } from './blockly/custom_renderer';
 import * as blocklyShadow from './blockly/extension_shadow';
@@ -23,6 +25,7 @@ import { registerExtensions } from './blockly/extensions';
 
 import * as notify from './blockly/lib';
 
+import { ShowSourceControl } from './blockly/show-source-control';
 import * as Themes from './blockly/themes';
 import { Toolbox } from './blockly/toolbox';
 import * as BlocklyVars from './blockly/variables';
@@ -35,7 +38,10 @@ const BlocklyEditor: React.FunctionComponent = () => {
     const workspaceRef = useRef<Blockly.WorkspaceSvg | null>(null);
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
+    //const { toggleIsSettingShowSourceEnabled } = useSettingIsShowSourceEnabled();
+
     const { isDarkMode } = useTernaryDarkMode();
+    const dispatch = useDispatch();
 
     useEffectOnce(() => {
         // istanbul ignore if: should never happen
@@ -135,6 +141,11 @@ const BlocklyEditor: React.FunctionComponent = () => {
         // Initialize plugin.
         const zoomToFit = new ZoomToFitControl(workspaceRef.current);
         zoomToFit.init();
+
+        const showSource = new ShowSourceControl(workspaceRef.current, () => {
+            dispatch(editorToggleSource());
+        });
+        showSource.init();
 
         // Führe initiales Resize durch
         resizeBlockly();
