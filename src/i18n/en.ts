@@ -10,6 +10,7 @@ import bleAlerts from '../ble/alerts/translations/en.json';
 import blocks from '../blocks/translations/en.json';
 import components from '../components/translations/en.json';
 import editor from '../editor/translations/en.json';
+import expert from '../expert/translations/en.json';
 import explorerAlerts from '../explorer/alerts/translations/en.json';
 
 import deleteFileAlert from '../explorer/deleteFileAlert/translations/en.json';
@@ -94,6 +95,7 @@ const resources = {
     tour,
     about,
     activities,
+    expert,
 };
 
 export default resources;

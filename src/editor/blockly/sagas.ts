@@ -14,6 +14,7 @@ import {
     take,
     takeEvery,
 } from 'typed-redux-saga/macro';
+import { addIssue, clearAllIssues } from '../../expert/actions';
 import { UUID } from '../../fileStorage';
 import {
     fileStorageDidFailToLoadBlockly,
@@ -178,6 +179,8 @@ function* handleBlocklyGenerateSource(
 
         pythonGenerator.init(workspace);
 
+        yield* put(clearAllIssues());
+
         let source = '';
         blocks.forEach((block) => {
             source += pythonGenerator.blockToCode(block);
@@ -186,6 +189,12 @@ function* handleBlocklyGenerateSource(
         startBlocks.forEach((block) => {
             source += wrapInMainFunction(pythonGenerator.blockToCode(block) as string);
         });
+
+        for (let i = 0; i < pythonGenerator.codeExpert._codeIssues.length; i++) {
+            const issue = pythonGenerator.codeExpert._codeIssues[i];
+
+            yield* put(addIssue(issue.severity, issue.label, issue.blockId));
+        }
 
         if (source.length > 0) {
             source = `from pybricks.hubs import PrimeHub
@@ -545,7 +554,7 @@ function* handleDidCreateBlockly(workspace: Blockly.Workspace): Generator {
     try {
         const defer: Array<() => void | Promise<void>> = [];
 
-        console.log('blockly created');
+        console.debug('Blockly saga created');
 
         try {
             yield* takeEvery(

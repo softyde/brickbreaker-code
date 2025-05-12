@@ -4,11 +4,12 @@
 import 'react-splitter-layout/lib/index.css';
 import './app.scss';
 import { Classes, Spinner } from '@blueprintjs/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SplitterLayout from 'react-splitter-layout';
 import { useLocalStorage, useTernaryDarkMode } from 'usehooks-ts';
 import Activities from '../activities/Activities';
+import Expert from '../expert/Expert';
 import DfuWindowsDriverInstallDialog from '../firmware/dfuWindowsDriverInstallDialog/DfuWindowsDriverInstallDialog';
 import { InstallPybricksDialog } from '../firmware/installPybricksDialog/InstallPybricksDialog';
 import RestoreOfficialDialog from '../firmware/restoreOfficialDialog/RestoreOfficialDialog';
@@ -165,6 +166,8 @@ const App: React.FunctionComponent = () => {
     const [isDragging, setIsDragging] = useState(false);
     const { t } = useTranslation();
 
+    const containerRef = useRef<HTMLDivElement>(null);
+
     const [docsSplit, setDocsSplit] = useLocalStorage('app-docs-split', 30);
     const [terminalSplit, setTerminalSplit] = useLocalStorage('app-terminal-split', 30);
 
@@ -196,7 +199,7 @@ const App: React.FunctionComponent = () => {
 
     return (
         <div className="pb-app" onContextMenu={(e) => e.preventDefault()}>
-            <div className="pb-app-body">
+            <div className="pb-app-body" ref={containerRef}>
                 <aside
                     className="pb-app-activities"
                     aria-label={t('landmark.activities')}
@@ -252,6 +255,7 @@ const App: React.FunctionComponent = () => {
                         </aside>
                     </SplitterLayout>
                 </div>
+                <Expert containerRef={containerRef} />
             </div>
             <StatusBar />
             <Tour />

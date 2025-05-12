@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Severity } from '../../../expert/codeIssue';
+import i18next from '../../../i18next';
 import { BlockDefinition } from '../../repository';
 import { defaultPorts } from '../../types';
 
@@ -34,6 +36,20 @@ const block: BlockDefinition = {
         const port = block.getFieldValue('sensor-port');
 
         const sensorVar = generator.getVariableName(sensor);
+
+        const codeExpert = generator.codeExpert;
+        if (!codeExpert.usePort(port)) {
+            const portName = block.getField('sensor-port')?.getText();
+
+            codeExpert.add(
+                Severity.Error,
+                i18next.t('expert:error.duplicatePort', {
+                    item: sensor,
+                    port: portName,
+                }),
+                block,
+            );
+        }
 
         return `${sensorVar} = UltrasonicSensor(${port})`;
     },

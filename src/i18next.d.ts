@@ -9,6 +9,7 @@ import translations from './app/translations/en.json';
 import bleAlerts from './ble/alerts/translations/en.json';
 import components from './components/translations/en.json';
 import editor from './editor/translations/en.json';
+import expert from './expert/translations/en.json';
 import explorerAlerts from './explorer/alerts/translations/en.json';
 
 import deleteFileAlert from './explorer/deleteFileAlert/translations/en.json';
@@ -109,6 +110,8 @@ declare module 'i18next' {
 
             about: typeof about;
             activities: typeof activities;
+
+            expert: typeof expert;
         };
     }
 }

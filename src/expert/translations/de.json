@@ -1,0 +1,6 @@
+{
+    "error": {
+        "duplicatePort": "{{item}} verwendet den bereits belegten Anschluss {{port}}.",
+        "duplicateMotor": "{{item}} verwendet zweimal den selben Motor."
+    }
+}

@@ -2,8 +2,9 @@
 // Copyright (c) 2025 Philipp Anné
 
 import * as Blockly from 'blockly';
-import { PythonGenerator } from 'blockly/python';
+//import { PythonGenerator } from 'blockly/python';
 
+import { BlocklyPythonGenerator } from '../editor/blockly/codegenerator';
 import { BlockStyles } from '../editor/blockly/themes';
 import i18next from '../i18next';
 
@@ -19,7 +20,7 @@ import valueBlocks from './values/index';
 
 export type BlockFunction = (
     block: Blockly.Block,
-    generator: PythonGenerator,
+    generator: BlocklyPythonGenerator,
 ) => string | [string, number] | null;
 
 export type BlockTypeStatements = 'init' | 'default';
@@ -200,7 +201,7 @@ class Repository {
             .toArray();
     }
 
-    addAll(generator: PythonGenerator) {
+    addAll(generator: BlocklyPythonGenerator) {
         this._repo.forEach((a) => {
             generator.forBlock[a.def.type] = a.func;
         });

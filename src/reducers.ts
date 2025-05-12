@@ -6,6 +6,7 @@ import { Reducer, combineReducers } from 'redux';
 import app from './app/reducers';
 import ble from './ble/reducers';
 import editor from './editor/reducers';
+import expert from './expert/reducers';
 import explorer from './explorer/reducers';
 import fileStorage from './fileStorage/reducers';
 import firmware from './firmware/reducers';
@@ -22,6 +23,7 @@ export const rootReducer = combineReducers({
     bootloader,
     ble,
     editor,
+    expert,
     explorer,
     fileStorage,
     firmware,

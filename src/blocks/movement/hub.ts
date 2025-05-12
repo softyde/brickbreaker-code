@@ -2,6 +2,8 @@
 // Copyright (c) 2025 Philipp Anné
 
 import { Order } from 'blockly/python';
+import { Severity } from '../../expert/codeIssue';
+import i18next from '../../i18next';
 import { BlockDefinition } from '../repository';
 import { shadowNumber } from '../types';
 
@@ -58,6 +60,20 @@ const block: BlockDefinition = {
         const motor1Var = generator.getVariableName(motor1);
         const motor2 = block.getFieldValue('VALUE.MOTOR.2');
         const motor2Var = generator.getVariableName(motor2);
+
+        const codeExpert = generator.codeExpert;
+
+        if (motor1Var === motor2Var) {
+            const hubName = block.getField('VAR.DRIVE')?.getText();
+
+            codeExpert.add(
+                Severity.Error,
+                i18next.t('expert:error.duplicateMotor', {
+                    item: hubName,
+                }),
+                block,
+            );
+        }
 
         return `${hubVar} = DriveBase(${motor1Var}, ${motor2Var}, ${diameter}, ${axleTrack})
 ${hubVar}.use_gyro(True)

@@ -21,7 +21,7 @@ const block: BlockDefinition = {
             {
                 type: 'field_multilinetext',
                 name: 'VAR_TEXT',
-                text: 'Kommentar',
+                text: 'Beschreibung einfügen',
                 spellcheck: false,
             },
         ],

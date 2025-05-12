@@ -8,7 +8,7 @@ export const Toolbox = {
     contents: [
         {
             kind: 'category',
-            name: 'Ereignisse',
+            name: 'Programm',
             categorystyle: 'event_category',
             contents: [
                 {
@@ -18,6 +18,10 @@ export const Toolbox = {
                 {
                     kind: 'block',
                     type: 'start_program',
+                },
+                {
+                    kind: 'block',
+                    type: 'comment',
                 },
             ],
         },
@@ -218,10 +222,6 @@ export const Toolbox = {
                 {
                     kind: 'block',
                     type: 'contest_move_and_lift',
-                },
-                {
-                    kind: 'block',
-                    type: 'comment',
                 },
             ],
         },

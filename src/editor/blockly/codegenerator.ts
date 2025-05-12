@@ -5,13 +5,36 @@ import { isProcedureBlock } from '@blockly/block-shareable-procedures';
 import * as Blockly from 'blockly';
 import { Order, PythonGenerator } from 'blockly/python';
 import Repository from '../../blocks/repository';
+import { Port } from '../../blocks/types';
+import { CodeIssue, Severity } from '../../expert/codeIssue';
 import { VAR_HUB_FRONT_AXIS, VAR_HUB_TOP_AXIS } from './blocks';
 //import { VAR_HUB_NAME } from './blocks';
 
 const robotHubName = 'my_robot';
 
-class BlocklyPythonGenerator extends PythonGenerator {
+export class CodeExpert {
+    _codeIssues: CodeIssue[] = [];
+
+    _usedPorts: Port[] = [];
+
+    usePort(port: Port): boolean {
+        if (this._usedPorts.indexOf(port) >= 0) {
+            return false;
+        }
+
+        this._usedPorts.push(port);
+        return true;
+    }
+
+    add(severity: Severity, label: string, block: Blockly.Block) {
+        this._codeIssues.push({ severity, label, blockId: block.id });
+    }
+}
+
+export class BlocklyPythonGenerator extends PythonGenerator {
     variablePrefix = 0;
+
+    codeExpert!: CodeExpert;
 
     init(workspace: Blockly.Workspace): void {
         super.init(workspace);
@@ -21,6 +44,8 @@ class BlocklyPythonGenerator extends PythonGenerator {
         this.addReservedWords(
             'PrimeHub,Motor,ColorSensor,UltrasonicSensor,ForceSensor,Button,Color,Direction,Port,Side,Stop,Axis,DriveBase,wait,StopWatch',
         );
+
+        this.codeExpert = new CodeExpert();
     }
 
     resetVariablePrefix(): void {
@@ -103,7 +128,7 @@ class BlocklyPythonGenerator extends PythonGenerator {
 
 const pythonGenerator = new BlocklyPythonGenerator('python');
 
-Repository.addAll(pythonGenerator as unknown as PythonGenerator);
+Repository.addAll(pythonGenerator);
 
 pythonGenerator.forBlock['hub_block'] = (block, _generator) => {
     //const nextCode = generator.blockToCode(block.getNextBlock());

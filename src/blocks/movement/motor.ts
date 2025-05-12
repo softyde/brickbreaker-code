@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Severity } from '../../expert/codeIssue';
+import i18next from '../../i18next';
+
 import { BlockDefinition } from '../repository';
 import { defaultDirections, defaultPorts } from '../types';
 
@@ -37,9 +40,24 @@ const block: BlockDefinition = {
     func: (block, generator) => {
         const motor = block.getFieldValue('VAR.MOTOR');
         const port = block.getFieldValue('motor-port');
+
         const direction = block.getFieldValue('motor-direction');
 
         const motorVar = generator.getVariableName(motor);
+
+        const codeExpert = generator.codeExpert;
+        if (!codeExpert.usePort(port)) {
+            const portName = block.getField('motor-port')?.getText();
+
+            codeExpert.add(
+                Severity.Error,
+                i18next.t('expert:error.duplicatePort', {
+                    item: motor,
+                    port: portName,
+                }),
+                block,
+            );
+        }
 
         return `${motorVar} = Motor(${port}, ${direction})`;
     },

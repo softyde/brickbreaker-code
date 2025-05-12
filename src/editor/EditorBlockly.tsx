@@ -82,7 +82,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
             startHats: true,
         });*/
 
-        Blockly.ContextMenuItems.registerCommentOptions();
+        //  Blockly.ContextMenuItems.registerCommentOptions();
         initRenderer();
 
         workspaceRef.current = Blockly.inject(blocklyEditorRef.current, {
@@ -94,7 +94,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
             sounds: true,
             collapse: false,
             disable: false,
-            comments: true,
+            comments: false,
             media: './blockly/',
             theme: isDarkMode ? Themes.darkTheme : Themes.defaultTheme,
             maxInstances: {
@@ -155,6 +155,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
             resizeBlockly();
         }, 5000);*/
 
+        console.debug('Blockly workspaceRef created ');
         notify.didCreateBlocklyEditor(workspaceRef.current);
 
         return () => {
