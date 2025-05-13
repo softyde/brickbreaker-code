@@ -2,6 +2,8 @@
 // Copyright (c) 2025 Philipp Anné
 
 import { Order } from 'blockly/python';
+import { Severity } from '../../expert/codeIssue';
+import i18next from '../../i18next';
 import { BlockDefinition } from '../repository';
 import { Direction, defaultDirections, shadowNumber } from '../types';
 
@@ -49,6 +51,19 @@ const block: BlockDefinition = {
 
         if (direction === Direction.Counterclockwise) {
             speed = `-${speed}`;
+        }
+
+        const codeExpert = generator.codeExpert;
+        const motorName = block.getField('VALUE.MOTOR')!.getText();
+
+        if (codeExpert.isHubMotor(motorName)) {
+            codeExpert.add(
+                Severity.Warning,
+                i18next.t('expert:warning.assignedHubMotor', {
+                    motor: motorName,
+                }),
+                block,
+            );
         }
 
         return `${motorVar}.run(speed=${speed})`;

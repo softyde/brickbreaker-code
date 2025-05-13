@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Philipp Anné
 
+import { Severity } from '../../expert/codeIssue';
+import i18next from '../../i18next';
 import { BlockDefinition } from '../repository';
 
 const block: BlockDefinition = {
@@ -26,6 +28,19 @@ const block: BlockDefinition = {
     func: (block, generator) => {
         const motor = block.getFieldValue('VALUE.MOTOR');
         const motorVar = generator.getVariableName(motor);
+
+        const codeExpert = generator.codeExpert;
+        const motorName = block.getField('VALUE.MOTOR')!.getText();
+
+        if (codeExpert.isHubMotor(motorName)) {
+            codeExpert.add(
+                Severity.Warning,
+                i18next.t('expert:warning.assignedHubMotor', {
+                    motor: motorName,
+                }),
+                block,
+            );
+        }
 
         return `${motorVar}.hold()`;
     },

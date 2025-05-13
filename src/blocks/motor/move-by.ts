@@ -2,6 +2,9 @@
 // Copyright (c) 2025 Philipp Anné
 
 import { Order } from 'blockly/python';
+import { Severity } from '../../expert/codeIssue';
+import i18next from '../../i18next';
+
 import { BlockDefinition } from '../repository';
 import { shadowNumber } from '../types';
 
@@ -47,6 +50,19 @@ const block: BlockDefinition = {
             .valueToCode(block, 'VAR_POSITION', Order.ATOMIC)
             .trim();
         const speed = generator.valueToCode(block, 'VAR_SPEED', Order.ATOMIC).trim();
+
+        const codeExpert = generator.codeExpert;
+        const motorName = block.getField('VALUE.MOTOR')!.getText();
+
+        if (codeExpert.isHubMotor(motorName)) {
+            codeExpert.add(
+                Severity.Warning,
+                i18next.t('expert:warning.assignedHubMotor', {
+                    motor: motorName,
+                }),
+                block,
+            );
+        }
 
         return `await ${motorVar}.run_angle(speed=${speed}, rotation_angle=${position}, then=Stop.HOLD)`;
     },

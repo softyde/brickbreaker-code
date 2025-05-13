@@ -46,6 +46,9 @@ const block: BlockDefinition = {
         const motorVar = generator.getVariableName(motor);
 
         const codeExpert = generator.codeExpert;
+
+        codeExpert.addMotor(motor, direction);
+
         if (!codeExpert.usePort(port)) {
             const portName = block.getField('motor-port')?.getText();
 

@@ -63,16 +63,80 @@ const block: BlockDefinition = {
 
         const codeExpert = generator.codeExpert;
 
-        if (motor1Var === motor2Var) {
-            const hubName = block.getField('VAR.DRIVE')?.getText();
+        const hubName = block.getField('VAR.DRIVE')?.getText();
 
+        const motor1Name = block.getField('VALUE.MOTOR.1')!.getText();
+        const motor2Name = block.getField('VALUE.MOTOR.2')!.getText();
+
+        let isOk = true;
+
+        if (motor1 === 'NONE' || motor2 === 'NONE') {
+            isOk = false;
             codeExpert.add(
                 Severity.Error,
-                i18next.t('expert:error.duplicateMotor', {
+                i18next.t('expert:error.unassignedMotor', {
                     item: hubName,
                 }),
                 block,
             );
+        } else {
+            if (motor1Var === motor2Var) {
+                isOk = false;
+                codeExpert.add(
+                    Severity.Error,
+                    i18next.t('expert:error.duplicateMotor', {
+                        item: hubName,
+                    }),
+                    block,
+                );
+            } else {
+                if (!codeExpert.isMotorDefined(motor1Name)) {
+                    isOk = false;
+                    codeExpert.add(
+                        Severity.Error,
+                        i18next.t('expert:error.wrongOrderMotor', {
+                            item: hubName,
+                            motor: motor1Name,
+                        }),
+                        block,
+                    );
+                }
+                if (!codeExpert.isMotorDefined(motor2Name)) {
+                    isOk = false;
+                    codeExpert.add(
+                        Severity.Error,
+                        i18next.t('expert:error.wrongOrderMotor', {
+                            item: hubName,
+                            motor: motor2Name,
+                        }),
+                        block,
+                    );
+                }
+
+                if (codeExpert.haveSameDirection(motor1Name, motor2Name)) {
+                    codeExpert.add(
+                        Severity.Warning,
+                        i18next.t('expert:warning.motorSameDirection', {
+                            item: hubName,
+                        }),
+                        block,
+                    );
+                }
+            }
+        }
+
+        if (diameter !== '56' && diameter !== '88') {
+            codeExpert.add(
+                Severity.Warning,
+                i18next.t('expert:warning.uncommonDiameter', {
+                    item: hubName,
+                }),
+                block,
+            );
+        }
+
+        if (isOk) {
+            codeExpert.addHubMotors([motor1Name, motor2Name]);
         }
 
         return `${hubVar} = DriveBase(${motor1Var}, ${motor2Var}, ${diameter}, ${axleTrack})

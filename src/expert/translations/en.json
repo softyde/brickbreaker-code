@@ -1,6 +1,13 @@
 {
     "error": {
         "duplicatePort": "{{item}} verwendet den bereits belegten Anschluss {{port}}.",
-        "duplicateMotor": "{{item}} verwendet zweimal den selben Motor."
+        "duplicateMotor": "{{item}} verwendet zweimal den selben Motor.",
+        "unassignedMotor": "Bei {{item}} wurden nicht alle Motoren zugewiesen.",
+        "wrongOrderMotor": "{{motor}} muss vor {{item}} stehen."
+    },
+    "warning": {
+        "uncommonDiameter": "{{item}} verwendet eine ungewöhnliche Radgröße (⌀ sollte 56mm oder 88mm sein).",
+        "motorSameDirection": "Beide Motoren von {{item}} drehen sich in die selbe Richtung.",
+        "assignedHubMotor": "{{motor}} wird auch in einem Fahrwerk verwendet."
     }
 }

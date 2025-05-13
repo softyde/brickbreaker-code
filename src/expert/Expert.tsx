@@ -11,8 +11,11 @@ import {
 } from '../editor/blockly/actions';
 import { useSelector } from '../reducers';
 
+import { Severity } from './codeIssue';
 import iconError from './expert-error.svg';
 import iconOk from './expert-ok.svg';
+import iconWarning from './expert-warning.svg';
+import iconArrow from './icon-arrow.svg';
 
 interface ExpertProps {
     containerRef: React.RefObject<HTMLDivElement>;
@@ -24,10 +27,17 @@ const Expert: React.FC<ExpertProps> = ({ containerRef }) => {
     const isDragging = useRef(false);
     const offset = useRef({ x: 0, y: 0 });
 
+    const [collapsed, setCollapsed] = useState(false);
+
     const dispatch = useDispatch();
 
     const { foundIssues, isExpertVisibe } = useSelector((s) => s.expert);
     const hasIssues = useSelector((s) => s.expert.foundIssues.length > 0);
+    const hasErrors = useSelector(
+        (s) =>
+            s.expert.foundIssues.filter((i) => i.severity === Severity.Error).length >
+            0,
+    );
 
     const clamp = (val: number, min: number, max: number) =>
         Math.max(min, Math.min(val, max));
@@ -72,9 +82,15 @@ const Expert: React.FC<ExpertProps> = ({ containerRef }) => {
         <div
             id="expert-dialog"
             className={
-                (hasIssues ? 'issue-error' : 'issue-ok') +
+                (hasIssues
+                    ? hasErrors
+                        ? 'issue-error'
+                        : 'issue-warning'
+                    : 'issue-ok') +
                 ' ' +
-                (isExpertVisibe ? 'expert-shown' : 'expert-hidden')
+                (isExpertVisibe ? 'expert-shown' : 'expert-hidden') +
+                ' ' +
+                (collapsed ? 'expert-collapsed' : '')
             }
             ref={boxRef}
             onMouseDown={onMouseDown}
@@ -83,14 +99,26 @@ const Expert: React.FC<ExpertProps> = ({ containerRef }) => {
                 left: position.x,
             }}
         >
+            <div
+                id="expert-collapse-button"
+                onClick={() => {
+                    setCollapsed(!collapsed);
+                }}
+            >
+                <img
+                    aria-hidden={true}
+                    width={`20px`}
+                    height={`20px`}
+                    src={iconArrow}
+                />
+            </div>
             <img
                 aria-hidden={true}
-                width={`120px`}
-                height={`120px`}
-                src={hasIssues ? iconError : iconOk}
+                width={collapsed ? '80px' : '120px'}
+                src={hasIssues ? (hasErrors ? iconError : iconWarning) : iconOk}
             />
             {hasIssues ? (
-                <div>
+                <div className="issue-container">
                     {foundIssues.map((issue, index) => (
                         // eslint-disable-next-line react/jsx-key
                         <div

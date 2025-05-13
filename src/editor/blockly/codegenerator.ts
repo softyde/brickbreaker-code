@@ -5,7 +5,7 @@ import { isProcedureBlock } from '@blockly/block-shareable-procedures';
 import * as Blockly from 'blockly';
 import { Order, PythonGenerator } from 'blockly/python';
 import Repository from '../../blocks/repository';
-import { Port } from '../../blocks/types';
+import { Direction, Port } from '../../blocks/types';
 import { CodeIssue, Severity } from '../../expert/codeIssue';
 import { VAR_HUB_FRONT_AXIS, VAR_HUB_TOP_AXIS } from './blocks';
 //import { VAR_HUB_NAME } from './blocks';
@@ -16,6 +16,9 @@ export class CodeExpert {
     _codeIssues: CodeIssue[] = [];
 
     _usedPorts: Port[] = [];
+    _motors: { name: string; direction: Direction }[] = [];
+
+    _hubMotors: string[] = [];
 
     usePort(port: Port): boolean {
         if (this._usedPorts.indexOf(port) >= 0) {
@@ -24,6 +27,33 @@ export class CodeExpert {
 
         this._usedPorts.push(port);
         return true;
+    }
+
+    addHubMotors(motors: string[]) {
+        this._hubMotors.push(...motors);
+    }
+
+    isHubMotor(motor: string): boolean {
+        return this._hubMotors.indexOf(motor) >= 0;
+    }
+
+    addMotor(name: string, direction: Direction) {
+        this._motors.push({ name, direction });
+    }
+
+    isMotorDefined(motor: string): boolean {
+        return this._motors.find((m) => m.name === motor) !== undefined;
+    }
+
+    haveSameDirection(motor1: string, motor2: string): boolean {
+        const m1 = this._motors.find((m) => m.name === motor1);
+        const m2 = this._motors.find((m) => m.name === motor2);
+
+        if (m1 === undefined || m2 === undefined) {
+            return false;
+        }
+
+        return m1.direction === m2.direction;
     }
 
     add(severity: Severity, label: string, block: Blockly.Block) {
