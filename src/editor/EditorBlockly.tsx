@@ -17,13 +17,19 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useEffectOnce, useTernaryDarkMode } from 'usehooks-ts';
 import Repository from '../blocks/repository';
-import { editorToggleSource } from './actions';
+import { useSelector } from '../reducers';
+import { editorHighlightBlockCode, editorToggleSource } from './actions';
+import {
+    blocklyDidChangeModel,
+    blocklyDidChangeVar,
+    blocklyDidCreate,
+    blocklyDidCreateBlock,
+    blocklyDidDeleteBlock,
+} from './blockly/actions';
 import defaultBlocks from './blockly/blocks';
 import { RendererName, initRenderer } from './blockly/custom_renderer';
 import * as blocklyShadow from './blockly/extension_shadow';
 import { registerExtensions } from './blockly/extensions';
-
-import * as notify from './blockly/lib';
 
 import { ShowSourceControl } from './blockly/show-source-control';
 import * as Themes from './blockly/themes';
@@ -38,10 +44,132 @@ const BlocklyEditor: React.FunctionComponent = () => {
     const workspaceRef = useRef<Blockly.WorkspaceSvg | null>(null);
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
+    const { highlightedBlock, sourceCode } = useSelector((s) => s.blockly);
+
     //const { toggleIsSettingShowSourceEnabled } = useSettingIsShowSourceEnabled();
 
     const { isDarkMode } = useTernaryDarkMode();
     const dispatch = useDispatch();
+
+    function onWorkspaceChange(event: Blockly.Events.Abstract) {
+        const workspace = workspaceRef.current;
+        if (!workspace) {
+            console.warn('WokspaceRef not set');
+            return;
+        }
+
+        if (event.isUiEvent) {
+            if (event.type === Blockly.Events.SELECTED) {
+                const selected = event as Blockly.Events.Selected;
+
+                let styleName: string | undefined;
+
+                if (selected.newElementId) {
+                    const block = workspace.getBlockById(selected.newElementId);
+
+                    styleName = block?.getStyleName();
+                }
+
+                dispatch(editorHighlightBlockCode(selected.newElementId, styleName));
+            }
+        }
+
+        if (event.type === Blockly.Events.BLOCK_DELETE) {
+            console.log('*** DELETED');
+
+            const deleted = event as Blockly.Events.BlockDelete;
+
+            if (!deleted.ids) {
+                throw 'empty id list';
+            }
+
+            for (let i = 0; i < deleted.ids.length; i++) {
+                dispatch(blocklyDidDeleteBlock(deleted.ids[i]));
+            }
+        }
+
+        if (event.type === Blockly.Events.BLOCK_CREATE) {
+            console.log('*** CREATED');
+
+            const created = event as Blockly.Events.BlockCreate;
+
+            if (!created.ids) {
+                throw 'empty id list';
+            }
+
+            for (let i = 0; i < created.ids.length; i++) {
+                dispatch(blocklyDidCreateBlock(created.ids[i]));
+            }
+        }
+
+        if (event.type === Blockly.Events.BLOCK_CHANGE) {
+            console.log('*** CHANGED');
+
+            const changed = event as Blockly.Events.BlockChange;
+
+            if (changed.element === 'field' && changed.name?.startsWith('VAR.')) {
+                console.log(changed);
+                dispatch(
+                    blocklyDidChangeVar(
+                        changed.blockId!,
+                        changed.name,
+                        changed.oldValue as string,
+                        changed.newValue as string,
+                    ),
+                );
+            }
+
+            console.log(changed);
+        }
+
+        dispatch(editorHighlightBlockCode());
+
+        if (!event.isUiEvent) {
+            const state = Blockly.serialization.workspaces.save(workspace);
+
+            const value = JSON.stringify(state);
+
+            dispatch(blocklyDidChangeModel(value));
+        }
+    }
+
+    useEffect(() => {
+        if (!workspaceRef.current) {
+            return;
+        }
+
+        if (highlightedBlock !== null) {
+            const block = workspaceRef.current.getBlockById(highlightedBlock);
+
+            if (block) {
+                const svgWorkspace = workspaceRef.current as Blockly.WorkspaceSvg;
+                svgWorkspace.highlightBlock(block.id);
+            }
+        } else {
+            const block = workspaceRef.current.getAllBlocks();
+
+            if (block.length > 0) {
+                const svgWorkspace = workspaceRef.current as Blockly.WorkspaceSvg;
+
+                svgWorkspace.highlightBlock(block[0].id);
+                svgWorkspace.highlightBlock(block[0].id, false);
+            }
+        }
+    }, [highlightedBlock]);
+
+    useEffect(() => {
+        if (!workspaceRef.current) {
+            return;
+        }
+
+        console.debug('Load blockly source code');
+
+        const data = sourceCode !== null ? JSON.parse(sourceCode) : {};
+
+        Blockly.serialization.workspaces.load(data, workspaceRef.current, {
+            recordUndo: false,
+        });
+    }, [sourceCode]);
 
     useEffectOnce(() => {
         // istanbul ignore if: should never happen
@@ -155,11 +283,16 @@ const BlocklyEditor: React.FunctionComponent = () => {
             resizeBlockly();
         }, 5000);*/
 
-        console.debug('Blockly workspaceRef created ');
-        notify.didCreateBlocklyEditor(workspaceRef.current);
+        console.debug('Blockly workspaceRef created');
+
+        console.debug('Adding workspace change listener');
+        workspaceRef.current.addChangeListener(onWorkspaceChange);
+
+        dispatch(blocklyDidCreate(workspaceRef.current));
 
         return () => {
-            //setEditor(undefined);
+            console.debug('Removing workspace change listener');
+            workspaceRef.current?.removeChangeListener(onWorkspaceChange);
         };
     });
 

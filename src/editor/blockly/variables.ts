@@ -19,7 +19,7 @@ function getVariableType(name: string) {
 }
 
 function asd(this: Blockly.Block) {
-    console.log(this.inputList);
+    //console.log(this.inputList);
 
     this.inputList
         .filter(

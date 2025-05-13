@@ -5,6 +5,7 @@ import { TypedUseSelectorHook, useSelector as useReduxSelector } from 'react-red
 import { Reducer, combineReducers } from 'redux';
 import app from './app/reducers';
 import ble from './ble/reducers';
+import blockly from './editor/blockly/reducers';
 import editor from './editor/reducers';
 import expert from './expert/reducers';
 import explorer from './explorer/reducers';
@@ -30,6 +31,7 @@ export const rootReducer = combineReducers({
     hub,
     tour,
     sponsor,
+    blockly,
 });
 
 /**
