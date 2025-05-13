@@ -14,7 +14,7 @@ import {
     take,
     takeEvery,
 } from 'typed-redux-saga/macro';
-import { addIssue, clearAllIssues } from '../../expert/actions';
+import { addIssue, clearAllIssues, showExpert } from '../../expert/actions';
 import { UUID } from '../../fileStorage';
 import {
     fileStorageDidFailToLoadBlockly,
@@ -30,6 +30,7 @@ import { RootState } from '../../reducers';
 import { defined, ensureError } from '../../utils';
 import {
     editorActivateFile,
+    editorCloseFile,
     editorDidFailToOpenFile,
     editorReplaceFile,
     editorReplaceSourceMap,
@@ -272,60 +273,57 @@ function* handleEditorActivateFile(
 
         console.debug('blockly activate file', action.uuid);
 
-        const defer: Array<() => void | Promise<void>> = [];
+        yield* put(fileStorageLoadBlockly(action.uuid));
 
-        try {
-            yield* put(fileStorageLoadBlockly(action.uuid));
+        const { didLoad, didFailToLoad } = yield* race({
+            didLoad: take(
+                fileStorageDidLoadBlockly.when((a) => a.uuid === action.uuid),
+            ),
+            didFailToLoad: take(
+                fileStorageDidFailToLoadBlockly.when((a) => a.uuid === action.uuid),
+            ),
+        });
 
-            const { didLoad, didFailToLoad } = yield* race({
-                didLoad: take(
-                    fileStorageDidLoadBlockly.when((a) => a.uuid === action.uuid),
-                ),
-                didFailToLoad: take(
-                    fileStorageDidFailToLoadBlockly.when((a) => a.uuid === action.uuid),
-                ),
-            });
-
-            if (didFailToLoad) {
-                throw didFailToLoad.error;
-            }
-
-            defined(didLoad);
-
-            let lis: Task | undefined;
-
-            if (didLoad.data === null) {
-                console.warn('Loaded blockly data is not set');
-            }
-
-            yield* put(blocklyDidLoadSource(didLoad.data));
-
-            if (didLoad.data !== null) {
-                lis = yield* takeEvery(
-                    blocklyDidChangeModel,
-                    handleBlocklyDidChangeModel,
-                    action.uuid,
-                );
-            }
-
-            console.log('listening for ', action.uuid);
-
-            yield* take(editorActivateFile.when((a) => a.uuid !== action.uuid));
-
-            console.log('stop listening for ', action.uuid, lis);
-            if (lis) {
-                console.debug('stopping model change listener');
-                yield cancel(lis);
-            } else {
-                console.debug('no model change listener to stop');
-            }
-
-            console.log('stopped');
-        } finally {
-            for (const callback of defer.reverse()) {
-                callback();
-            }
+        if (didFailToLoad) {
+            throw didFailToLoad.error;
         }
+
+        defined(didLoad);
+
+        let lis: Task | undefined;
+
+        if (didLoad.data === null) {
+            console.debug('Loaded blockly data is not set');
+            yield* put(showExpert(false));
+
+            return;
+        }
+
+        yield* put(showExpert(true));
+
+        yield* put(blocklyDidLoadSource(didLoad.data));
+
+        if (didLoad.data !== null) {
+            lis = yield* takeEvery(
+                blocklyDidChangeModel,
+                handleBlocklyDidChangeModel,
+                action.uuid,
+            );
+        }
+
+        console.log('listening for ', action.uuid);
+
+        yield* take(editorActivateFile.when((a) => a.uuid !== action.uuid));
+
+        console.log('stop listening for ', action.uuid, lis);
+        if (lis) {
+            console.debug('stopping model change listener');
+            yield cancel(lis);
+        } else {
+            console.debug('no model change listener to stop');
+        }
+
+        console.log('stopped');
     } catch (err) {
         // FIXME das ist der falsche Typ!!!
         yield* put(editorDidFailToOpenFile(action.uuid, ensureError(err)));
@@ -401,7 +399,7 @@ function handleBlocklyDidCreateBlock(
         c.classList.add('blockly-shadow-20');
     }
 
-    console.debug(`created ${action.blockId} = ${block.type}, ${block.isShadow()}`);
+    //   console.debug(`created ${action.blockId} = ${block.type}, ${block.isShadow()}`);
 
     block.inputList
         //    .filter((i) => i.type === Blockly.inputs.inputTypes.DUMMY)
@@ -455,7 +453,7 @@ function handleBlocklyDidDeleteBlock(
 
     variables.forEach((variable) => {
         const id = variable.getId();
-        console.log(`${id} = ${variable.name} / ${variable.type}`);
+        //console.log(`${id} = ${variable.name} / ${variable.type}`);
 
         if (id.startsWith('VAR.') && id.endsWith(`.${action.blockId}`)) {
             console.log(`delete var ${id}`);
@@ -613,6 +611,10 @@ function* handleDidCreateBlockly(
     }
 }
 
+function* handleCloseFile(_action: ReturnType<typeof editorCloseFile>): Generator {
+    yield* put(showExpert(false));
+}
+
 function* monitorBlockly(): Generator {
     // const ch = eventChannel<Blockly.Workspace>((emit) => {
     //     const subscription = notify.onDidCreateBlocklyEditor(emit);
@@ -620,6 +622,7 @@ function* monitorBlockly(): Generator {
     // });
 
     yield* takeEvery(blocklyDidCreate, handleDidCreateBlockly);
+    yield* takeEvery(editorCloseFile, handleCloseFile);
 
     yield* take('__never__');
 

@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Philipp Anné
 
 import { Reducer, combineReducers } from 'redux';
-import { addIssue, clearAllIssues } from './actions';
+import { addIssue, clearAllIssues, showExpert } from './actions';
 import { CodeIssue } from './codeIssue';
 
 export interface IIssue {
@@ -12,11 +12,6 @@ export interface IIssue {
 
 /** Indicated that the code editor is shown for blockly sources. */
 const foundIssues: Reducer<readonly CodeIssue[]> = (state = [], action) => {
-    /*if (editorToggleSource.matches(action)) {
-        console.log('triggered by editorToggleSource');
-        return !state;
-    }*/
-
     if (clearAllIssues.matches(action)) {
         return [];
     }
@@ -31,6 +26,16 @@ const foundIssues: Reducer<readonly CodeIssue[]> = (state = [], action) => {
     return state;
 };
 
+/** Indicated that the code editor is shown for blockly sources. */
+const isExpertVisibe: Reducer<boolean> = (state = false, action) => {
+    if (showExpert.matches(action)) {
+        return action.visible;
+    }
+
+    return state;
+};
+
 export default combineReducers({
     foundIssues,
+    isExpertVisibe,
 });

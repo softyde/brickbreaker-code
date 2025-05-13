@@ -2,6 +2,10 @@
 // Copyright (c) 2025 Philipp Anné
 
 #expert-dialog {
+    &:not(.expert-shown) {
+        display: none;
+    }
+
     position: absolute;
 
     display: flex;
@@ -12,7 +16,7 @@
 
     max-width: 400px;
 
-    background-color: rgba(230, 231, 233, 1);
+    background-color: rgba(230, 231, 233, 0.9);
     color: white;
     padding: 10px;
     cursor: move;

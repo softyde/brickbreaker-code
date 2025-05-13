@@ -9,6 +9,11 @@ export const clearAllIssues = createAction(() => ({
     type: 'expert.action.clearAllIssues',
 }));
 
+export const showExpert = createAction((visible: boolean) => ({
+    type: 'expert.action.showExpert',
+    visible,
+}));
+
 /** Action that indicates that a code editor was created. */
 export const addIssue = createAction(
     (severity: Severity, label: string, blockId: string) => ({

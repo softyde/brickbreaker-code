@@ -26,7 +26,7 @@ const Expert: React.FC<ExpertProps> = ({ containerRef }) => {
 
     const dispatch = useDispatch();
 
-    const foundIssues = useSelector((s) => s.expert.foundIssues);
+    const { foundIssues, isExpertVisibe } = useSelector((s) => s.expert);
     const hasIssues = useSelector((s) => s.expert.foundIssues.length > 0);
 
     const clamp = (val: number, min: number, max: number) =>
@@ -71,7 +71,11 @@ const Expert: React.FC<ExpertProps> = ({ containerRef }) => {
     return (
         <div
             id="expert-dialog"
-            className={hasIssues ? 'issue-error' : 'issue-ok'}
+            className={
+                (hasIssues ? 'issue-error' : 'issue-ok') +
+                ' ' +
+                (isExpertVisibe ? 'expert-shown' : 'expert-hidden')
+            }
             ref={boxRef}
             onMouseDown={onMouseDown}
             style={{
