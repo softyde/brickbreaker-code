@@ -3,7 +3,7 @@
 
 import './editorBlockly.scss';
 
-import * as BlocklyProcedures from '@blockly/block-shareable-procedures';
+//import * as BlocklyProcedures from '@blockly/block-shareable-procedures';
 import { registerFieldMultilineInput } from '@blockly/field-multilineinput';
 import { PositionedMinimap } from '@blockly/workspace-minimap';
 import { ZoomToFitControl } from '@blockly/zoom-to-fit';
@@ -23,8 +23,6 @@ import {
     blocklyDidChangeModel,
     blocklyDidChangeVar,
     blocklyDidCreate,
-    blocklyDidCreateBlock,
-    blocklyDidDeleteBlock,
 } from './blockly/actions';
 import defaultBlocks from './blockly/blocks';
 import { RendererName, initRenderer } from './blockly/custom_renderer';
@@ -35,8 +33,50 @@ import { ShowSourceControl } from './blockly/show-source-control';
 import * as Themes from './blockly/themes';
 import { Toolbox } from './blockly/toolbox';
 import * as BlocklyVars from './blockly/variables';
+import { VAR_ENTRY_NONE } from './blockly/variables';
 
 Blockly.setLocale(De as unknown as { [key: string]: string });
+
+function handleBlockDelete(blockId: string) {
+    const deletedVarIds: string[] = [];
+
+    const workspace = Blockly.getMainWorkspace();
+
+    const variables = workspace.getAllVariables();
+
+    variables.forEach((variable) => {
+        const id = variable.getId();
+        //console.log(`${id} = ${variable.name} / ${variable.type}`);
+
+        if (id.startsWith('VAR.') && id.endsWith(`.${blockId}`)) {
+            console.log(`delete var ${id}`);
+            deletedVarIds.push(id);
+            workspace.deleteVariableById(id);
+        }
+    });
+
+    workspace.getAllBlocks().forEach((block) => {
+        block.inputList
+            .filter(
+                (input) =>
+                    input.type === Blockly.inputs.inputTypes.DUMMY &&
+                    input.name.startsWith('LIST.'),
+            )
+            .forEach((input) => {
+                const field = input.fieldRow.find(
+                    (f) => f.name?.startsWith('VALUE.'),
+                )! as Blockly.FieldDropdown;
+
+                const value = field.getValue();
+                if (value) {
+                    if (deletedVarIds.indexOf(value) >= 0) {
+                        const firstOptions = field.getOptions(false)[0];
+                        field.setValue(firstOptions[1]);
+                    }
+                }
+            });
+    });
+}
 
 const BlocklyEditor: React.FunctionComponent = () => {
     const blocklyEditorRef = useRef<HTMLDivElement>(null);
@@ -50,6 +90,147 @@ const BlocklyEditor: React.FunctionComponent = () => {
 
     const { isDarkMode } = useTernaryDarkMode();
     const dispatch = useDispatch();
+
+    const findVariableName = (
+        workspace: Blockly.Workspace,
+        variableName: string,
+        varId: string,
+        type: string,
+    ): string => {
+        for (;;) {
+            const variable = workspace.getVariable(variableName, type);
+
+            if (!variable || variable.getId() === varId) {
+                return variableName;
+            }
+
+            const index = variableName.search(/(\d)+$/);
+            if (index < 0) {
+                variableName += ' 1';
+            } else {
+                let num = parseInt(variableName.substring(index), 10);
+
+                num += 1;
+
+                variableName = variableName.substring(0, index) + num;
+            }
+        }
+    };
+    function getVariableType(name: string) {
+        if (name.startsWith('VAR.')) {
+            name = name.substring(4);
+        }
+
+        const index = name.lastIndexOf('.');
+        if (index >= 0) {
+            name = name.substring(0, index);
+        }
+
+        return name;
+    }
+
+    function createVariable(
+        workspace: Blockly.Workspace,
+        varType: string,
+        varId: string,
+        value: string,
+    ) {
+        console.debug(`>>> create variable ${value} == ${varId}, type=${varType}`);
+
+        const existingVar = workspace.getVariableById(varId);
+        if (!existingVar) {
+            workspace.createVariable(value, varType, varId);
+        }
+    }
+
+    function onCreateBlock(blockId: string) {
+        if (!workspaceRef.current) {
+            return;
+        }
+        const workspace = Blockly.getMainWorkspace(); //workspaceRef.current;
+
+        const block = workspace.getBlockById(blockId);
+        if (!block) {
+            throw `block with id ${blockId} not found`;
+        }
+
+        console.log(`Create ${block.type}:${blockId}`);
+
+        if (block.type.startsWith('shadow_')) {
+            const b = block as Blockly.BlockSvg;
+            const c = b.getSvgRoot();
+
+            c.classList.add('blockly-shadow-20');
+        }
+
+        //   console.debug(`created ${action.blockId} = ${block.type}, ${block.isShadow()}`);
+
+        block.inputList
+            //    .filter((i) => i.type === Blockly.inputs.inputTypes.DUMMY)
+            .forEach((i) => {
+                i.fieldRow
+                    .filter((b) => b.name && b.name.startsWith('VAR.'))
+                    .forEach((input) => {
+                        const varType = getVariableType(input.name!);
+                        let value = block.getFieldValue(input.name!);
+                        const id = `${input.name}.${block.id}`;
+
+                        const newValue = findVariableName(
+                            workspace,
+                            value,
+                            id,
+                            varType,
+                        );
+
+                        if (newValue !== value) {
+                            value = newValue;
+                            input.setValue(value, false);
+                        }
+
+                        createVariable(workspace, varType, id, value);
+
+                        console.log(`created variable ${varType}:${id}:${value}`);
+
+                        workspace.getAllBlocks().forEach((block) => {
+                            block.inputList
+                                .filter(
+                                    (input) =>
+                                        input.type ===
+                                            Blockly.inputs.inputTypes.DUMMY &&
+                                        input.name.startsWith('LIST.'),
+                                )
+                                .forEach((input) => {
+                                    const field = input.fieldRow.find(
+                                        (f) => f.name?.startsWith('VALUE.'),
+                                    )! as Blockly.FieldDropdown;
+
+                                    const blockValue = field.getValue();
+
+                                    console.log(
+                                        `${block.type}:${block.id} = ${blockValue}`,
+                                    );
+                                    if (id === blockValue) {
+                                        const firstOptions = field.getOptions(false)[0];
+                                        field.setValue(firstOptions[1]);
+                                        console.log(
+                                            `re-setting value (${firstOptions}, ${id})`,
+                                        );
+
+                                        field.setValue(id);
+                                        // field.forceRerender();
+                                        // (block as Blockly.BlockSvg).render();
+                                    }
+
+                                    if (!blockValue || blockValue === VAR_ENTRY_NONE) {
+                                        console.log('VARIABLE ANPASSEN');
+                                        const firstOptions = field.getOptions(false)[0];
+                                        field.setValue(firstOptions[1]);
+                                    }
+                                });
+                        });
+                    });
+            });
+    }
 
     function onWorkspaceChange(event: Blockly.Events.Abstract) {
         const workspace = workspaceRef.current;
@@ -75,7 +256,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
         }
 
         if (event.type === Blockly.Events.BLOCK_DELETE) {
-            console.log('*** DELETED');
+            //  console.log('*** DELETED');
 
             const deleted = event as Blockly.Events.BlockDelete;
 
@@ -84,12 +265,14 @@ const BlocklyEditor: React.FunctionComponent = () => {
             }
 
             for (let i = 0; i < deleted.ids.length; i++) {
-                dispatch(blocklyDidDeleteBlock(deleted.ids[i]));
+                //dispatch(blocklyDidDeleteBlock(deleted.ids[i]));
+
+                handleBlockDelete(deleted.ids[i]);
             }
         }
 
         if (event.type === Blockly.Events.BLOCK_CREATE) {
-            console.log('*** CREATED');
+            // console.log('*** CREATED');
 
             const created = event as Blockly.Events.BlockCreate;
 
@@ -98,17 +281,18 @@ const BlocklyEditor: React.FunctionComponent = () => {
             }
 
             for (let i = 0; i < created.ids.length; i++) {
-                dispatch(blocklyDidCreateBlock(created.ids[i]));
+                onCreateBlock(created.ids[i]);
+                //dispatch(blocklyDidCreateBlock(created.ids[i]));
             }
         }
 
         if (event.type === Blockly.Events.BLOCK_CHANGE) {
-            console.log('*** CHANGED');
+            //console.log('*** CHANGED');
 
             const changed = event as Blockly.Events.BlockChange;
 
             if (changed.element === 'field' && changed.name?.startsWith('VAR.')) {
-                console.log(changed);
+                //  console.log(changed);
                 dispatch(
                     blocklyDidChangeVar(
                         changed.blockId!,
@@ -166,6 +350,10 @@ const BlocklyEditor: React.FunctionComponent = () => {
 
         const data = sourceCode !== null ? JSON.parse(sourceCode) : {};
 
+        Blockly.Events.disable();
+        Blockly.getMainWorkspace().clear();
+        Blockly.Events.enable();
+
         Blockly.serialization.workspaces.load(data, workspaceRef.current, {
             recordUndo: false,
         });
@@ -179,9 +367,9 @@ const BlocklyEditor: React.FunctionComponent = () => {
         }
 
         // registerFirstContextMenuOptions();
-        BlocklyProcedures.unregisterProcedureBlocks();
-        Blockly.common.defineBlocks(BlocklyProcedures.blocks);
-        BlocklyProcedures.registerProcedureSerializer();
+        //BlocklyProcedures.unregisterProcedureBlocks();
+        //Blockly.common.defineBlocks(BlocklyProcedures.blocks);
+        //BlocklyProcedures.registerProcedureSerializer();
 
         BlocklyVars.initCustomVariableHandling();
 

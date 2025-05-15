@@ -141,7 +141,8 @@ const block: BlockDefinition = {
 
         return `${hubVar} = DriveBase(${motor1Var}, ${motor2Var}, ${diameter}, ${axleTrack})
 ${hubVar}.use_gyro(True)
-${hubVar}.settings(straight_speed=200, straight_acceleration=100, turn_rate=30, turn_acceleration=100)
+${hubVar}.settings(straight_speed=400, straight_acceleration=200, turn_rate=50, turn_acceleration=200)
+${hubVar}.reset()
 `;
     },
 };

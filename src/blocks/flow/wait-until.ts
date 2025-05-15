@@ -28,7 +28,7 @@ const block: BlockDefinition = {
             .trim();
 
         return `while not (${condition}):
-  wait(5)`;
+  await wait(5)`;
     },
 };
 

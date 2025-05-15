@@ -2,8 +2,10 @@
 // Copyright (c) 2025 Philipp Anné
 
 import { Order } from 'blockly/python';
+import { Severity } from '../../expert/codeIssue';
+import i18next from '../../i18next';
 import { BlockDefinition } from '../repository';
-import { shadowNumber, straightDirections } from '../types';
+import { StraightDirection, shadowNumber, straightDirections } from '../types';
 
 const block: BlockDefinition = {
     def: {
@@ -11,7 +13,7 @@ const block: BlockDefinition = {
         message0: 'contest.move-and-lift.message',
         previousStatement: 'default',
         nextStatement: 'default',
-        style: 'motor_category',
+        style: 'movement_category$light',
         extensions: ['dynamic_var_list', 'add_shadow_fields'],
         inputsInline: true,
 
@@ -33,24 +35,66 @@ const block: BlockDefinition = {
                 name: 'VAR_DIRECTION',
                 options: straightDirections(),
             },
-            {
-                type: 'input_value',
-                name: 'VAR_SPEED',
-                check: ['Number', 'Speed', shadowNumber('speed', 100, 1, 500, 1)],
-            },
         ],
         message1: 'contest.move-and-lift.message1',
+        message2: 'contest.move-and-lift.message2',
+        args2: [
+            {
+                type: 'input_dummy',
+                name: 'LIST.MOTOR',
+            },
+            {
+                type: 'input_value',
+                name: 'VAR_POSITION',
+                check: ['Number', shadowNumber('degree', 0, -1000, 1000, 1)],
+            },
+            {
+                type: 'input_value',
+                name: 'VAR_MOTOR_SPEED',
+                check: [
+                    'Number',
+                    'Speed',
+                    shadowNumber('rotation-speed', 100, 1, 500, 1),
+                ],
+            },
+        ],
     },
     func: (block, generator) => {
+        const drive = block.getFieldValue('VALUE.DRIVE');
+        const driveVar = generator.getVariableName(drive);
+
+        let distance =
+            generator.valueToCode(block, 'VAR_DISTANCE', Order.ATOMIC).trim() + ' * 10';
+        const direction = block.getFieldValue('VAR_DIRECTION');
+
+        if (direction === StraightDirection.Backward) {
+            distance = `-${distance}`;
+        }
+
         const motor = block.getFieldValue('VALUE.MOTOR');
         const motorVar = generator.getVariableName(motor);
 
         const position = generator
             .valueToCode(block, 'VAR_POSITION', Order.ATOMIC)
             .trim();
-        const speed = generator.valueToCode(block, 'VAR_SPEED', Order.ATOMIC).trim();
+        const motorSpeed = generator
+            .valueToCode(block, 'VAR_MOTOR_SPEED', Order.ATOMIC)
+            .trim();
 
-        return `await ${motorVar}.run_target(speed=${speed}, target_angle=${position}, then=Stop.HOLD)`;
+        const motorName = block.getField('VALUE.MOTOR')!.getText();
+        const codeExpert = generator.codeExpert;
+
+        if (codeExpert.isHubMotor(motorName)) {
+            codeExpert.add(
+                Severity.Warning,
+                i18next.t('expert:warning.assignedHubMotor', {
+                    motor: motorName,
+                }),
+                block,
+            );
+        }
+
+        return `await multitask(${driveVar}.straight(${distance}, then=Stop.HOLD), ${motorVar}.run_target(speed=${motorSpeed}, target_angle=${position}, then=Stop.HOLD))`;
     },
 };
 

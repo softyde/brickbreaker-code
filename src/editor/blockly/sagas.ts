@@ -139,9 +139,11 @@ function* handleBlocklyDidChangeModel(
     uuid: UUID,
     action: ReturnType<typeof blocklyDidChangeModel>,
 ): Generator {
-    console.debug('handleBlocklyDidChangeModel');
+    //   console.debug('handleBlocklyDidChangeModel');
 
     const data = action.value;
+
+    //console.debug(data);
 
     // when the model changes, save it to storage.
     yield* put(fileStorageStoreBlocklyValue(uuid, data));
@@ -159,7 +161,7 @@ function wrapInMainFunction(code: string): string {
         .map((line) => '  ' + line)
         .join('\n');
 
-    return `async def main()\n${indentedCode}\n\nrun_task(main())`;
+    return `async def main():\n${indentedCode}\n\nrun_task(main())`;
 }
 
 function* handleBlocklyGenerateSource(
@@ -204,7 +206,7 @@ function* handleBlocklyGenerateSource(
 from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
 from pybricks.parameters import Button, Color, Direction, Port, Side, Stop, Axis
 from pybricks.robotics import DriveBase
-from pybricks.tools import wait, StopWatch
+from pybricks.tools import wait, StopWatch, multitask, run_task
 
 ${source}`;
         }
@@ -420,6 +422,22 @@ function handleBlocklyDidCreateBlock(
 
                     createVariable(workspace, varType, id, value);
 
+                    console.log(`created variable ${varType}:${id}:${value}`);
+
+                    const variables = workspace.getVariablesOfType(varType);
+
+                    const x = workspace.getAllVariables();
+                    console.log(
+                        `called for variable ${varType} ${variables
+                            .map((v) => v.getId())
+                            .join(',')}`,
+                    );
+                    console.log(
+                        `called for all variable ${varType} ${x
+                            .map((v) => v.getId())
+                            .join(',')}`,
+                    );
+
                     workspace.getAllBlocks().forEach((block) => {
                         block.inputList
                             .filter(
@@ -434,6 +452,7 @@ function handleBlocklyDidCreateBlock(
 
                                 const value = field.getValue();
                                 if (!value || value === VAR_ENTRY_NONE) {
+                                    console.log('VARIABLE ANPASSEN');
                                     const firstOptions = field.getOptions(false)[0];
                                     field.setValue(firstOptions[1]);
                                 }
@@ -445,7 +464,7 @@ function handleBlocklyDidCreateBlock(
 
 function handleBlocklyDidDeleteBlock(
     workspace: Blockly.Workspace,
-    action: ReturnType<typeof blocklyDidCreateBlock>,
+    action: ReturnType<typeof blocklyDidDeleteBlock>,
 ) {
     const deletedVarIds: string[] = [];
 

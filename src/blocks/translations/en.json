@@ -151,8 +151,9 @@
     },
     "contest": {
         "move-and-lift": {
-            "message": "%1 %2 fährt %3 %4 mit %5",
-            "message1": "und\n"
+            "message": "%1 %2 fährt %3 %4\n",
+            "message1": "und gleichzeitig\n",
+            "message2": "%1 bewege zu Position %2 mit %3"
         },
         "comment": {
             "message": "%1 %2"

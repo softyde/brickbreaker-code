@@ -24,7 +24,7 @@ const block: BlockDefinition = {
         const sensor = block.getFieldValue('VALUE.DISTANCESENSOR');
         const sensorVar = generator.getVariableName(sensor);
 
-        return [`(${sensorVar}.distance() / 10)`, Order.ATOMIC];
+        return [`(await ${sensorVar}.distance() / 10)`, Order.ATOMIC];
     },
 };
 

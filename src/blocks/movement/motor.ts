@@ -62,7 +62,9 @@ const block: BlockDefinition = {
             );
         }
 
-        return `${motorVar} = Motor(${port}, ${direction})`;
+        return `${motorVar} = Motor(${port}, ${direction})
+${motorVar}.reset_angle(0)        
+`;
     },
 };
 

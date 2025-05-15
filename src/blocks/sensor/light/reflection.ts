@@ -24,7 +24,7 @@ const block: BlockDefinition = {
         const sensor = block.getFieldValue('VALUE.LIGHTSENSOR');
         const sensorVar = generator.getVariableName(sensor);
 
-        return [`${sensorVar}.reflection()`, Order.ATOMIC];
+        return [`await ${sensorVar}.reflection()`, Order.ATOMIC];
     },
 };
 

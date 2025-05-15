@@ -30,7 +30,7 @@ const block: BlockDefinition = {
             parseFloat(generator.valueToCode(block, 'VAR_TIME', Order.ATOMIC).trim()) *
             1000;
 
-        return `wait(${time})`;
+        return `await wait(${time})`;
     },
 };
 
