@@ -23,6 +23,13 @@ If it does: don't use it for anything serious.**
 
 (0.1.0-alpha15 / 15.05.2025)
 
+
+## Preview
+
+https://github.com/user-attachments/assets/f2de55c8-6cba-4719-80b6-93c76d6f8f9c
+
+
+
 ---
 
 ## Next steps / wip
