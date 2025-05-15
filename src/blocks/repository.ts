@@ -67,6 +67,15 @@ export type InputDummy = {
     name: string;
 };
 
+export type CustomFieldVariable = {
+    type: 'custom_field_variable';
+    name: string;
+    //name: 'FIELDNAME',
+    //"variable": "x",
+    variableTypes: string[];
+    defaultType: string;
+};
+
 export type ShadowNumber = {
     type: 'shadow-number-type';
     name: string;
@@ -97,6 +106,7 @@ export type BlockType = {
         | InputDummy
         | ShadowNumber
         | InputStatement
+        | CustomFieldVariable
     )[];
     args1?: (
         | FieldSeparator
@@ -106,6 +116,7 @@ export type BlockType = {
         | InputDummy
         | ShadowNumber
         | InputStatement
+        | CustomFieldVariable
     )[];
     args2?: (
         | FieldSeparator
@@ -115,6 +126,7 @@ export type BlockType = {
         | InputDummy
         | ShadowNumber
         | InputStatement
+        | CustomFieldVariable
     )[];
     args3?: (
         | FieldSeparator
@@ -124,6 +136,7 @@ export type BlockType = {
         | InputDummy
         | ShadowNumber
         | InputStatement
+        | CustomFieldVariable
     )[];
 
     output?: 'Number' | 'Speed' | 'Boolean';

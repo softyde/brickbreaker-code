@@ -6,6 +6,10 @@ import * as Blockly from 'blockly';
 export const VAR_ENTRY_NONE = 'NONE';
 
 function getVariableType(name: string) {
+    if (!name) {
+        return 'asdf';
+    }
+
     if (name.startsWith('LIST.')) {
         name = name.substring(5);
     }
@@ -19,36 +23,41 @@ function getVariableType(name: string) {
 }
 
 class VariableDropDown extends Blockly.FieldDropdown {
+    _loadedState: { value: string; text: string } | null = null;
+
+    inputName: string;
+
     constructor(
-        menuGenerator: Blockly.MenuGenerator,
+        inputName: string,
         validator?: Blockly.FieldDropdownValidator,
         config?: Blockly.FieldDropdownConfig,
     ) {
-        super(menuGenerator, validator, config);
+        super(VariableDropDown.dropdownCreate, validator, config);
+        this.inputName = inputName;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     saveState(_doFullSerialization?: boolean): any {
-        console.log('saveState');
+        //  console.log(`saveState full=${doFullSerialization}`);
 
-        const state = super.saveState();
+        const value = this.getValue();
+        const text = this.getText();
 
-        //     console.log(state);
+        this._loadedState = null;
 
-        return state;
+        return {
+            value,
+            text,
+        };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    loadState(state: string) {
-        //const options = this.getOptions(false);
+    loadState(state: any) {
+        // console.log(`loadState`, state);
 
-        //      console.log('loadState');
+        this._loadedState = { value: state.value, text: state.text };
 
-        //if (options.find((o) => o[1] === state)) {
-        super.loadState(state);
-        //} else {
-        //    console.debug(`ignoring value for now');
-        //}
+        this.setValue(state.value);
     }
 
     /**
@@ -77,10 +86,61 @@ class VariableDropDown extends Blockly.FieldDropdown {
                         newValue,
                 );
                 console.log(options.map((a) => `${a[0]}:${a[0]}`).join(','));
+                newValue = options[0][1];
             }
             //return null;
         }
         return newValue;
+    }
+
+    /**
+     * Return a sorted list of variable names for variable dropdown menus.
+     * Include a special option at the end for creating a new variable name.
+     *
+     * @returns Array of variable names/id tuples.
+     */
+    static dropdownCreate(this: Blockly.FieldDropdown): Blockly.MenuOption[] {
+        const result: Blockly.MenuOption[] = [];
+
+        const dropDown = this as VariableDropDown;
+
+        const ws = Blockly.getMainWorkspace();
+
+        const varType = getVariableType(dropDown.inputName);
+
+        const variables = ws.getVariablesOfType(varType);
+
+        // const x = ws.getAllVariables();
+        // console.log(
+        //     `${this.type}:${
+        //         this.id
+        //     } - called for variable ${varType} ${variables
+        //         .map((v) => v.getId())
+        //         .join(',')}`,
+        // );
+        // console.log(`${self === this}`);
+        // console.log(
+        //     `called for all variable ${varType} ${x
+        //         .map((v) => v.getId())
+        //         .join(',')}`,
+        // );
+
+        variables.forEach((variable) => {
+            result.push([variable.name, variable.getId()]);
+        });
+
+        if (result.length === 0) {
+            if (dropDown._loadedState) {
+                console.log('faking loaded state');
+                result.push([dropDown._loadedState.text, dropDown._loadedState.value]);
+            } else {
+                result.push(['<KEINER>', VAR_ENTRY_NONE]);
+            }
+        }
+
+        console.log(`got options with ${result.map((a) => a[0]).join(',')}`);
+
+        return result;
     }
 }
 
@@ -94,45 +154,8 @@ function asd(this: Blockly.Block) {
                 input.name.startsWith('LIST.'),
         )
         .forEach((input) => {
-            const varType = getVariableType(input.name);
-
             input.appendField(
-                new VariableDropDown(() => {
-                    const result: Blockly.MenuOption[] = [];
-
-                    const ws = Blockly.getMainWorkspace();
-
-                    const variables = ws.getVariablesOfType(varType);
-
-                    // const x = ws.getAllVariables();
-                    // console.log(
-                    //     `${this.type}:${
-                    //         this.id
-                    //     } - called for variable ${varType} ${variables
-                    //         .map((v) => v.getId())
-                    //         .join(',')}`,
-                    // );
-                    // console.log(`${self === this}`);
-                    // console.log(
-                    //     `called for all variable ${varType} ${x
-                    //         .map((v) => v.getId())
-                    //         .join(',')}`,
-                    // );
-
-                    variables.forEach((variable) => {
-                        result.push([variable.name, variable.getId()]);
-                    });
-
-                    if (result.length === 0) {
-                        result.push(['<KEINER>', VAR_ENTRY_NONE]);
-                    }
-
-                    console.log(
-                        `got options with ${result.map((a) => a[0]).join(',')}`,
-                    );
-
-                    return result;
-                }),
+                new VariableDropDown(input.name),
                 `VALUE.${input.name.substring(5)}`,
             );
         });

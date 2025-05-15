@@ -36,7 +36,7 @@ const block: BlockDefinition = {
                 check: [
                     'Number',
                     'Speed',
-                    shadowNumber('rotation-speed', 100, 1, 500, 1),
+                    shadowNumber('rotation-speed', 100, 1, 2000, 1),
                 ],
             },
         ],

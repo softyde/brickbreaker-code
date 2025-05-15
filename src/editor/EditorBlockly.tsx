@@ -35,6 +35,14 @@ import { Toolbox } from './blockly/toolbox';
 import * as BlocklyVars from './blockly/variables';
 import { VAR_ENTRY_NONE } from './blockly/variables';
 
+class X extends PositionedMinimap {
+    getMinimapWorkspace(): Blockly.WorkspaceSvg | null {
+        return this.minimapWorkspace;
+    }
+}
+
+let minimap: X | undefined;
+
 Blockly.setLocale(De as unknown as { [key: string]: string });
 
 function handleBlockDelete(blockId: string) {
@@ -352,11 +360,17 @@ const BlocklyEditor: React.FunctionComponent = () => {
 
         Blockly.Events.disable();
         Blockly.getMainWorkspace().clear();
+
+        if (minimap) {
+            minimap.getMinimapWorkspace()?.clear();
+        }
         Blockly.Events.enable();
 
         Blockly.serialization.workspaces.load(data, workspaceRef.current, {
             recordUndo: false,
         });
+
+        resizeBlockly();
     }, [sourceCode]);
 
     useEffectOnce(() => {
@@ -372,6 +386,8 @@ const BlocklyEditor: React.FunctionComponent = () => {
         //BlocklyProcedures.registerProcedureSerializer();
 
         BlocklyVars.initCustomVariableHandling();
+
+        //Blockly.fieldRegistry.register('custom_field_variable', CustomFieldVariable);
 
         blocklyShadow.registerExtension();
 
@@ -451,7 +467,7 @@ const BlocklyEditor: React.FunctionComponent = () => {
         resizeObserverRef.current.observe(blocklyEditorRef.current);
 
         // Initialize plugin.
-        const minimap = new PositionedMinimap(workspaceRef.current);
+        minimap = new X(workspaceRef.current);
         minimap.init();
 
         // Initialize plugin.
@@ -493,13 +509,13 @@ const BlocklyEditor: React.FunctionComponent = () => {
         // Füge eine kleine Verzögerung ein, um Flackern zu vermeiden
         window.requestAnimationFrame(() => {
             // Berechne die neue Größe basierend auf dem Container
-            const metrics = workspaceRef.current!.getMetrics();
+            // const metrics = workspaceRef.current!.getMetrics();
 
             // Resize nur durchführen, wenn Metrics verfügbar sind
-            if (metrics && metrics.contentHeight > 0) {
-                Blockly.svgResize(workspaceRef.current!);
-                workspaceRef.current!.render();
-            }
+            //if (metrics && metrics.contentHeight > 0) {
+            Blockly.svgResize(workspaceRef.current!);
+            workspaceRef.current!.render();
+            // }
         });
     };
 

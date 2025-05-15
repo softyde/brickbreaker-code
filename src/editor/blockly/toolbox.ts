@@ -201,19 +201,8 @@ export const Toolbox = {
         },
         {
             kind: 'category',
-            name: 'Hub',
-            categorystyle: 'hub_category',
-            contents: [
-                {
-                    kind: 'block',
-                    type: 'hub_block',
-                },
-            ],
-        },
-        {
-            kind: 'category',
             name: 'Robotik',
-            categorystyle: 'robotic_category',
+            categorystyle: 'hub_category',
             contents: [
                 {
                     kind: 'label',
@@ -223,8 +212,27 @@ export const Toolbox = {
                     kind: 'block',
                     type: 'contest_move_and_lift',
                 },
+                {
+                    kind: 'block',
+                    type: 'move_to_line',
+                },
             ],
         },
+        // {
+        //     kind: 'category',
+        //     name: 'Robotik',
+        //     categorystyle: 'robotic_category',
+        //     contents: [
+        //         {
+        //             kind: 'label',
+        //             text: 'Bewegungen',
+        //         },
+        //         {
+        //             kind: 'block',
+        //             type: 'contest_move_and_lift',
+        //         },
+        //     ],
+        // },
 
         {
             kind: 'category',

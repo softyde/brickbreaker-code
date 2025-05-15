@@ -28,7 +28,7 @@ const block: BlockDefinition = {
             {
                 type: 'input_value',
                 name: 'VAR_POSITION',
-                check: ['Number', shadowNumber('degree', 0, -1000, 1000, 1)],
+                check: ['Number', shadowNumber('degree', 0, -5000, 5000, 1)],
             },
         ],
     },

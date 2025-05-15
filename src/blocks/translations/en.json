@@ -155,6 +155,9 @@
             "message1": "und gleichzeitig\n",
             "message2": "%1 bewege zu Position %2 mit %3"
         },
+        "move-to-line": {
+            "message": "%1 %2 fahre %3 bis Helligkeit an %4 < %5"
+        },
         "comment": {
             "message": "%1 %2"
         }
