@@ -21,7 +21,7 @@ Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 **This is an alpha. And nothing will work.  
 If it does: don't use it for anything serious.**
 
-(0.1.0-alpha11 / 13.05.2025)
+(0.1.0-alpha15 / 15.05.2025)
 
 ---
 
@@ -45,7 +45,7 @@ If it does: don't use it for anything serious.**
 - [x] included some plugins: minimap / zoom-to-fit
 - [x] __⇉ CURRENT__ 📌  implemented virtual coach
 - [ ] cleanup code
-- [ ] fix dependenciesgi
+- [ ] fix dependencies
 - [ ] fix broken tests
 - [ ] peace & love  
 

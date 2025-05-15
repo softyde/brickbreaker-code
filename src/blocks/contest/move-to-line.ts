@@ -53,7 +53,7 @@ const block: BlockDefinition = {
         const sensor = block.getFieldValue('VALUE.LIGHTSENSOR');
         const sensorVar = generator.getVariableName(sensor);
 
-        return `await ${driveVar}.drive(${dir}${driveVar}.settings()[0], 0)
+        return `${driveVar}.drive(${dir}${driveVar}.settings()[0], 0)
 while await ${sensorVar}.reflection() >= ${reflection}:
   await wait(5)
 ${driveVar}.brake()`;
