@@ -12,7 +12,7 @@ Die Blöcke sollen dabei (nach heutiger Idee) nicht (nur) 1:1 die pybricks Pytho
 Zielsystem ist primär LEGO® Education SPIKE™ Prime.
 
 #### Milestones
-- [ ] Mai 2025 - eine erste Beta-Version bei der WRO 2025 zum Einsatz bringen 🤖
+- [x] Mai 2025 - eine erste Beta-Version bei der WRO 2025 zum Einsatz bringen 🤖
 
 ---
 
