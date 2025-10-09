@@ -2,9 +2,9 @@
 > Dieses Projekt ruht bis auf Weiteres (d.h. vermutlich bis in alle Ewigkeit). Obwohl alles soweit funktioniert und uns bei der WRO 2025 eine Top-Platzierung ermöglicht hat<sup>1</sup>.
 > Warum also? Ganz einfach: an meiner Schule stehen "nur" iPads für die Robotik AG zur Verfügung und bekanntermaßen unterstützt Safari `navigator.bluetooth` nicht.
 >
-> Es ist zwar nicht auszuschließen, dass sich das in naher Zukunft ändert. Trotzdem habe ich mit der Entwicklung eines neuen Projektes begonnen. Dies ermöglicht auf Basis von `Capacitor
-> die Nutzung auch auf iPads (und auch Android Tablets). Außerdem verzichte ich auf die Unterstützung von direkter Quellcode-Eingabe ("Monaco-Editor"), was das Programm nochmal viel
-> schlanker macht<sup>2</sup>. Zu guter Letzt hilft ein sauberes Aufsetzen auf Basis von React 19/Redux und Vite 7/Typescript 5.8 auch, einige Altlasten aus pybricks-code loszuwerden.
+> Es ist zwar nicht auszuschließen, dass sich das in naher Zukunft ändert. Trotzdem habe ich mit der Entwicklung eines neuen Projektes begonnen. Dies ermöglicht auf Basis von `Capacitor`
+> die Nutzung auch auf iPads (und auch Android Tablets). Außerdem verzichte ich auf die Unterstützung von direkter Quellcode-Eingabe ("`Monaco-Editor`"), was das Programm nochmal viel
+> schlanker macht<sup>2</sup>. Zu guter Letzt hilft ein sauberes Aufsetzen auf Basis von `React` 19/`Redux` und `Vite` 7/`Typescript` 5.8 auch, einige Altlasten aus pybricks-code loszuwerden.
 >
 > Ich werde berichten.
 > 
