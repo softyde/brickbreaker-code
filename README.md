@@ -8,7 +8,7 @@
 >
 > Ich werde berichten.
 > 
-> <sup>1</sup> Die Möglichkeit, mit einem einzigen Befehl, Gyro-gesteuert gradeaus zu fahren, grenzt gegenüber der Lego-eigenen Lösung ein wenig an Wettbewerbsverzerrung - gerade in den unteren Altersklassen.
+> <sup>1</sup> Die Möglichkeit, mit einem einzigen Befehl, Gyro-gesteuert gradeaus zu fahren, grenzt gegenüber der Lego-eigenen Lösung ein wenig an Wettbewerbsverzerrung - gerade in den unteren Altersklassen.  
 > <sup>2</sup> Wer direkt in Python entwickeln will, verwendet eh einen Laptop und ist mit pybricks-code bestens bedient. Meine Zielgruppe ist aber bekanntlich eine andere.
 
 
