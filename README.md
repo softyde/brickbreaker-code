@@ -12,6 +12,16 @@
 > <sup>2</sup> Wer direkt in Python entwickeln will, verwendet eh einen Laptop und ist mit pybricks-code bestens bedient. Meine Zielgruppe ist aber bekanntlich eine andere.
 
 
+
+#### Update 4.11.2025
+
+Eine erste Alpha-Version gibt es unter https://alpha.brickbreaker.de - sie ersetzt den bisherigen pybricks-dev-Fork:
+
+<img width="1397" height="1033" alt="preview_alpha" src="https://github.com/user-attachments/assets/32f0acfc-0ae9-4076-b8ad-270630e182df" />
+
+Falls der Start nicht funktioniert, hast Du eventuell noch den Service-Worker der vorherigen Version laufen. In der Developer-Console des Browsers kann man den löschen, dann sollte nach einem Refresh die neue Seite geladen werden.
+
+
 brickbreaker-code
 =================
 
