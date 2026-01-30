@@ -15,4 +15,11 @@ Check out our repository at [**https://codeberg.org/softyde/brickbreaker-code**]
 
 ---
 
+[<img width="1200" height="628" alt="Link Card Preview Image - 1200x628" src="https://github.com/user-attachments/assets/fe333df9-2c9b-466b-a718-b3603b935dd2" />](https://apple.co/46mHZ6V)
+
+
+
+
+
+---
 *This repository will be closed/archived at some point in the future.*
